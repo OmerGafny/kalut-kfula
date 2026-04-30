@@ -98,7 +98,7 @@ For live exchange rate data, pair this skill with:
 
 | MCP Server | What it provides | Install |
 |------------|-----------------|---------|
-| **boi-exchange** | Official Bank of Israel daily representative rates (sha'ar yatzig) for 30+ currencies, historical rate series, rate change calculations, and direct currency conversion via BOI SDMX API. No API key required. | [Install boi-exchange](https://agentskills.co.il/en/mcps/boi-exchange) |
+| **boi-exchange** | Official Bank of Israel daily representative rates (sha'ar yatzig) for 30+ currencies, historical rate series, rate change calculations, and direct currency conversion via BOI SDMX API. No API key required. | [Install boi-exchange](https://agentskills.co.il/en/mcp/boi-exchange) |
 
 When the `boi-exchange` MCP is available, use its tools for real-time conversions instead of the static reference tables above. The MCP provides the official representative rate (shaar yatzig) which is the legally binding rate for tax purposes.
 

@@ -277,7 +277,7 @@ Before recommending any strategy, verify these compliance requirements:
 
 | MCP Server | What It Adds |
 |------------|-------------|
-| [kolzchut](https://agentskills.co.il/he/mcps/kolzchut) | Look up tax rights, entitlements, and eligibility criteria from Israel's authoritative rights database |
+| [kolzchut](https://agentskills.co.il/he/mcp/kolzchut) | Look up tax rights, entitlements, and eligibility criteria from Israel's authoritative rights database |
 
 ## Reference Links
 

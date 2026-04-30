@@ -83,11 +83,11 @@ For live financial data, pair this skill with:
 
 | MCP Server | What it provides | Install |
 |------------|-----------------|---------|
-| **boi-exchange** | Live Bank of Israel exchange rates and interest rate data | [Install](https://agentskills.co.il/en/mcps/boi-exchange) |
-| **israeli-cbs** | Consumer Price Index (CPI), housing indices, and economic statistics from the Central Bureau of Statistics | [Install](https://agentskills.co.il/en/mcps/israeli-cbs) |
-| **israel-statistics** | Additional CBS price indices and inflation-adjusted price calculations | [Install](https://agentskills.co.il/en/mcps/israel-statistics) |
-| **il-budget** | Israeli government budget data, procurement contracts, and support payment information | [Install](https://agentskills.co.il/en/mcps/il-budget) |
-| **budgetkey** | Comprehensive Israeli State Budget data (1997-2025) with full SQL query support | [Install](https://agentskills.co.il/en/mcps/budgetkey) |
+| **boi-exchange** | Live Bank of Israel exchange rates and interest rate data | [Install](https://agentskills.co.il/en/mcp/boi-exchange) |
+| **israeli-cbs** | Consumer Price Index (CPI), housing indices, and economic statistics from the Central Bureau of Statistics | [Install](https://agentskills.co.il/en/mcp/israeli-cbs) |
+| **israel-statistics** | Additional CBS price indices and inflation-adjusted price calculations | [Install](https://agentskills.co.il/en/mcp/israel-statistics) |
+| **il-budget** | Israeli government budget data, procurement contracts, and support payment information | [Install](https://agentskills.co.il/en/mcp/il-budget) |
+| **budgetkey** | Comprehensive Israeli State Budget data (1997-2025) with full SQL query support | [Install](https://agentskills.co.il/en/mcp/budgetkey) |
 
 When these MCPs are available, use them for real-time rates and indices instead of the static reference tables above.
 

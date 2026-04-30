@@ -207,7 +207,7 @@ compatibility: Works with Claude Code, OpenClaw, Cursor, Windsurf, Codex, GitHub
 
 | שרת MCP | מה הוא מוסיף |
 |---------|-------------|
-| [kolzchut](https://agentskills.co.il/he/mcps/kolzchut) | חיפוש זכויות מס, זכאויות וקריטריוני כשירות ממאגר הזכויות המוסמך של ישראל |
+| [kolzchut](https://agentskills.co.il/he/mcp/kolzchut) | חיפוש זכויות מס, זכאויות וקריטריוני כשירות ממאגר הזכויות המוסמך של ישראל |
 
 ## קישורי עזר
 
