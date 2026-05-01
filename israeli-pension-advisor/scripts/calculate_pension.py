@@ -114,7 +114,7 @@ def project_retirement(
         monthly_salary: Current gross monthly salary.
         current_age: Current age in years.
         gender: "male" or "female" (affects default retirement age).
-        retirement_age: Target retirement age (defaults by gender: male 67, female 64).
+        retirement_age: Target retirement age (defaults by gender: male 67, female 63 in 2026, rising to 65 by 2032).
         annual_return: Expected annual investment return rate.
         existing_balance: Current pension balance.
 
@@ -122,7 +122,8 @@ def project_retirement(
         Dictionary with projection details.
     """
     if retirement_age is None:
-        retirement_age = 67 if gender == "male" else 64
+        # Women's retirement age in 2026 is 63 (62y8m, rounded), rising 4 months/year to 65 by 2032
+        retirement_age = 67 if gender == "male" else 63
 
     years = retirement_age - current_age
     if years <= 0:
@@ -210,7 +211,7 @@ def main():
     parser.add_argument("--age", type=int, default=30, help="Current age for projection")
     parser.add_argument(
         "--female", action="store_true",
-        help="Use female retirement age (~64 in 2026)"
+        help="Use female retirement age (63 in 2026, rising to 65 by 2032)"
     )
     parser.add_argument(
         "--example", action="store_true", help="Show example calculation"
@@ -267,7 +268,7 @@ def main():
     print(format_breakdown(breakdown))
 
     if args.project:
-        retirement_age = 64 if args.female else 67
+        retirement_age = 63 if args.female else 67
         print()
         print(f"  --- Retirement Projection (age {args.age} -> {retirement_age}) ---")
         projection = project_retirement(args.salary, args.age, gender=gender)

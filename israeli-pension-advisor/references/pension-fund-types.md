@@ -3,7 +3,7 @@
 ## Keren Pensia (Pension Fund)
 - **Type:** Defined contribution (since 1995 reform)
 - **Components:** Retirement savings + disability insurance + survivors insurance
-- **Management fees:** Non-default funds: max 0.5% of balance + up to 6% of deposits. Selected default funds (since June 2025): 0.22% of balance + 1% of deposits, locked for 10 years.
+- **Management fees:** Non-default funds: max 0.5% of balance + up to 6% of deposits. Selected default funds: 0.22% of balance + 1% of deposits, locked for 10 years from each member's join date.
 - **Investment:** Balanced portfolio managed by fund
 - **Payout:** Monthly pension at retirement (annuity)
 - **Major funds:** Menora Mivtachim, Migdal Makefet, Harel, Clal, Phoenix
@@ -60,12 +60,13 @@
 - More flexible withdrawal rules
 - Capital gains tax applies
 
-## Default Pension Fund System (June 2025)
-- Employers with 50+ employees: fund assigned by employee ID check digit
+## Default Pension Fund System
+- Tender awarded November 2024 to 4 funds; tender period runs through October 31, 2028
+- ID-digit auto-assignment for employers with 50+ employees activated June 1, 2025 (after a 7-month implementation window)
   - Last digits 0, 1 -- Meitav
   - Last digits 2, 3 -- Altshuler Shaham
   - Last digits 4, 5, 6 -- Mor
   - Last digits 7, 8, 9 -- Infinity
-- Fee caps: 0.22% balance + 1% deposits, fixed for 10 years
 - Smaller employers may select any of the 4 funds
+- Fee cap: 0.22% balance + 1% deposits, locked for 10 years from each member's join date (per-member, not tender)
 - Employees can switch funds at any time after assignment
