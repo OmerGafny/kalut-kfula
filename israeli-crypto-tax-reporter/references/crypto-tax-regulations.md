@@ -77,7 +77,7 @@ Published by the Israeli Tax Authority on February 19, 2018, this is the primary
 | Capital gains (significant shareholder) | 30% | Holding 10%+ of a project |
 | Business income | 10-50% | Marginal rates based on total income |
 | Passive income (interest/dividends) | 25% | From crypto lending, some staking |
-| Surtax (mas yesafim) | +5% (post-2025 reform; verify 2026 figure) | On income (now including capital gains) exceeding the CPI-adjusted threshold (~721,560 NIS for 2025; verify 2026 on mas.gov.il) |
+| Surtax (mas yesafim) - 2026 | 3% base + 2% additional on capital-source income (effective 5% on crypto gains in the band above threshold) | Threshold NIS 721,560 / monthly NIS 60,130, **frozen through tax year 2027** by the Dec 2024 indexation-pause amendment. The 2025 reform brought capital gains into the surtax base. |
 
 ### For Companies (Chevra)
 
@@ -87,43 +87,65 @@ Published by the Israeli Tax Authority on February 19, 2018, this is the primary
 | Business income | 23% | Corporate tax rate |
 | Dividend distribution | 25-30% | Additional tax when distributing to shareholders |
 
-### National Insurance and Health Tax
+### National Insurance and Health Tax (2026)
 
-If crypto income is classified as business income:
-- **Bituach Leumi**: 5.97-12.83% depending on income level
-- **Mas Briut (health tax)**: 3.1-5% depending on income level
-- These do NOT apply to capital gains (investment classification)
+If crypto income is classified as business income (not investment):
+- **Bituach Leumi (self-employed, 2026)**: **4.47% on income up to ~NIS 7,703/month; 12.83% on the portion above** (per btl.gov.il). Verify the current bracket and ceiling at the start of each tax year.
+- **Mas Briut (health tax, 2026)**: **3.23% on income up to the same threshold; 5.17% on the portion above**.
+- Combined effective rate (BL + Mas Briut): roughly **7.7% / 18%** across the two bands.
+- These rates do NOT apply to capital gains (investment classification) - only to income classified as a business under Section 2(1).
 
 ## Reporting Requirements
 
-### Form 1325 (Capital Gains Report)
+### Form 1322 + Form 1325 (Annual Capital Gains Schedule)
 
 Filed with the annual tax return for capital gain events:
-- Required for each disposal (sale or exchange) of crypto
-- Lists acquisition date, disposal date, cost basis, proceeds, and gain/loss
-- Must be in NIS
+- **Form 1322** (Nispach Gimel) is the primary capital-gains appendix to the annual return; totals land here.
+- **Form 1325** (Nispach Gimel(1)) is the auxiliary detail form for negotiable-securities sales where tax was NOT withheld at source. Most crypto sales (no Israeli source-withholding) are itemised on Form 1325 and totals carry to Form 1322.
+- Lists acquisition date, disposal date, cost basis, proceeds, and gain/loss for each disposal.
+- All amounts must be in NIS.
 
 ### Form 1301 (Annual Individual Tax Return)
 
 The comprehensive annual return that includes:
 - All income sources (salary, business, capital gains, passive income)
-- Form 1325 is attached as a schedule
-- Filing deadline (Form 1301 individual annual return): **May 31** of the following year for online filing (paper filing earlier in May); extensions to end of July or even September available via רואה חשבון. The "April 30" deadline is outdated.
+- Forms 1322 and 1325 attached as appendices
+- **Filing deadline for tax year 2025 (filed in 2026): 30 June 2026 for online filing via the gov.il portal; 29 May 2026 for paper filing.** Extensions to end of July or September are available for returns filed by a representing accountant. The "April 30" or "May 31" dates that appeared in older guides are outdated; verify the current-year deadline on gov.il/he/service.
 
 ### Advance Tax Payments (Mikdamot)
 
-**Regulation 7 of the Income Tax (Capital Gains Tax) Regulations:**
-- Within 30 days of a capital gain event, the taxpayer must file Form 7002 and pay 25% of the gain as an advance
-- Applies to gains exceeding a minimal threshold
-- Failure to file: interest (ribit) and linkage differences (hafreshei hatzamda) accrue from the 30-day deadline
-- The advance is credited against the final annual tax liability
+**Form 1399י (1399-yod) - capital gains advance payment for individuals:**
+- Within 30 days of a capital gain event, the taxpayer files Form 1399י with the assessing officer (pakid shuma) and pays 25% of the gain as an advance.
+- Virtual-currency disposals are filed with transaction codes **77** (sale) and **71** (virtual currency).
+- Form 1399ח is the equivalent form for companies.
+- Applies to gains exceeding a minimal de minimis threshold; for non-trivial crypto gains assume the form is required.
+- Failure to file: interest (ribit) and linkage differences (hafreshei hatzamda) accrue from the 30-day deadline.
+- The advance is credited against the final annual tax liability.
+- The "Form 7002" reference in older guides is outdated for crypto reporting - use Form 1399י.
 
 ### Reporting Thresholds
 
-- **Any capital gain**: Technically reportable regardless of amount
-- **Advance payment**: Required for gains with tax liability exceeding approximately 1,000 NIS
-- **Annual filing**: Required for individuals with income from sources other than salary, or with annual income exceeding the filing threshold
-- **Record retention**: All transaction records must be retained for 7 years minimum
+- **Any capital gain**: technically reportable regardless of amount.
+- **Advance payment (mikdama)**: required for non-trivial gains. Verify current-year de minimis amounts on the ITA service portal; do not rely on a fixed historical NIS figure.
+- **Annual filing**: required for individuals with income from sources other than salary, or with annual income exceeding the filing threshold. A crypto disposal generally triggers a filing obligation even for salaried taxpayers.
+- **Record retention**: all transaction records must be retained for 7 years minimum.
+
+### Voluntary Disclosure Procedure 2025-2026 (Crypto Track)
+
+Published 25 August 2025 by the ITA, this procedure expressly covers digital assets and provides a route to regularise prior-year unreported crypto gains in exchange for criminal immunity:
+
+- **Two tracks**:
+  - **Green Track** - annual income up to NIS 500,000 and cumulative crypto assets up to NIS 1.5M as of 31 December 2024. Faster processing, anonymity removed.
+  - **Regular Track** - for cases above those thresholds.
+- **Deadline**: applications must be submitted by **31 August 2026**.
+- **Anonymity**: not available; all applications include the taxpayer's identifying details.
+- Use this procedure for clients who held crypto without reporting in prior years and want to come into compliance before CARF data-sharing surfaces them.
+
+### CARF (OECD Crypto-Asset Reporting Framework)
+
+- Israel committed to CARF; Israeli RCASPs (Reporting Crypto-Asset Service Providers - exchanges, wallet providers) **collect customer data from 1 January 2026**.
+- **First international exchange**: September 2027.
+- For taxpayers, this means: any crypto held on an Israeli or foreign-but-CARF-participating exchange will be visible to the ITA from 2027 onwards. Past-year non-compliance is increasingly likely to surface during routine matching.
 
 ## DeFi-Specific Guidance
 
@@ -170,10 +192,8 @@ The Israeli Tax Authority has not published comprehensive DeFi guidance. The fol
 - Capital gains from crypto are generally taxable in the country of residence (Israel, for Israeli residents)
 - Foreign tax credits may be available if tax was paid in another jurisdiction
 
-### OECD Crypto-Asset Reporting Framework (CARF)
-- Israel has committed to implementing CARF
-- Expected to require automatic exchange of crypto transaction data between jurisdictions
-- Implementation timeline: 2027 (expected)
+### OECD Crypto-Asset Reporting Framework (CARF) - see Reporting Requirements above
+- See the dedicated CARF block under "Reporting Requirements" for current dates: collection from 1 January 2026, first international exchange September 2027.
 
 ## Compliance Best Practices
 

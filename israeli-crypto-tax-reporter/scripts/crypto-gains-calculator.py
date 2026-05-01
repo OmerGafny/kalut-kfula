@@ -40,11 +40,14 @@ from typing import Optional
 INDIVIDUAL_TAX_RATE = 0.25
 SIGNIFICANT_SHAREHOLDER_RATE = 0.30
 CORPORATE_TAX_RATE = 0.23
-# 2025 budget legislation raised mas yesafim from 3% to 5% AND extended it to
-# capital gains. Verify the 2026 threshold on mas.gov.il before relying on the
-# constant below. The 721,560 figure is the 2025 CPI-adjusted threshold.
+# 2025 budget legislation restructured mas yesafim into a 3% base on all income
+# above the threshold + 2% additional on capital-source income (effective 5% on
+# crypto gains above threshold). This calculator models the post-threshold band
+# as a flat 5%, accurate for crypto-only gains; users with a mixed surtax base
+# should account for the 3% base separately. The threshold is FROZEN through tax
+# year 2027 by the December 2024 indexation-pause amendment, so do not apply CPI.
 SURTAX_RATE = 0.05
-SURTAX_THRESHOLD = 721_560  # NIS, 2025 threshold; refresh annually
+SURTAX_THRESHOLD = 721_560  # NIS, frozen 2025-2027 by Dec 2024 amendment
 ADVANCE_PAYMENT_DAYS = 30
 
 
@@ -518,7 +521,7 @@ def format_report(report: TaxReport) -> str:
         "=" * 70,
         "DISCLAIMER: This report is for informational purposes only.",
         "Consult a licensed Israeli tax advisor for official tax filing.",
-        "Rates and thresholds are based on 2024 regulations.",
+        "Rates and thresholds are based on 2026 regulations (surtax threshold frozen through 2027).",
         "=" * 70,
     ])
 

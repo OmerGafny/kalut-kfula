@@ -1,10 +1,9 @@
 ---
 name: israeli-crypto-tax-reporter
-description: Calculate cryptocurrency capital gains tax per Israeli Tax Authority (Reshut HaMisim) regulations and generate Form 1325 reporting data. Use when a user needs to compute crypto tax obligations using FIFO cost basis, classify DeFi income (staking, liquidity mining, airdrops) for Israeli tax purposes, prepare annual tax filing data, or understand reporting thresholds and advance payment (mikdamot) requirements. Covers Section 2(1) of the Income Tax Ordinance, Circular 2018/05, and the 25% capital gains rate for individuals. Do NOT use for non-Israeli tax jurisdictions, general income tax calculations, or VAT (maam) on crypto business activities, which require separate professional consultation.
+description: Calculate cryptocurrency capital gains tax per Israeli Tax Authority (Reshut HaMisim) regulations and generate Form 1322/1325 reporting data and Form 1399י advance-payment data (within 30 days of disposal). Use when a user needs to compute crypto tax obligations using FIFO cost basis, classify DeFi income (staking, liquidity mining, airdrops) for Israeli tax purposes, prepare annual tax filing data, understand reporting thresholds and advance payment (mikdamot) requirements, or evaluate the 2025-2026 Voluntary Disclosure Procedure (open until 31 Aug 2026). Covers Section 88 of the Income Tax Ordinance, Circular 2018/05, the 25% capital gains rate for individuals, and the 5% surtax on capital income above NIS 721,560 (threshold frozen through 2027). Do NOT use for non-Israeli tax jurisdictions, general income tax calculations, or VAT (maam) on crypto business activities, which require separate professional consultation.
 license: MIT
 allowed-tools: Bash(python:*) Read Edit Write WebFetch
 compatibility: Requires Python 3.8+ for calculator script
-version: 1.0.1
 ---
 
 # Israeli Crypto Tax Reporter
@@ -25,7 +24,7 @@ Before performing any calculations, ensure you understand the key regulatory pri
 - **Individuals**: 25% capital gains tax on profits. If the seller is a "significant shareholder" (baal meniayot mahuti) of a crypto project, the rate is 30%.
 - **Business/traders**: If crypto activity constitutes a business (esek), gains are taxed as ordinary income at marginal rates (up to 50%). The classification depends on frequency, volume, and whether the taxpayer holds crypto as inventory vs. investment.
 - **Companies**: Standard corporate tax rate (**23%**, since 2018) applies to capital gains.
-- **Surtax (mas yesafim)**: 2025 budget legislation raised the surtax rate and **explicitly extended it to passive income (capital gains, dividends, interest, rentals)**. For individuals with annual income exceeding the CPI-adjusted threshold (NIS ~721,560 for 2025; verify the 2026 figure on the ITA site), the surtax is **5% on the excess** (some sources reference a tiered 3% band + 5% beyond for specific income types — verify against mas.gov.il before quoting). The pre-2025 framing of "3% surtax on labor income only" is obsolete. **Crypto capital gains are now within the surtax base**, which materially raises the effective rate on large crypto realizations.
+- **Surtax (mas yesafim)**: the 2025 budget reform restructured the surtax from a flat 3% on labor income into a two-component charge that explicitly reaches passive and capital income, including crypto capital gains. For 2026 the structure is **3% base on all taxable income above NIS 721,560 PLUS an additional 2% on capital-source income (capital gains, dividends, interest, rentals) above the same threshold** - effective **5% on crypto gains in the band above the threshold**. The threshold (NIS 721,560 / monthly NIS 60,130) is **frozen through tax year 2027** by the December 2024 indexation-pause amendment, so do not apply CPI uplifts. The pre-2025 framing of "3% surtax on labor income only" is obsolete; **crypto capital gains are now within the surtax base**, materially raising the effective rate on large realizations.
 
 **Cost basis method:**
 - Israel mandates **FIFO** (First In, First Out) for calculating cost basis unless the taxpayer can demonstrate a different method was consistently applied.
@@ -101,12 +100,17 @@ Different crypto activities have different tax treatments in Israel:
 Consult `references/crypto-tax-regulations.md` for detailed regulatory analysis.
 Consult `references/crypto-tax-scenarios.md` for worked examples of each scenario.
 
-### Step 5: Generate Form 1325 Data
+### Step 5: Generate Form 1322 / 1325 Data
 
-Form 1325 (Tofes 1325) is the Israeli capital gains reporting form, filed as part of the annual tax return. Generate the required data:
+Crypto capital gains for individuals are reported on Appendix ג to the annual tax return. Two related forms are involved:
+
+- **Form 1322** (Nispach Gimel) - the primary capital gains schedule attached to the annual return; this is where totals land.
+- **Form 1325** (Nispach Gimel(1)) - an auxiliary detail form for negotiable-securities sales where tax was not withheld at source. It feeds line totals into Form 1322. Most crypto sales (no Israeli source-withholding) belong here.
+
+Generate the required data:
 
 ```bash
-python scripts/crypto-gains-calculator.py --input transactions.csv --year 2024 --form-1325
+python scripts/crypto-gains-calculator.py --input transactions.csv --year 2025 --form-1325
 ```
 
 The form requires for each disposal:
@@ -116,7 +120,7 @@ The form requires for each disposal:
 4. **Acquisition cost** (in NIS): Original purchase price + fees
 5. **Disposal proceeds** (in NIS): Sale price - fees
 6. **Capital gain or loss** (in NIS): Proceeds minus cost
-7. **Holding period**: Short-term (under 12 months) vs. long-term (12+ months). Note: for crypto, both are taxed at 25% for individuals, but the distinction matters for loss offsetting rules.
+7. **Holding period**: Records whether the lot was held under or over 12 months. For crypto, individuals pay 25% in both cases - there is no US-style long-term-rate preference. The duration matters mainly for the inflation-component (sechum hatzmada) calculation under Section 91(b)(3), which the calculator does NOT yet apply (see Gotchas).
 
 **Loss offsetting rules:**
 - Capital losses from crypto can offset capital gains from crypto in the same tax year
@@ -126,26 +130,30 @@ The form requires for each disposal:
 
 ### Step 6: Calculate Advance Tax Payments (Mikdamot)
 
-If the user has significant crypto gains during the year, they may need to make advance tax payments (mikdamot):
+If the user has crypto gains during the year, they generally need to file and pay advance tax (mikdama) ahead of the annual return:
 
-- **Reporting deadline**: Within 30 days of a capital gain event that creates a tax liability exceeding a minimal threshold
-- **Payment**: The advance payment is calculated at 25% of the gain (for individuals)
-- **Annual reconciliation**: Advance payments are credited against the annual tax liability when filing the annual return
-- **Penalties for non-payment**: Interest and linkage differences (hatzamada) apply to late advance payments
+- **Form**: **Form 1399י** (1399-yod) for individuals - the dedicated capital gains advance-payment form. Virtual-currency disposals are filed with transaction codes **77** (sale) and **71** (virtual currency). Form 1399ח is the equivalent for companies.
+- **Reporting deadline**: within **30 days** of the capital gain event for one-off disposals; the form is filed to the assessing officer (pakid shuma).
+- **Payment**: 25% of the gain for individuals (or 30% for significant-shareholder cases).
+- **Annual reconciliation**: advance payments are credited against the final annual tax liability when filing the annual return.
+- **Penalties for non-payment**: interest (ribit) and linkage differences (hafreshei hatzmada) accrue from the 30-day deadline.
+
+The legacy "Form 7002" reference in older guides is outdated for crypto reporting - use Form 1399י.
 
 ```bash
-python scripts/crypto-gains-calculator.py --input transactions.csv --year 2024 --advance-payments
+python scripts/crypto-gains-calculator.py --input transactions.csv --year 2025 --advance-payments
 ```
 
 ### Step 7: Provide Filing Guidance
 
 Guide the user through the tax filing process:
 
-1. **Compile Form 1325**: List all capital gain events with the data from Step 5
-2. **File annual tax return**: Include Form 1325 as an appendix to the annual tax return (doch shnati)
-3. **Filing deadline**: Generally mid to late April of the following year for individuals (extensions may apply for accountant-filed returns). Verify current deadlines with the Israeli Tax Authority as they may change annually.
-4. **Self-assessment**: Individuals with crypto gains exceeding the surtax threshold must also account for surtax (mas yesafim)
-5. **Record keeping**: Maintain all transaction records, exchange exports, and wallet data for at least 7 years
+1. **Compile capital gains schedule**: list all disposals on Form 1325 (auxiliary), with totals carried into Form 1322 (Appendix ג of the annual return).
+2. **File annual tax return**: submit Form 1301 (the individual annual return, doch shnati) with Forms 1322 and 1325 attached as appendices. Salaried individuals with crypto income must file even if they would otherwise be exempt - any disposal generally triggers a filing obligation.
+3. **Filing deadline**: for tax year 2025 (filed in 2026), the deadlines published by the Israeli Tax Authority are **30 June 2026 for online filing via the gov.il portal** and **29 May 2026 for paper filing**. Returns filed via a representing accountant typically receive extensions through July or September. Always verify the current year's deadlines on gov.il/he/service before filing.
+4. **Self-assessment of surtax**: individuals whose total taxable income (including crypto gains) exceeds NIS 721,560 must also self-assess surtax (mas yesafim) - 3% base on income above the threshold plus an additional 2% on capital-source income above the same threshold. The threshold is frozen through 2027.
+5. **Voluntary Disclosure window**: prior-year unreported crypto gains can be regularised under the **2025-2026 Voluntary Disclosure Procedure (Nohal Gilui Mirtzon)**, which expressly covers digital assets and grants criminal immunity. **Deadline: 31 August 2026**. Two tracks: a Green Track for smaller cases (annual income up to NIS 500k and cumulative crypto assets up to NIS 1.5M as of 31 Dec 2024) and a Regular Track for larger cases. Anonymity is no longer available; all applications are filed with identifying details.
+6. **Record keeping**: maintain all transaction records, exchange exports, and wallet data for at least 7 years.
 
 **When to recommend professional help:**
 - Transaction volume exceeds 100 trades per year
@@ -159,16 +167,16 @@ Guide the user through the tax filing process:
 
 ### Example 1: Simple Bitcoin Buy and Sell
 
-User says: "I bought 0.5 BTC in January 2024 for 80,000 NIS and sold it in August 2024 for 120,000 NIS. What's my tax?"
+User says: "I bought 0.5 BTC in January 2025 for 80,000 NIS and sold it in August 2025 for 120,000 NIS. What's my tax?"
 
 Actions:
-1. Identify the transaction: single buy, single sell
-2. Calculate capital gain: 120,000 - 80,000 = 40,000 NIS
-3. Apply 25% capital gains tax: 40,000 x 0.25 = 10,000 NIS
-4. Check surtax threshold: 40,000 NIS gain is well below the surtax threshold, so no surtax
-5. Note the holding period: 7 months (short-term, but rate is still 25% for crypto)
+1. Identify the transaction: single buy, single sell.
+2. Calculate capital gain: 120,000 - 80,000 = 40,000 NIS.
+3. Apply 25% capital gains tax: 40,000 x 0.25 = 10,000 NIS.
+4. Check surtax threshold: a 40,000 NIS gain is well below NIS 721,560, so no surtax (assuming no other income above the threshold).
+5. Note the holding period: 7 months. The 25% rate applies regardless, but the inflation-component split (sechum hatzmada) is negligible for such a short hold.
 
-Result: The capital gain is 40,000 NIS. The tax liability is 10,000 NIS (25% rate). The user should have filed an advance payment (mikdama) within 30 days of the August sale. If not yet filed, the user should file and pay as soon as possible to minimize interest penalties. The gain should be reported on Form 1325 as part of the 2024 annual tax return.
+Result: capital gain 40,000 NIS, tax liability 10,000 NIS. The user should have filed Form 1399י (transaction codes 77/71) within 30 days of the August sale and paid the 10,000 NIS as a mikdama. If the deadline is missed, the user should still file and pay as soon as possible to minimise interest and linkage penalties. The gain is then reported on Forms 1325/1322 as part of the **2025 annual tax return**, due **30 June 2026 (online) or 29 May 2026 (paper)**.
 
 ### Example 2: Crypto-to-Crypto Trade with FIFO
 
@@ -210,11 +218,22 @@ Result: Under the conservative approach recommended by most Israeli tax advisors
 - `references/crypto-tax-regulations.md` -- Israeli Tax Authority circulars, relevant Income Tax Ordinance sections, classification rules for different crypto activities, and reporting deadlines. Consult when determining the correct tax treatment for specific crypto activities.
 - `references/crypto-tax-scenarios.md` -- Worked examples covering simple trades, crypto-to-crypto swaps, DeFi staking, NFT sales, mining income, airdrops, and hard forks. Consult when calculating tax for specific transaction types.
 
+## Recommended MCP Servers
+
+| MCP | What It Adds |
+|-----|-------------|
+| [BOI Exchange Rates](https://agentskills.co.il/he/mcp/boi-exchange) | Provides the official Bank of Israel daily representative rate (sha'ar yatzig) for USD, EUR, and 30+ other currencies - the rate this skill requires for converting non-NIS legs of every transaction. Live access removes the need to scrape boi.org.il manually and ensures the FIFO calculator sees authoritative same-day NIS values. |
+
 ## Gotchas
-- Israel taxes crypto as property (capital gains), not as currency. Agents may apply currency exchange rules or VAT to crypto transactions, which is incorrect under Israeli tax law.
+- Israel taxes crypto as property (capital gains), not as currency. Agents may apply currency-exchange rules or VAT to crypto transactions, which is incorrect under Israeli tax law.
 - The Israeli capital gains tax rate on crypto is 25% for individuals (mas revach hon), not the US 15%/20% rates. Agents trained on US tax data will use the wrong rate.
 - Israeli crypto tax reporting uses FIFO (First In, First Out) as the default cost basis method. Agents may default to average cost or LIFO, which are not standard practice in Israel.
-- Crypto-to-crypto swaps are taxable events in Israel. Agents may treat them as non-taxable exchanges, which was the old US rule but has never been the case in Israel.
+- Crypto-to-crypto swaps are taxable events in Israel. Agents may treat them as non-taxable exchanges (the old US rule), but this has never been the case in Israel.
+- **Stablecoins (USDT, USDC, DAI) are still "asset" under Section 88 of the Income Tax Ordinance**, not foreign currency. Every USDT-to-USDC swap, every conversion-leg of a DeFi trade, and every USDT off-ramp to fiat is a taxable disposal valued in NIS. Users frequently treat stablecoins as "cash equivalents" and skip them, missing the majority of taxable events for active DeFi participants.
+- **Inflation indexation (sechum hatzmada) is not yet applied by the calculator.** Section 91(b)(3) splits any capital gain into a "real gain" (taxed at 25%) and an "inflation-component gain" (taxed at 0% for individuals on assets acquired after 1.1.1994). The current calculator multiplies total gain by 25% with no CPI step, so it overstates tax on lots held longer than ~12 months in inflationary years. For long-held lots, agents should flag this limitation to the user and recommend a manual indexation pass or a CPA review before filing.
+- **Israel has no wash-sale rule.** Unlike the US 30-day rule, Israeli tax law allows a taxpayer to realise a December capital loss and re-buy the same crypto in January with the loss fully recognised. Agents trained on US tools may incorrectly disallow such losses.
+- **Gifts and inheritance use carryover basis** under Section 97(a)(5) - the recipient inherits the donor's original cost basis and acquisition date. Treating an inherited 1 BTC as zero-basis or as fair-market-value at inheritance produces wildly wrong numbers. Document the donor's records.
+- **Crypto lost to exchange insolvency (FTX, Celsius pattern), theft, or lost private keys** is recognised as a capital loss only when the loss is final and documented (e.g., bankruptcy court order, police report). Agents should not write off frozen-but-not-bankrupt balances and should not treat loss-of-keys as deductible without supporting evidence.
 
 ## Troubleshooting
 
@@ -232,4 +251,15 @@ Solution: Review the transaction manually. Common DeFi operations and their clas
 
 ### Error: "Form 1325 generation failed - missing required fields"
 Cause: Some transactions are missing data required for Form 1325 (typically the acquisition date or the NIS value at acquisition).
-Solution: Review the error output which lists the specific transactions with missing data. For each, provide the acquisition date (FIFO-determined) and the NIS value at that date. If the acquisition was a gift or airdrop, the cost basis rules differ: gifts use the giver's cost basis, and airdrops use the market value at receipt. Update the transaction CSV with the corrected data and re-run.
+Solution: Review the error output which lists the specific transactions with missing data. For each, provide the acquisition date (FIFO-determined) and the NIS value at that date. If the acquisition was a gift or airdrop, the cost basis rules differ: gifts use the donor's cost basis (Section 97(a)(5) carryover), and airdrops use the market value at receipt. Update the transaction CSV with the corrected data and re-run.
+
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| Israeli Tax Authority - annual return service (Form 1301) | https://www.gov.il/he/service/reporting-and-payment-2025-annual-tax-report-for-individuals | Current-year filing deadlines, links to Forms 1322 and 1325, online filing portal |
+| Bank of Israel - representative rates (sha'ar yatzig) | https://www.boi.org.il/roles/markets/exchangerates/ | Daily NIS reference rates for currency conversion of foreign-fiat legs of crypto trades |
+| ITA Circular 05/2018 (crypto classification, FIFO, virtual currency definition) | https://www.gov.il/he/Departments/legalInfo/04-2018 | Foundational tax-treatment guidance for virtual currencies |
+| Voluntary Disclosure Procedure 2025-2026 (crypto track) | https://www.gov.il/he/Departments/policies/voluntary-disclosure-2025 | Eligibility, Green vs Regular Track, deadline 31 Aug 2026, required documentation |
+| Bituach Leumi self-employed rates (2026) | https://www.btl.gov.il/Insurance/National%20Insurance/type_list/Self_Employed/Pages/rates.aspx | Current National Insurance + health-tax rates for business-classified crypto traders |
+| OECD Crypto-Asset Reporting Framework (CARF) | https://www.oecd.org/tax/exchange-of-tax-information/crypto-asset-reporting-framework.htm | Israel collection from 1 Jan 2026, first international exchange Sept 2027 |
