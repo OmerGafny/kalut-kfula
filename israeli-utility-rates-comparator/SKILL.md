@@ -45,17 +45,20 @@ The Electricity Authority publishes official tariffs at pua.gov.il. IEC tariffs 
 - Simplest billing structure
 - Suitable for low-medium consumption households
 
-**Time-of-use tariff (tariff meshutane, TOU / עונתי):**
+**Time-of-use tariff (tariff TOZ / תעריף תעו"ז):**
 - Requires a smart meter (moné chokhéakh)
-- Different rates for peak (shpia), shoulder (gerev), and off-peak (shefel) hours
-- Peak hours: typically Sunday-Thursday 17:00-22:00 (summer), 7:00-17:00 (winter)
-- Off-peak: nights and Shabbat/holidays
+- Two tiers since April 2023: peak (shia / שיא) and off-peak (shefel / שפל). The former shoulder (geva / גבע) tier was eliminated. Older docs may still describe a 3-tier structure.
+- Summer (Jun-Sep) weekday peak: 17:00-23:00; off-peak: all other hours including weekends and Shabbat
+- Winter (Dec-Feb) weekday peak: typically 17:00-22:00 plus a morning band 06:00-08:00; off-peak the rest of the day
+- 2026 indicative rates (incl. 18% VAT): off-peak ~52.83 agorot/kWh; summer peak ~168.95 agorot/kWh
 - Can save 15-25% for households that shift consumption to off-peak hours
+- Tariffs reset quarterly via Electricity Authority decisions, so verify current numbers at pua.gov.il before quoting
 
 **Monthly fixed charges:**
 - Connection fee (agrat chibbur) regardless of consumption
 - Distribution fee
 - Public broadcasting fee (agrat shidrur)
+- For apartments: a share of common-area electricity (chashmal klali) for stairwells, elevators, and lobby lighting, billed via the va'ad bayit (building committee) and separate from the IEC bill. New tenants are often surprised by this line item.
 
 To compare electricity costs:
 1. Obtain the user's recent electricity bills (at least 3 months, preferably 12 for seasonal patterns)
@@ -63,13 +66,16 @@ To compare electricity costs:
 3. Check if they have a smart meter (required for TOU pricing)
 4. If no smart meter, check eligibility and installation process with IEC (iec.co.il)
 
-**Independent electricity producers:**
+**Independent electricity producers (residential market):**
 
-Since the electricity market reform, independent producers offer alternatives:
-- **OPC Energy** - Major independent producer, offers competitive rates to large consumers
-- **Dalia Energy** - Solar-based production
-- **Enlight Renewable Energy** - Renewable energy focus
-- Most independent producer deals are currently for large consumers and businesses, but the market is gradually opening to residential customers
+The residential electricity market is open to private suppliers. As of end-2025, approximately 280,000 households had switched to alternate suppliers, with typical discounts of 5-21% off the IEC tariff for the generation portion. Active residential suppliers in 2026 include:
+- **Cellcom Energy**, **Partner**, **Bezeq**, **HOT Energy** (telecom-bundled offers)
+- **Pazgas Electricity**, **Amisragas**, **Electra Power** (energy and gas group offers)
+- **OPC Energy**, **Dalia Energy**, **Enlight Renewable Energy** (independent generators, historically large-customer focused, also signing residential customers)
+
+**Critical: switching does NOT replace the full bill.** Independent suppliers compete only on the **generation** (ייצור) component, which is roughly 60-70% of the bill. The household continues to pay IEC for distribution (חלוקה), transmission (הולכה), the public broadcasting fee, and meter charges. The supplier discount applies only to the energy portion.
+
+**Cooling-off period:** Under the Consumer Protection Law (חוק הגנת הצרכן), residential customers have a 14-day right to cancel after signing with an alternate supplier. Always read the cancellation clauses before signing, and keep a copy of the contract.
 
 ### Step 3: Calculate Solar Panel ROI
 
@@ -83,14 +89,14 @@ Solar panels (panelim sola'riyyim) are increasingly popular in Israel due to hig
 - System size limited to your annual consumption level
 
 **ROI calculation factors:**
-1. **System cost**: typically 15,000-40,000 ILS for residential (3-10 kW)
-2. **Annual production**: Israel averages 1,500-1,800 kWh per installed kW (Negev gets more, north gets less)
-3. **Current electricity cost**: multiply production by current IEC tariff rate
-4. **Annual savings**: production in kWh multiplied by tariff rate
-5. **Payback period**: system cost divided by annual savings (typically 5-8 years in Israel)
-6. **System lifetime**: 25+ years with gradual degradation (0.5% per year)
+1. **System cost**: in 2026, typically 3,500-4,000 ILS per kWp turnkey installed. Common residential sizes: 3 kW ~11,000-13,000 ILS; 5 kW ~18,000-22,000 ILS; 10 kW ~38,000-48,000 ILS basic, up to ~75,000 ILS for premium panels or battery-paired systems.
+2. **Annual production**: Israel averages 1,500-1,800 kWh per installed kWp (Negev gets ~1,800, north gets ~1,400-1,500, central ~1,600)
+3. **Current electricity cost**: multiply production by the current IEC tariff (Jan 2026 standard residential ~0.6432 ILS/kWh inc. 18% VAT)
+4. **Annual savings**: production in kWh multiplied by tariff rate (savings on offset consumption) plus the export tariff (~0.213 ILS/kWh in 2026) for excess production fed to the grid
+5. **Payback period**: system cost divided by annual savings (typically 4-7 years in Israel, faster in the south)
+6. **System lifetime**: 25+ years with gradual degradation (~0.5% per year)
 7. **Maintenance**: minimal, panel cleaning 1-2 times per year
-8. **Feed-in tariff**: for systems approved under previous programs, a guaranteed purchase rate applies
+8. **Connection approval**: net metering is still active, but new installations may also be offered alternate models (קול קורא tariffs / SmartGrid feed-in) per Electricity Authority decisions 1573 and 45-46. Confirm which model the installer is quoting.
 
 **Steps to evaluate solar:**
 1. Check roof orientation (south-facing is optimal in Israel)
@@ -111,13 +117,14 @@ Israeli residential water uses an ascending block tariff (tiered pricing):
 
 **Tier 2 (consumption above basic allocation):**
 - Higher rate per cubic meter
-- Approximately 50-60% more expensive than Tier 1
+- Approximately 84% more expensive than Tier 1 (Jan 2026: Tier 1 ~8.508 ILS/m³ inc. VAT vs Tier 2 ~15.623 ILS/m³ inc. VAT, both include sewage)
 - Applies to all consumption beyond the basic allocation
 
 **Important factors:**
-- **Nefashot registration**: register all household members at your water corporation to maximize Tier 1 allocation. Unregistered members mean a lower threshold before Tier 2 kicks in.
+- **Nefashot registration**: register all household members at your water corporation to maximize Tier 1 allocation. Unregistered members mean a lower threshold before Tier 2 kicks in. Registration is forward-looking; back-credit is generally limited to the current billing period.
 - **Garden/pool allocation**: additional allocation available for documented garden irrigation or swimming pool
-- **Sewage surcharge (biuv)**: charged as a percentage of water consumption, varies by municipality
+- **Sewage charge (biuv)**: in most municipalities sewage is bundled into the regulated per-m³ water tariff (the 8.508 / 15.623 ILS/m³ figures already include sewer). Where the local authority bills sewer separately, the standalone sewer rate is ~4.39 ILS/m³ on a volume basis (typically 70-90% of metered water).
+- **Confirmed-leak credit**: water corporations grant a partial credit (often 50-100%) for documented hidden leaks under תקנות תאגידי מים וביוב. Requires a plumber certificate filed within 60 days of detection.
 
 **Municipal water corporations (examples):**
 - **Mei Avivim** (Tel Aviv)
@@ -203,13 +210,23 @@ Note: Rates vary by zone within each city and change annually. Always verify cur
 4. Calculate based on your property size and classification
 
 **Arnona discounts (hanashot):**
-- New immigrants (olim): up to 90% discount for first year, 10% for years 2-5
-- Senior citizens (over 62/67): discounts available based on income
-- Low income (hakhnasoat nemukhoht): significant discounts, apply through municipal welfare department
-- Disabled (nekhim): discounts based on disability percentage
-- National service / IDF veterans: various discounts
+- New immigrants (olim): up to 90% discount on the first 100 sqm for 12 months out of the 24 months following aliyah registration (single benefit, not yearly). Olim recognized by Bituach Leumi for disability or sicud benefits get up to 80% with no time limit. See kolzchut.org.il/he/הנחה_בארנונה_לעולים_חדשים for the exact rules.
+- Senior citizens (women 62 / men 67, the official retirement age): 30% discount if income is below the average wage; up to 100% if also receiving income supplement (השלמת הכנסה) from Bituach Leumi.
+- Low income (hakhnasot nemukhot): significant discounts on a sliding scale, apply through the municipal welfare department
+- Disabled (nekhim): discounts based on disability percentage; 80% for 90%+ disability
+- National service / IDF veterans: various discounts, including bereaved families
 - Students: some municipalities offer student discounts
 - Single-person household: some municipalities offer discounts
+
+**Discount stacking rule:** Only one discount tier applies per property at a time, per תקנות הסדרים במשק המדינה (הנחה מארנונה), תשנ"ג-1993. A household qualifying for both senior and low-income discounts receives the larger of the two, not the sum. Apply for whichever gives the highest reduction.
+
+**Filing an arnona objection (hassagah):** If you believe the bill is wrong (incorrect property size, wrong zone classification, missing discount, balcony charged at full rate), there is a formal escalation path:
+1. **Hassagah** — file a written objection with the municipal arnona manager within **90 days** of receiving the bill. Cite the specific calculation error and attach evidence (measurement, classification documents, photos of enclosed vs open balcony).
+2. **Response** — the municipality must respond within 60 days. Silence after 60 days is treated as deemed-rejection and the clock for the next step starts.
+3. **Appeal to ועדת ערר** — if rejected, you have **30 days** to appeal to the local arnona objection committee (ועדת ערר לארנונה).
+4. **Administrative court** — if the ועדת ערר ruling is against you, escalate to בית משפט לעניינים מנהליים within 45 days of the decision.
+
+For IEC and water-corporation billing disputes (not arnona), the small-claims court (בית משפט לתביעות קטנות, 38,500 ILS cap in 2026) is often a faster path.
 
 ### Step 7: Tips for Reducing Utility Bills
 
@@ -239,10 +256,11 @@ Note: Rates vary by zone within each city and change annually. Always verify cur
 ### Step 8: Smart Meter Adoption and Monitoring
 
 **Smart meters (monéi chokhéakh):**
-- IEC is gradually rolling out smart meters across Israel
+- IEC has installed approximately 1 million smart meters as of 2026 (~30% of households); rollout continues, prioritizing high-consumption households and dense urban areas first
 - Allow real-time consumption monitoring
 - Enable TOU pricing
-- Check eligibility at iec.co.il or call *2730
+- Check eligibility at iec.co.il, call **103** (also reachable as 055-7000103 for SMS / WhatsApp), or use the IEC app
+- Self-paid expedited installation (~265 ILS) is available where IEC has not yet deployed in the area
 
 **Monitoring tools:**
 - IEC app (available on iOS and Android): view real-time consumption, billing history, and payment options
@@ -262,16 +280,17 @@ Note: Rates vary by zone within each city and change annually. Always verify cur
 User says: "We live in a house in Modi'in, pay about 800 ILS per month for electricity, and want to know if solar panels are worth it."
 
 Actions:
-1. Calculate approximate monthly consumption: 800 ILS / ~0.60 ILS per kWh (approximate residential tariff) = ~1,333 kWh per month
-2. Determine system size needed: 1,333 * 12 / 1,600 (kWh per kW in central Israel) = ~10 kW system
-3. Estimate system cost: 10 kW * ~3,500 ILS per kW = ~35,000 ILS
-4. Calculate annual savings: 800 * 12 = 9,600 ILS per year
-5. Payback period: 35,000 / 9,600 = ~3.6 years
-6. 25-year total savings: (9,600 * 25) - 35,000 = ~205,000 ILS (not accounting for degradation and tariff changes)
-7. Check roof suitability: Modi'in gets good solar irradiance, verify south-facing roof availability
-8. Recommend getting 3 installer quotes and checking with the local municipality for permit requirements
+1. Calculate approximate monthly consumption: 800 ILS / ~0.6432 ILS per kWh (Jan 2026 standard residential tariff inc. 18% VAT) = ~1,244 kWh per month
+2. Determine system size needed: 1,244 * 12 / 1,600 (kWh per kWp in central Israel) = ~9.3 kWp; round to a 9-10 kWp system
+3. Estimate system cost: 9.5 kWp * ~3,800 ILS per kWp = ~36,000 ILS turnkey (mid-range 2026 pricing; basic systems start lower, premium and battery-paired go higher)
+4. Calculate annual savings: 800 * 12 = 9,600 ILS per year (assumes consumption matches production timing; net metering covers the timing gap)
+5. Payback period: 36,000 / 9,600 = ~3.75 years
+6. 25-year total savings: (9,600 * 25) - 36,000 = ~204,000 ILS (not accounting for panel degradation ~0.5%/year and tariff changes)
+7. Check roof suitability: Modi'in gets good solar irradiance, verify south-facing roof availability and shading
+8. Recommend getting 3 installer quotes; confirm whether the quote uses net metering or one of the newer feed-in models (decisions 1573/45-46), since the export tariff (~0.213 ILS/kWh in 2026) is lower than the consumption rate
+9. Check with the municipality for any heter bniya requirements for roof modifications
 
-Result: User receives a detailed ROI analysis showing that solar panels would pay for themselves in approximately 3-4 years with total savings exceeding 200,000 ILS over the system lifetime, making it a strong investment.
+Result: User receives a detailed ROI analysis showing that solar panels would pay for themselves in approximately 4 years with total savings exceeding 200,000 ILS over the system lifetime, making it a strong investment.
 
 ### Example 2: Comparing Utility Costs Between Cities for Relocation
 
@@ -322,10 +341,13 @@ Actions:
 Result: User receives a practical action plan for shifting consumption to off-peak hours, with estimated monthly savings of 80-120 ILS, plus an ongoing monitoring strategy using the IEC app.
 
 ## Gotchas
-- Israel Electric Corporation (Chevrat Hashmal) rates change quarterly based on fuel cost adjustments. Agents may use outdated rates from a previous quarter. Always check the current tariff from the IEC website.
-- Water rates in Israel use a tiered pricing structure: a lower rate for basic consumption (up to 3.5 cubic meters per person per month) and a higher rate above it. Agents may apply a flat rate.
-- Israeli utility bills include VAT (18%) on top of the listed rates. Agents may calculate costs using the pre-VAT tariff without adding VAT, underestimating the actual bill.
-- The electricity market in Israel opened to competition in 2023, allowing private generators. Agents may only reference IEC rates without mentioning competitive alternatives like OPC or Dalia.
+- Israel Electric Corporation rates reset quarterly via Electricity Authority decisions; the Jan 2026 update added +1.5% over 2025. Agents may use outdated rates from a previous quarter. Always verify the current tariff at pua.gov.il before quoting per-kWh numbers.
+- The TOU (tariff TOZ / תעו"ז) schedule has only two tiers since April 2023: peak (שיא) and off-peak (שפל). The former שלב הגבע (shoulder) tier was eliminated. Agents trained on older docs may still describe a 3-tier structure with a middle band.
+- Switching to an alternate electricity supplier (Cellcom Energy, Pazgas, OPC, etc.) only discounts the generation component, which is roughly 60-70% of the bill. The household still pays IEC for distribution, transmission, the public broadcasting fee, and meter charges. Agents may incorrectly imply the entire bill changes.
+- Water Tier 1 covers up to 3.5 m³ per registered nefesh per month at the lower rate; consumption above goes to Tier 2 (~84% higher in Jan 2026: 8.508 vs 15.623 ILS/m³ inc. VAT). Sewage is bundled into the regulated per-m³ tariff in most municipalities, NOT a separate percentage surcharge as some older guides describe.
+- Israeli utility bills include 18% VAT (raised from 17% on 1 Jan 2025; the 2026 increase to 19% was rejected by the cabinet in Dec 2025). Be explicit about whether quoted prices include or exclude VAT, especially when comparing alternate-supplier offers, since some advertise the pre-VAT generation rate.
+- The Olim Hadashim arnona discount is 90% on up to 100 sqm for 12 months out of the 24 months following aliyah registration, NOT yearly. Agents may incorrectly describe it as multi-year (e.g., "90% first year, 10% years 2-5"). Disabled olim recognized by Bituach Leumi get up to 80% indefinitely under a separate provision.
+- The IEC customer-service number is **103** (also 055-7000103 for SMS/WhatsApp). The legacy `*2730` short code is no longer in use; agents that emit it will send users to a dead number.
 
 ## Reference Links
 
@@ -336,6 +358,8 @@ Result: User receives a practical action plan for shifting consumption to off-pe
 | Water Authority | https://www.gov.il/he/departments/water_authority | Tiered water rates, household allocation, municipal corporations |
 | Natural Gas Authority | https://www.gov.il/he/departments/natural_gas_authority | Consumer gas pricing, supplier list, connection rules |
 | Arnona property tax rates | https://www.gov.il/he/service/arnona-payment | Municipal arnona tariffs and discount eligibility |
+| Kolzchut, olim arnona discount | https://www.kolzchut.org.il/he/הנחה_בארנונה_לעולים_חדשים | Exact eligibility window (12 months out of 24), 100 sqm cap, special-needs olim rules |
+| Kolzchut, senior arnona discount | https://www.kolzchut.org.il/he/הנחה_בארנונה_לאזרחים_ותיקים | Senior age threshold (women 62 / men 67), income tests, discount tiers |
 
 ## Troubleshooting
 
@@ -355,7 +379,7 @@ Solution: Check for toilet leaks by adding food coloring to the tank and waiting
 
 Cause: TOU pricing requires a smart meter (moné chokhéakh), which not all households have yet. IEC is rolling out smart meters gradually, and some areas haven't been covered yet. Additionally, some older electrical panel configurations may need upgrades to support smart meter installation.
 
-Solution: Call IEC customer service at *2730 or check iec.co.il to verify if your area is eligible for smart meter installation. If eligible, request installation (free of charge from IEC). Installation typically takes 2-4 weeks from request. Once installed, contact IEC to switch your tariff plan from standard to TOU. Note that TOU is only beneficial if you can shift significant consumption to off-peak hours; if your consumption is already mostly during off-peak times (work from home at night, Shabbat observer), the savings will be greater. If you can't shift consumption, the standard tariff may actually be cheaper since TOU peak rates are higher than the standard flat rate.
+Solution: Call IEC customer service at **103** (or send SMS / WhatsApp to 055-7000103) or check iec.co.il to verify if your area is eligible for smart meter installation. If eligible, request installation (free of charge from IEC). Installation typically takes 2-4 weeks from request. Once installed, contact IEC to switch your tariff plan from standard to TOU. Note that TOU is only beneficial if you can shift significant consumption to off-peak hours; if your consumption is already mostly during off-peak times (work from home at night, Shabbat observer), the savings will be greater. If you can't shift consumption, the standard tariff may actually be cheaper since TOU peak rates are higher than the standard flat rate.
 
 ### Error: "Arnona rate on my bill doesn't match the published municipal tariff"
 
