@@ -80,7 +80,7 @@ The following expenses are generally not deductible for tax purposes:
 
 ### Fully Reclaimable / ניכוי מלא
 - Business expenses with valid tax invoice from Osek Murshe / הוצאות עסקיות עם חשבונית מס תקפה מעוסק מורשה
-- Standard 17% VAT rate / שיעור מע"מ סטנדרטי 17%
+- Standard 18% VAT rate (effective 1 January 2025) / שיעור מע"מ סטנדרטי 18% (מ-1 בינואר 2025)
 
 ### Partially Reclaimable / ניכוי חלקי
 - Vehicle expenses: 2/3 of VAT for non-commercial vehicles / הוצאות רכב: 2/3 מהמע"מ לרכב לא מסחרי
@@ -100,7 +100,7 @@ The following expenses are generally not deductible for tax purposes:
 
 3. **Mixed-use expenses / הוצאות לשימוש מעורב:** When an expense serves both business and personal purposes, only the business portion is deductible. Documentation of business use percentage is required.
 
-4. **E-invoice requirement (from 2024) / דרישת חשבונית אלקטרונית (מ-2024):** Invoices above the threshold must include a Tax Authority allocation number (מספר הקצאות) to be eligible for VAT deduction.
+4. **E-invoice allocation number (Israel Invoice Model) / מספר הקצאה (מודל חשבוניות ישראל):** B2B tax invoices above the SHAAM threshold must carry a Tax Authority allocation number (מספר הקצאה) to be eligible for VAT input deduction. Threshold by issue date: NIS 20,000 in 2025; NIS 10,000 from 1 Jan 2026; NIS 5,000 from 1 Jun 2026 (permanent floor). / סף לפי תאריך הוצאת החשבונית: 20,000 ש"ח ב-2025; 10,000 ש"ח מ-1.1.2026; 5,000 ש"ח מ-1.6.2026 (רצפה קבועה).
 
 5. **Record retention / שמירת מסמכים:** Business records and invoices must be retained for 7 years per Israeli tax law.
 

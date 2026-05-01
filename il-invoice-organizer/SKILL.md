@@ -34,45 +34,53 @@ Parse the following fields from each invoice:
 | Net amount | סכום לפני מע"מ | Line items sum | Before VAT |
 | VAT amount | סכום מע"מ | VAT line | = Net * 0.18 |
 | Total amount | סכום כולל | Bottom | = Net + VAT |
-| Allocation number | מספר הקצאה | B2B invoices ≥ NIS 5,000 | SHAAM allocation required |
+| Allocation number | מספר הקצאה | B2B invoices above SHAAM threshold | SHAAM allocation required |
 
-Note: As of 2026 the SHAAM e-invoice allocation number (מספר הקצאה) is mandatory for B2B tax invoices with a pre-VAT amount of NIS 5,000 or more. Invoices above the threshold without an allocation number are not valid for VAT input deduction.
+SHAAM allocation threshold timeline (Israel Tax Authority, accelerated rollout):
+
+| Period | Threshold (pre-VAT) |
+|--------|---------------------|
+| 2025 (full year) | NIS 20,000 |
+| 1 Jan 2026 to 31 May 2026 | NIS 10,000 |
+| From 1 Jun 2026 | NIS 5,000 (permanent floor) |
+
+A B2B tax invoice above the threshold without a valid SHAAM allocation number (מספר הקצאה) is not eligible for VAT input deduction. Always check the threshold for the invoice issue date, not today's date.
 
 ### Step 3: Extract VAT (1/6 Rule)
-For Israeli invoices where only the total (gross) amount is visible:
+Israeli VAT is 18% (raised from 17% effective 1 January 2025). For invoices where only the total (gross) is visible:
 
 ```python
 # VAT extraction from gross amount (כלל השישית)
-vat_rate = 0.18  # 18% standard rate
+vat_rate = 0.18  # 18% standard rate (effective 1 Jan 2025)
 gross_amount = 1180  # סכום כולל מע"מ
 
 # Method: VAT = gross * (rate / (1 + rate)) = gross * (18/118)
 vat_amount = gross_amount * (vat_rate / (1 + vat_rate))
-# = 1170 * (0.18 / 1.18) = 1180 * 0.1525 = 180
+# = 1180 * (0.18 / 1.18) = 1180 * 0.1525... = 180.00
 
 net_amount = gross_amount - vat_amount
 # = 1180 - 180 = 1000
 ```
 
-Shortcut: VAT = Total / 6.556 (approximately 1/6 of the gross, hence "klal hashishit")
+Shortcut at 18%: VAT ≈ Total / 6.556 (the divisor is 118/18). The colloquial name "klal hashishit" (the 1/6 rule) predates the rate hike and is now an approximation, not a literal sixth.
 
 ### Step 4: Categorize by Tax Authority Standards
-Assign each expense to a Tax Authority category:
+Assign each expense to a Tax Authority category. Codes 1–12 align with `references/expense-categories.md` and the keyword-based auto-categorizer in `scripts/categorize_invoices.py`:
 
-| Category | Hebrew | Expense Code | Common Examples |
-|----------|--------|-------------|-----------------|
-| Salary & wages | שכר עבודה | 10 | Employee salaries, bonuses |
-| Subcontractors | קבלני משנה | 20 | Freelancer invoices |
-| Rent | שכירות | 30 | Office, warehouse rent |
-| Office supplies | חומרי משרד | 40 | Paper, toner, supplies |
-| Communications | תקשורת | 50 | Phone, internet, hosting |
-| Professional services | שירותים מקצועיים | 60 | Legal, accounting, consulting |
-| Vehicle expenses | רכב | 70 | Fuel, maintenance, insurance |
-| Travel | נסיעות | 80 | Flights, hotels, per diem |
-| Marketing | שיווק ופרסום | 90 | Advertising, events |
-| Insurance | ביטוח | 100 | Business insurance |
-| Depreciation | פחת | 110 | Equipment, computers |
-| Other | אחר | 999 | Miscellaneous |
+| Code | Hebrew | English | Common Examples |
+|:----:|--------|---------|-----------------|
+| 1 | חומרי גלם | Raw materials | Production materials, components |
+| 2 | קבלני משנה | Subcontractors | Freelancer invoices, outsourced services |
+| 3 | שכר עבודה | Wages and salaries | Employee salaries, bonuses, commissions |
+| 4 | ביטוח לאומי מעסיק | Employer NII | Employer share of Bituach Leumi |
+| 5 | שכירות | Rent | Office, warehouse, shop, workshop rent |
+| 6 | ביטוח | Insurance | Liability, professional, property, inventory |
+| 7 | חשמל ומים | Utilities | Electricity, water |
+| 8 | תקשורת | Communications | Phone, mobile, internet, cloud services |
+| 9 | הוצאות רכב | Vehicle expenses | Fuel, maintenance, vehicle insurance, parking |
+| 10 | פחת | Depreciation | Computers, furniture, equipment, vehicles |
+| 11 | הוצאות משרד | Office expenses | Stationery, paper, toner, postage |
+| 12 | הוצאות אחרות | Other expenses | Representation, travel, training, subscriptions |
 
 Use `scripts/categorize_invoices.py` for automatic categorization.
 
@@ -83,18 +91,19 @@ Determine supplier and customer business status:
 |--------|--------|--------------|--------------|
 | Osek Murshe | עוסק מורשה | Charges VAT, can deduct input VAT | Tax Invoice (300/305) |
 | Osek Patur | עוסק פטור | No VAT charged (under threshold) | Receipt only (320) |
-| Amuta (Non-profit) | עמותה | Usually no VAT | Receipt |
+| Hevra Peratit (HP) | חברה פרטית (ח"פ) | Charges VAT, TIN starts 51/52 | Tax Invoice |
+| Amuta (Non-profit) | עמותה | Usually no VAT, TIN starts 58 | Receipt |
 | Malkar (Non-profit) | מלכ"ר | No VAT | Receipt |
 
-Important: You can only deduct input VAT (mas tsumos) from tax invoices issued by Osek Murshe suppliers. Receipts from Osek Patur do not have VAT to deduct.
+Important: You can only deduct input VAT (mas tsumos) from tax invoices issued by Osek Murshe (or Hevra Peratit) suppliers. Receipts from Osek Patur do not have VAT to deduct.
 
 ### Step 6: Generate Accountant-Ready Export
-Organize the data for the accountant (ro'eh cheshbon):
+Organize the data for the accountant (ro'eh cheshbon).
 
 Output format (CSV/Excel):
 ```
 Date, Supplier, TIN, Invoice#, Category, Net, VAT, Total, Notes
-15/01/2025, חברת אלפא, 515000000, 1234, קבלני משנה, 10000, 1700, 11700, שירותי פיתוח
+15/01/2026, חברת אלפא, 515000000, 1234, קבלני משנה, 10000, 1800, 11800, שירותי פיתוח
 ```
 
 Include summary:
@@ -112,47 +121,58 @@ Actions:
 2. Parse: Extract supplier, amount, VAT, date from each
 3. Categorize: Assign Tax Authority category per Step 4
 4. Validate: Check TIN format, VAT calculation, allocation numbers
-5. Run `python scripts/categorize_invoices.py --input invoices.csv`
+5. Run `python scripts/categorize_invoices.py --input invoices.json --output categorized.json`
 6. Export: Generate accountant-ready CSV with summary
 Result: Organized expense report with VAT summary ready for accountant
 
 ### Example 2: VAT Extraction from Receipts
 User says: "I paid 5,850 NIS total for cloud services. What is the VAT portion?"
 Actions:
-1. Apply 1/6 rule: VAT = 5,850 * (0.18 / 1.18) = 892.37 NIS
+1. Apply the 18/118 rule: VAT = 5,850 * (18 / 118) = 892.37 NIS
 2. Net amount: 5,850 - 892.37 = 4,957.63 NIS
-3. Categorize: Communications (code 50) for cloud services
-4. Note: Verify supplier is Osek Murshe and issued tax invoice
-Result: VAT of 892.37 NIS extractable, net expense 4,957.63 NIS in Communications category
+3. Categorize: Communications (code 8) for cloud services
+4. Note: Verify supplier is Osek Murshe and issued a tax invoice
+Result: VAT of 892.37 NIS extractable, net expense 4,957.63 NIS in Communications (8)
 
 ### Example 3: Osek Patur Invoice Handling
 User says: "I got an invoice from a freelance designer, but there is no VAT line"
 Actions:
 1. Check: Is the supplier Osek Patur (עוסק פטור)?
 2. If Osek Patur: No VAT to deduct, record full amount as expense
-3. Categorize: Professional services (code 60) or Marketing (code 90)
+3. Categorize: Subcontractors (code 2) for freelance design work
 4. Note: Request the supplier's TIN and verify their status
 Result: Full amount recorded as expense with no VAT deduction, flagged for accountant
+
+### Example 4: Mixed-Use Vehicle Expense
+User says: "I got a fuel receipt for 2,340 NIS for a car I use for both work and personal trips"
+Actions:
+1. Extract VAT: 2,340 * 18 / 118 = 356.95 NIS (total VAT)
+2. Apply the vehicle rule: only 2/3 of VAT is deductible on a non-commercial vehicle
+3. Deductible VAT: 356.95 * 2/3 = 237.97 NIS
+4. Non-deductible VAT: 356.95 * 1/3 = 118.98 NIS
+5. Categorize: Vehicle expenses (code 9)
+Result: Total VAT 356.95 NIS, but only 237.97 NIS is deductible. The remaining 118.98 NIS is a non-deductible expense.
 
 ## Bundled Resources
 
 ### Scripts
-- `scripts/categorize_invoices.py` -- Categorizes Israeli invoices by Tax Authority expense codes, extracts VAT, and generates accountant-ready reports. Run: `python scripts/categorize_invoices.py --help`
+- `scripts/categorize_invoices.py` -- Categorizes Israeli invoices by Tax Authority expense codes (1–12), extracts VAT at 18%, validates business numbers (Luhn-like check digit), applies the vehicle 2/3 rule, and generates accountant-ready reports. Run: `python scripts/categorize_invoices.py --help`
 
 ### References
-- `references/expense-categories.md` -- Complete list of Tax Authority expense categories with codes, common examples, and special rules for deductibility (vehicle 2/3 rule, entertainment limits). Consult when categorizing unusual expenses.
+- `references/expense-categories.md` -- Complete list of Tax Authority expense categories (codes 1–12) with descriptions and common examples, plus special rules: vehicle 2/3 deduction, entertainment 80% income-tax cap, mixed-use proportional deductions, depreciation rates by asset type. Consult when categorizing unusual expenses.
 
 ## Gotchas
-- Agents often calculate VAT as `amount * 0.18` when extracting from a total, but the correct formula to extract VAT from a VAT-inclusive amount is `total / 1.18 * 0.18` (or equivalently `total * 18/118`). This "1/6 rule" is specific to Israeli bookkeeping.
+- Agents often calculate VAT as `amount * 0.18` when extracting from a total, but the correct formula to extract VAT from a VAT-inclusive amount is `total / 1.18 * 0.18` (or equivalently `total * 18/118`). This "1/6 rule" is specific to Israeli bookkeeping and the divisor changed from 117 to 118 when the rate moved to 18% in 2025.
 - Osek Patur (exempt dealer) invoices have no VAT component. Agents may still try to extract VAT from these invoices, producing incorrect bookkeeping entries.
 - Israeli invoice numbers are not globally unique. Different suppliers can have the same invoice number. Always index by supplier + invoice number combination.
 - Hebrew OCR on scanned invoices frequently misreads the characters vav (ו) and zayin (ז), and confuses final-mem (ם) with samekh (ס). Verify extracted amounts and names.
+- The SHAAM allocation-number threshold is staged (NIS 10,000 from 1 Jan 2026, dropping to NIS 5,000 from 1 Jun 2026). Apply the threshold that was in force on the invoice issue date, not today.
 
 ## Reference Links
 
 | Source | URL | What to Check |
 |--------|-----|---------------|
-| Israel Tax Authority | https://www.gov.il/he/departments/israel_tax_authority | Current VAT rate, e-invoice regulations, expense categories |
+| Israel Tax Authority | https://www.gov.il/he/departments/israel_tax_authority | Current VAT rate (18%), e-invoice regulations, expense categories |
 | SHAAM e-invoice portal | https://www.gov.il/he/service/digital-invoices-service | Allocation number threshold, how to verify a supplier's allocation |
 | Invoice compliance rules | https://www.gov.il/he/pages/invoices-format | Required fields and formats for a tax invoice |
 | Business lookup | https://www.gov.il/he/service/business-id-search | Verify a supplier's TIN and status (Osek Murshe / Osek Patur) |
@@ -162,12 +182,16 @@ Result: Full amount recorded as expense with no VAT deduction, flagged for accou
 
 ### Error: "VAT amount doesn't match"
 Cause: Rounding differences between line-item VAT and total VAT
-Solution: Israeli invoices may have rounding differences of up to 1 NIS. Use the VAT amount printed on the invoice (not recalculated). If no VAT line exists, use the 1/6 rule from Step 3.
+Solution: Israeli invoices may have rounding differences of up to 1 NIS. Use the VAT amount printed on the invoice (not recalculated). If no VAT line exists, use the 18/118 rule from Step 3. Differences greater than 1 NIS usually indicate either the wrong rate (legacy 17%) or a real invoice error, contact the supplier for a corrected invoice.
 
 ### Error: "Cannot determine business type"
 Cause: Invoice does not clearly state Osek Murshe or Osek Patur
-Solution: Look for "עוסק מורשה" on the invoice. Check TIN on Tax Authority website. If unclear, treat as Osek Patur (no VAT deduction) and flag for accountant review.
+Solution: Look for "עוסק מורשה" or "עוסק פטור" on the invoice. Check the TIN on the Tax Authority business lookup. If unclear, treat as Osek Patur (no VAT deduction) and flag for accountant review.
 
 ### Error: "Expense category unclear"
 Cause: Invoice description is vague or multi-category
-Solution: Use the primary purpose of the expense. When in doubt, assign to "Other" (code 999) and let the accountant reclassify. Common confusion: software subscriptions (Communications 50, not Office supplies 40).
+Solution: Use the primary purpose of the expense. When in doubt, assign to "Other expenses" (code 12) and let the accountant reclassify. Common confusion: software subscriptions belong in Communications (8), not Office expenses (11).
+
+### Error: "Missing SHAAM allocation number on a B2B invoice"
+Cause: A B2B tax invoice above the active threshold was issued without a SHAAM allocation number (מספר הקצאה)
+Solution: Determine the threshold in force on the invoice issue date (NIS 20,000 in 2025; NIS 10,000 from 1 Jan 2026; NIS 5,000 from 1 Jun 2026). If the invoice is above the threshold and lacks an allocation number, it is not valid for VAT input deduction. Ask the supplier to reissue with an allocation number, or record the invoice without claiming the input VAT and flag for the accountant.

@@ -24,9 +24,9 @@ from typing import Any
 # Constants
 # ---------------------------------------------------------------------------
 
-VAT_RATE = Decimal("0.17")
-VAT_DIVISOR = Decimal("117")
-VAT_MULTIPLIER = Decimal("17")
+VAT_RATE = Decimal("0.18")
+VAT_DIVISOR = Decimal("118")
+VAT_MULTIPLIER = Decimal("18")
 VAT_TOLERANCE_NIS = Decimal("1")
 ROUNDING = ROUND_HALF_UP
 
