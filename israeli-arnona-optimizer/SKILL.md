@@ -4,7 +4,7 @@ description: Calculate municipal property tax (arnona) for Israeli properties, c
 license: MIT
 allowed-tools: Bash(python:*) Read Edit Write WebFetch
 compatibility: Requires Python 3.10+ for calculator script
-version: 1.1.1
+version: 1.2.0
 ---
 
 # Israeli Arnona Optimizer
@@ -162,6 +162,16 @@ Result: The agent drafts a formal appeal letter in Hebrew addressed to the Haifa
 ### References
 - `references/arnona-rates-guide.md` -- Comprehensive guide to arnona rate structures, zone classifications, usage types, and billing cycles across Israeli municipalities. Consult when determining the correct rate for a specific property.
 - `references/arnona-discounts-guide.md` -- Complete reference for all arnona discount categories, eligibility criteria, required documentation, and municipality-specific variations. Consult when checking if a user qualifies for arnona discounts.
+
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| Kolzchut: Arnona | https://www.kolzchut.org.il/he/ארנונה | Plain-language guide to arnona obligations, discounts, and appeal rights |
+| gov.il: Property Tax (Arnona) | https://www.gov.il/he/departments/topics/property_tax_arnona | Official ministry topic page covering legislation and discount eligibility |
+| Bituach Leumi: Disability Benefits | https://www.btl.gov.il/benefits/Disability/Pages/default.aspx | Source documents for the disability percentages used in arnona discount eligibility |
+| Tel Aviv Municipality | https://www.tel-aviv.gov.il/ | Tel Aviv tzav arnona, current rates, online payment, appeals |
+| Jerusalem Municipality | https://www.jerusalem.muni.il/ | Jerusalem alef-heh zone rates, payment, discount applications |
 
 ## Gotchas
 - Arnona rates vary dramatically between municipalities. Agents may use Tel Aviv rates for Haifa properties or vice versa. Always verify rates against the specific municipality (iriya or mo'atza).
