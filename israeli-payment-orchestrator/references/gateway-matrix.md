@@ -32,15 +32,15 @@
 - **Sandbox:** Available
 - **Documentation:** https://www.payme.io/developers
 
-### Meshulam
-- **Base URL:** `https://sandbox.meshulam.co.il/api/` (sandbox)
+### Meshulam (Grow)
+- **Base URL:** `https://secure.meshulam.co.il/api/` (production); `https://sandbox.meshulam.co.il/api/` (sandbox)
 - **Auth:** API key + page code
 - **Format:** REST JSON
 - **Tokenization:** Yes
 - **3D Secure:** Supported
 - **Webhook:** POST callback
 - **Sandbox:** Available
-- **Documentation:** https://www.meshulam.co.il/developers
+- **Documentation:** https://grow-il.readme.io/reference/overview
 
 ### iCredit
 - **Base URL:** `https://icredit.rivhit.co.il/api/`

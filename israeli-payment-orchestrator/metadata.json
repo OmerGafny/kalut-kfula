@@ -1,6 +1,6 @@
 {
   "author": "skills-il",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "category": "tax-and-finance",
   "tags": {
     "he": [
@@ -8,7 +8,7 @@
       "סליקה",
       "שב\"א",
       "כרטיסי-אשראי",
-      "תשלומים",
+      "תשלומים-נדחים",
       "ישראל"
     ],
     "en": [
@@ -26,7 +26,7 @@
   },
   "display_description": {
     "he": "תזמור שערי תשלום ישראליים (Cardcom, Tranzila, PayMe, Meshulam, iCredit, Pelecard) עם ניתוב אחיד, fallback ותשלומים. כולל השוואת שערים, טיפול בתשלומים ועמידה בהנחיות בנק ישראל.",
-    "en": "Orchestrate Israeli payment gateways (Cardcom, Tranzila, PayMe, Meshulam, iCredit, Pelecard) with unified routing, fallback, and installments (tashlumim). Use when user asks about multi-gateway payment integration, \"slikat kartisim\", \"tashlumim\", payment routing, Shva network, BOI Directive 357, gateway comparison, or building a payment abstraction layer for Israeli merchants. Provides unified API patterns, installment handling, Shva clearing rules, and regulatory compliance. Do NOT use for single gateway setup (use cardcom-payment-gateway or tranzila-payment-gateway instead)."
+    "en": "Orchestrate Israeli payment gateways (Cardcom, Tranzila, PayMe, Meshulam, iCredit, Pelecard) with unified routing, fallback, and installments (tashlumim). Use when user asks about multi-gateway payment integration, \"slikat kartisim\", \"tashlumim\", payment routing, Shva network, BOI payment-services regulation, gateway comparison, or building a payment abstraction layer for Israeli merchants. Provides unified API patterns, installment handling, Shva clearing rules, and regulatory compliance. Do NOT use for single gateway setup (use cardcom-payment-gateway or tranzila-payment-gateway instead)."
   },
   "supported_agents": [
     "claude-code",
