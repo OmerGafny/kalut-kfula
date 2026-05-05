@@ -390,10 +390,12 @@ Grow מציעה סוגי דפי תשלום מוכנים מראש, כל אחד ע
 | iframe ריק ב-HTTP | HTTPS נדרש | הגישו את הדף שלכם דרך HTTPS |
 | iframe של Apple Pay נכשל | דומיין לא מאומת | השלימו אימות דומיין Apple דרך לוח הבקרה של Grow |
 
-## מקורות
+## קישורי עזר
 
-- [תיעוד API של Grow](https://grow-il.readme.io/)
-- [סקירת מוצרים](https://grow-il.readme.io/docs/about-grow-products)
-- [מסמך API](https://grow-il.readme.io/reference/overview-6)
-- [תיעוד Webhooks](https://grow-il.readme.io/docs/overview-7)
-- [מדריך אינטגרציית Wix](https://support.wix.com/en/article/connecting-grow-by-meshulam-as-a-payment-provider)
+| מקור | קישור | מה לבדוק |
+|------|-------|---------|
+| תיעוד API של Grow | https://grow-il.readme.io/reference/overview | endpoints נוכחיים, קודי אמצעי תשלום, מבני בקשה ותגובה |
+| תיעוד Grow | https://grow-il.readme.io/docs | טוקניזציה, חיובים חוזרים, תשלומי J-code, webhooks |
+| סקירת מוצרי Grow | https://grow-il.readme.io/docs/about-grow-products | אילו מוצרים קיימים ב-Grow ואיך הם ממופים ל-API |
+| כתובת בסיס פרודקשן (Meshulam) | https://secure.meshulam.co.il/ | אישור שכתובת הפרודקשן נכונה, לא להפנות תעבורה לסביבת sandbox |
+| מדריך אינטגרציית Wix | https://support.wix.com/en/article/connecting-grow-by-meshulam-as-a-payment-provider | הדרכה ברמה גבוהה למרכזי Wix |

@@ -396,10 +396,12 @@ Grow offers pre-configured payment page types, each with a different `pageCode`:
 | iframe blank on HTTP | HTTPS required | Serve your page over HTTPS |
 | Apple Pay iframe fails | Domain not verified | Complete Apple domain verification via Grow dashboard |
 
-## References
+## Reference Links
 
-- [Grow API Documentation](https://grow-il.readme.io/)
-- [Grow Product Overview](https://grow-il.readme.io/docs/about-grow-products)
-- [API Reference](https://grow-il.readme.io/reference/overview-6)
-- [Webhook Documentation](https://grow-il.readme.io/docs/overview-7)
-- [Wix Integration Guide](https://support.wix.com/en/article/connecting-grow-by-meshulam-as-a-payment-provider)
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| Grow API Reference | https://grow-il.readme.io/reference/overview | Current endpoints, payment-method codes, request/response shapes |
+| Grow Documentation | https://grow-il.readme.io/docs | Tokenization, recurring, J-code installments, webhooks |
+| Grow Product Overview | https://grow-il.readme.io/docs/about-grow-products | Which Grow products exist and how they map to API surface |
+| Meshulam (Grow) Production Base | https://secure.meshulam.co.il/ | Confirms production host; do not point production traffic at sandbox.meshulam.co.il |
+| Wix Integration Guide | https://support.wix.com/en/article/connecting-grow-by-meshulam-as-a-payment-provider | High-level integration walkthrough for Wix merchants |
