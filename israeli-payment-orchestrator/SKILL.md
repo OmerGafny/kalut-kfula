@@ -2,7 +2,7 @@
 name: israeli-payment-orchestrator
 description: Orchestrate Israeli payment gateways (Cardcom, Tranzila, PayMe, Meshulam, iCredit, Pelecard) with unified routing, fallback, and installments (tashlumim). Use when user asks about multi-gateway payment integration, "slikat kartisim", "tashlumim", payment routing, Shva network, BOI payment-services regulation, gateway comparison, or building a payment abstraction layer for Israeli merchants. Provides unified API patterns, installment handling, Shva clearing rules, and regulatory compliance. Do NOT use for single gateway setup (use cardcom-payment-gateway or tranzila-payment-gateway instead).
 license: MIT
-version: 1.0.2
+version: 1.1.0
 compatibility: Works with Claude Code, Cursor, GitHub Copilot, Windsurf, OpenCode, Codex. Python 3.8+ for helper scripts.
 ---
 
@@ -188,6 +188,17 @@ Result: Installment payment configured with cost breakdown for merchant
 
 ### References
 - `references/gateway-matrix.md` -- Detailed feature comparison of Israeli payment gateways: API formats, installment support, recurring billing, hosted pages, settlement timelines, and fee structures. Consult when evaluating or switching gateways.
+
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| Cardcom | https://www.cardcom.co.il/ | Current API surface, pricing, supported card types |
+| Tranzila Documentation | https://docs.tranzila.com/ | Form-encoded API parameters, supplier code (terminalname) flows |
+| PayMe Developer Docs | https://www.payme.io/developers | Bearer-token REST JSON API, Bit/Apple Pay support |
+| Meshulam (Grow) Reference | https://grow-il.readme.io/reference/overview | Production base = secure.meshulam.co.il (do NOT use sandbox.meshulam.co.il in prod) |
+| iCredit | https://icredit.rivhit.co.il/ | Group private token + credentials auth scheme |
+| Bank of Israel: Payment Systems | https://www.boi.org.il/en/banking/payment-systems/ | Authoritative source for the current Israeli payment-services regulation framework |
 
 ## Gotchas
 - Each Israeli payment gateway in this skill (Cardcom, Tranzila, PayMe, Meshulam, iCredit, Pelecard) has a completely different API format: Cardcom uses JSON, Tranzila uses form-encoded key-value pairs, Meshulam uses multipart/form-data with a separate page-code parameter, and PayMe uses bearer-token JSON. Agents may apply one gateway's format to another.

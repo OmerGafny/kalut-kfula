@@ -168,8 +168,19 @@ async def process_with_fallback(request: PaymentRequest) -> PaymentResult:
 ### חומרי עזר
 - `references/gateway-matrix.md` -- השוואת פיצ'רים מפורטת של שערי תשלום ישראליים: פורמטי API, תמיכת תשלומים, חיוב חוזר, דפים מאוחסנים, לוחות זמני גמר חשבון ומבני עמלות. היעזרו בקובץ זה בעת הערכה או החלפת שערים.
 
+## קישורי עזר
+
+| מקור | קישור | מה לבדוק |
+|------|-------|---------|
+| Cardcom | https://www.cardcom.co.il/ | משטח ה-API הנוכחי, תמחור, סוגי כרטיסים נתמכים |
+| Tranzila — תיעוד | https://docs.tranzila.com/ | פרמטרי API ב-form-encoded, זרימת supplier code (terminalname) |
+| PayMe — תיעוד מפתחים | https://www.payme.io/developers | API REST JSON עם Bearer token, תמיכת Bit/Apple Pay |
+| Meshulam (Grow) — Reference | https://grow-il.readme.io/reference/overview | בסיס פרודקשן secure.meshulam.co.il (אל תשתמשו ב-sandbox.meshulam.co.il בפרודקשן) |
+| iCredit | https://icredit.rivhit.co.il/ | סכמת אימות Group private token + credentials |
+| בנק ישראל: מערכות תשלומים | https://www.boi.org.il/he/banking/payment-systems/ | מקור רשמי למסגרת הרגולציה הנוכחית של מערכות תשלום ישראליות |
+
 ## מלכודות נפוצות
-- לכל שער תשלומים ישראלי (קארדקום, טרנזילה, Grow) פורמט API שונה לחלוטין: קארדקום משתמשת ב-JSON, טרנזילה ב-form-encoded, ו-Grow ב-multipart/form-data. סוכנים עלולים להחיל פורמט של שער אחד על אחר.
+- לכל שער תשלומים בכישור הזה (Cardcom, Tranzila, PayMe, Meshulam, iCredit, Pelecard) פורמט API שונה לחלוטין: Cardcom משתמשת ב-JSON, Tranzila ב-form-encoded, Meshulam ב-multipart/form-data עם פרמטר page-code נפרד, ו-PayMe ב-JSON עם Bearer token. סוכנים עלולים להחיל פורמט של שער אחד על אחר.
 - עיבוד תשלומים בישראל דורש רישום עסקי ישראלי (עוסק מורשה/פטור). סוכנים עלולים להציע להקים עיבוד תשלומים לפני שמאמתים שלעסק יש רישום תקין ברשות המסים.
 - דרישות PCI DSS בישראל עוקבות אחרי אותו תקן בינלאומי, אבל סולקים ישראליים (ישראכרט, Visa CAL) עשויים להחיל דרישות מקומיות נוספות. סוכנים עלולים לייצר קוד תואם PCI שמפספס שדות ספציפיים לסולקים ישראליים.
 - החזרי Bit (התשלום הנייד הדומיננטי בישראל) משתמשים ב-endpoint שונה מהחזרי כרטיס אשראי ברוב השערים. סוכנים עלולים להשתמש ב-endpoint של החזר כרטיס עבור עסקאות Bit.
