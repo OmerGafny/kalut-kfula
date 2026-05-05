@@ -16,8 +16,8 @@
 
 | Company | Hebrew | MCP Support | Notes |
 |---------|--------|-------------|-------|
-| Visa Cal (CAL) | visa cal | israeli-bank-mcp | Visa/MasterCard/Diners. Owned by Discount Bank (divestment pending) |
-| Max (formerly Leumi Card) | max | israeli-bank-mcp | Mastercard/Visa. Owned by Clal Insurance (since 2023) |
+| Visa Cal (CAL) | visa cal | israeli-bank-mcp | Visa/MasterCard/Diners. Verify current ownership against Bank of Israel filings; the card-issuer ownership landscape has been actively shifting under BOI competition rulings |
+| Max (formerly Leumi Card) | max | israeli-bank-mcp | Mastercard/Visa. Verify current ownership against Bank of Israel filings; the card-issuer ownership landscape has been actively shifting |
 | Isracard | isracard | israeli-bank-mcp | Isracard/Mastercard |
 | American Express Israel | amex | israeli-bank-mcp | Amex cards |
 
@@ -35,11 +35,6 @@
 - Adds transaction analysis features (spending breakdowns, recurring charge detection)
 - Uses SQLite for local data storage
 - GitHub: github.com/glekner/il-bank-mcp
-
-### Asher MCP
-- Alternative interface
-- Same underlying scraper library
-- Different API surface
 
 ## Authentication Notes
 - All Israeli banks require 2FA (two-factor authentication)
