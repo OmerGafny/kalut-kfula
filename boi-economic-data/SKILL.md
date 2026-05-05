@@ -1,9 +1,9 @@
 ---
 name: boi-economic-data
-description: "Fetch and analyze Bank of Israel (BOI) economic data: interest rates, CPI (madad hamchirim), exchange rates (sha'ar yatzig), and CBS statistics. Use when user asks about BOI interest rate, ribit Bank Israel, exchange rates, sha'ar yatzig, CPI index, madad, inflation data, or Israeli economic indicators. Foundation skill for Israeli financial analytics. Provides API access to data.boi.org.il and CBS data. Do NOT use for stock market data (use tase-stock-analysis instead) or for currency conversion (use shekel-currency-converter instead)."
+description: "Fetch and analyze Bank of Israel (BOI) economic data: interest rates, CPI (madad hamchirim), exchange rates (sha'ar yatzig), and CBS statistics. Use when user asks about BOI interest rate, ribit Bank Israel, exchange rates, sha'ar yatzig, CPI index, madad, inflation data, or Israeli economic indicators. Foundation skill for Israeli financial analytics. Provides API access to the BOI SDMX API at edge.boi.gov.il and CBS data. Do NOT use for stock market data (use tase-stock-analysis instead) or for currency conversion (use shekel-currency-converter instead)."
 license: MIT
 compatibility: "Requires network access for Bank of Israel API. Works with Claude Code, Cursor, GitHub Copilot, Windsurf, OpenCode, Codex."
-version: 1.0.1
+version: 1.0.2
 ---
 
 # BOI Economic Data
@@ -23,16 +23,16 @@ Ask the user what economic data they need:
 | Monetary aggregates | אגרגטים מוניטריים | BOI | Monthly |
 
 ### Step 2: Fetch Data from BOI API
-The Bank of Israel provides public data via REST API at `data.boi.org.il`. Note: API endpoint structure may change, verify current endpoints before use.
+The Bank of Israel provides public data through the SDMX REST API at `edge.boi.gov.il`. The API returns SDMX-XML by default; pass an `Accept: application/json` header (or use the helper script) to get JSON. Note: dataflow paths can shift; the canonical reference is `references/boi-api.md`.
 
 **Exchange Rates (Sha'ar Yatzig):**
 ```
-GET https://data.boi.org.il/api/data/EXR?format=json&startperiod={date}&endperiod={date}
+GET https://edge.boi.gov.il/FusionEdgeServer/sdmx/v2/data/dataflow/BOI/EXR/1.0?startperiod={date}&endperiod={date}&c[CURRENCY]=USD
 ```
 
 **Interest Rate:**
 ```
-GET https://data.boi.org.il/api/data/IR_INTEREST?format=json
+GET https://edge.boi.gov.il/FusionEdgeServer/sdmx/v2/data/dataflow/BOI/IR_INTEREST/1.0
 ```
 
 Use `scripts/fetch_boi_rates.py` for simplified data fetching.
