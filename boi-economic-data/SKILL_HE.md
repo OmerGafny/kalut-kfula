@@ -3,7 +3,7 @@ name: boi-economic-data
 description: "Fetch and analyze Bank of Israel (BOI) economic data: interest rates, CPI (madad hamchirim), exchange rates (sha'ar yatzig), and CBS statistics. Use when user asks about BOI interest rate, ribit Bank Israel, exchange rates, sha'ar yatzig, CPI index, madad, inflation data, or Israeli economic indicators. Foundation skill for Israeli financial analytics. Provides API access to the BOI SDMX API at edge.boi.gov.il and CBS data. Do NOT use for stock market data (use tase-stock-analysis instead) or for currency conversion (use shekel-currency-converter instead)."
 license: MIT
 compatibility: "Requires network access for Bank of Israel API. Works with Claude Code, Cursor, GitHub Copilot, Windsurf, OpenCode, Codex."
-version: 1.0.2
+version: 1.1.0
 ---
 
 # נתונים כלכליים מבנק ישראל
@@ -127,6 +127,15 @@ GET https://edge.boi.gov.il/FusionEdgeServer/sdmx/v2/data/dataflow/BOI/IR_INTERE
 
 ### חומרי עזר
 - `references/boi-api.md` -- endpoints של ה-API של בנק ישראל (פורמט SDMX), אימות, rate limits ומבנה נתונים. תיעזרו בקובץ הזה כשאתם בונים אינטגרציות או מפלצים בעיות בקריאות API.
+
+## קישורי עזר
+
+| מקור | קישור | מה לבדוק |
+|------|-------|---------|
+| מידע סטטיסטי בנק ישראל | https://www.boi.org.il/he/economic-roles/statistical-information/ | פורטל רשמי לריבית, שערי חליפין ואגרגטים מוניטריים |
+| נקודת כניסה ל-BOI SDMX API | https://edge.boi.gov.il/FusionEdgeServer/sdmx/v2/ | ה-endpoint החי שבו משתמש `scripts/fetch_boi_rates.py` |
+| הודעות בנק ישראל לעיתונות | https://www.boi.org.il/he/communication-and-publications/press-releases/ | החלטות ריבית של הוועדה המוניטרית ופרוטוקולים נלווים |
+| מדד המחירים לצרכן (למ"ס) | https://www.cbs.gov.il/he/subjects/Pages/מדד-המחירים-לצרכן.aspx | לוח פרסום חודשי, מדד היסטורי ומבנה משקלים |
 
 ## מלכודות נפוצות
 - סוכנים שולחים הרבה פעמים שאילתות לשערים בימי שישי-שבת, אבל השער היציג מתפרסם רק בימי עסקים (ראשון-חמישי). תשתמשו בשער האחרון מיום חמישי לסופי שבוע.

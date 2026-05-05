@@ -3,7 +3,7 @@ name: boi-economic-data
 description: "Fetch and analyze Bank of Israel (BOI) economic data: interest rates, CPI (madad hamchirim), exchange rates (sha'ar yatzig), and CBS statistics. Use when user asks about BOI interest rate, ribit Bank Israel, exchange rates, sha'ar yatzig, CPI index, madad, inflation data, or Israeli economic indicators. Foundation skill for Israeli financial analytics. Provides API access to the BOI SDMX API at edge.boi.gov.il and CBS data. Do NOT use for stock market data (use tase-stock-analysis instead) or for currency conversion (use shekel-currency-converter instead)."
 license: MIT
 compatibility: "Requires network access for Bank of Israel API. Works with Claude Code, Cursor, GitHub Copilot, Windsurf, OpenCode, Codex."
-version: 1.0.2
+version: 1.1.0
 ---
 
 # BOI Economic Data
@@ -127,6 +127,15 @@ Result: Exact CPI adjustment with new rent calculation
 
 ### References
 - `references/boi-api.md` -- Bank of Israel API endpoints (SDMX format), authentication, rate limits, and data structure. Consult when building integrations or troubleshooting API calls.
+
+## Reference Links
+
+| Source | URL | What to Check |
+|--------|-----|---------------|
+| BOI Statistical Information | https://www.boi.org.il/en/economic-roles/statistical-information/ | Official portal for interest rates, exchange rates, monetary aggregates |
+| BOI SDMX API root | https://edge.boi.gov.il/FusionEdgeServer/sdmx/v2/ | Live API entry point used by `scripts/fetch_boi_rates.py` |
+| BOI Press Releases | https://www.boi.org.il/en/communication-and-publications/press-releases/ | Most recent Monetary Committee rate decisions and accompanying minutes |
+| CBS Consumer Price Index | https://www.cbs.gov.il/en/subjects/Pages/Consumer-Price-Index.aspx | Current monthly CPI release schedule, historical index, weighting structure |
 
 ## Gotchas
 - Agents often query BOI exchange rates for Friday or Saturday, but the representative rate (sha'ar yatzig) is only published on business days (Sunday-Thursday). Use the last available Thursday rate for weekends.
