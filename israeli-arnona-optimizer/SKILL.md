@@ -4,7 +4,7 @@ description: Calculate municipal property tax (arnona) for Israeli properties, c
 license: MIT
 allowed-tools: Bash(python:*) Read Edit Write WebFetch
 compatibility: Requires Python 3.10+ for calculator script
-version: 1.0.1
+version: 1.1.1
 ---
 
 # Israeli Arnona Optimizer
@@ -32,7 +32,7 @@ python scripts/arnona-calculator.py --municipality "tel-aviv" --area 80 --zone A
 The calculator applies the correct rate per sqm based on the municipality's published rate tables. Key rate structures:
 
 - **Tel Aviv-Yafo**: Rates range from approximately 75 to 130 NIS/sqm/year for residential depending on zone (zones 1-4). Commercial rates are 2-4x higher.
-- **Jerusalem**: Rates range from approximately 55 to 95 NIS/sqm/year for residential. Divided into zones 1-5.
+- **Jerusalem**: Rates range from approximately 55 to 95 NIS/sqm/year for residential. Divided into 5 zones using Hebrew letters alef through heh (א through ה).
 - **Haifa**: Rates range from approximately 50 to 90 NIS/sqm/year for residential. Lower overall compared to Tel Aviv.
 - **Beer Sheva**: Rates range from approximately 35 to 60 NIS/sqm/year for residential. Among the lowest for major cities.
 
@@ -180,7 +180,7 @@ Cause: The discount type specified does not match one of the supported discount 
 Solution: Run `python scripts/arnona-calculator.py --list-discounts` to see all supported discount categories. Common mistakes include using "immigrant" instead of "oleh", or "senior" instead of "elderly". The supported categories are: oleh, soldier, elderly, disabled, low-income, student, single-parent, large-family, bereaved, holocaust-survivor.
 
 ### Error: "Zone not valid for this municipality"
-Cause: Each municipality uses its own zone classification system. Tel Aviv uses numbered zones (1-4), Jerusalem uses numbered zones (1-5), and other cities have their own systems.
+Cause: Each municipality uses its own zone classification system. Tel Aviv uses numbered zones (1-4), Jerusalem uses Hebrew-letter zones alef through heh (א-ה), and other cities have their own systems.
 Solution: Check the zone classification for your specific municipality. If unsure of your zone, look at a previous arnona bill (it shows the zone), or contact the municipality's arnona department. The `references/arnona-rates-guide.md` file lists the zone systems for each supported municipality.
 
 ### Error: "Cannot determine appeal deadline"
