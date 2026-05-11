@@ -42,27 +42,36 @@ Self-employed freelancers pay Bituach Leumi monthly in advance (mkdamot). Paymen
 
 Payment is based on the annual assessment (shuma) from Bituach Leumi. The advance amount may be adjusted after the annual tax return is filed.
 
-## Annual Tax Report (Doch Shnati)
+## Annual Tax Report (Doch Shnati / Form 1301)
 
-- **Standard deadline:** April 30 of the following year
-- **Online filers:** May get until May 31 or June 30 (depends on the Tax Authority announcement each year)
-- **With accountant extension:** Typically extended to May 31, July 31, or later (depends on the accountant's arrangement with the Tax Authority)
+For tax year 2025 filed in 2026 (verify each year on the Tax Authority service page for Form 1301):
+
+- **Paper / non-online filers:** May 31, 2026
+- **Online filers:** June 30, 2026 (online filing is mandatory for most filers)
+- **With accountant extension:** typically pushed to July 31 or later, per the accountant's arrangement with the Tax Authority
 - The annual report is filed with the Tax Authority (mas hachnasa) and includes all income, expenses, and deductions for the tax year
+- **Do not confuse with the osek patur annual turnover declaration**, which is a separate filing to the VAT office due January 31. The income-tax annual report is a different document and has different deadlines.
 
 ## Advance Tax Payments (Mkdamot Mas Hachnasa)
 
-Freelancers may be required to pay income tax advances (mkdamot) throughout the year:
+Freelancers may be required to pay income tax advances (mkdamot) throughout the year. The frequency is set in the Tax Authority assessment letter and determines the deadline:
+
+### Monthly Filers
+Deadline: **15th of the month following the reporting month** (for example, January advance due February 15).
+
+### Bi-Monthly Filers
+Deadline: **19th of the month following the bi-monthly period.**
 
 | Period | Payment Deadline |
 |--------|-----------------|
-| January-February | March 15 |
-| March-April | May 15 |
-| May-June | July 15 |
-| July-August | September 15 |
-| September-October | November 15 |
-| November-December | January 15 (following year) |
+| January-February | March 19 |
+| March-April | May 19 |
+| May-June | July 19 |
+| July-August | September 19 |
+| September-October | November 19 |
+| November-December | January 19 (following year) |
 
-The advance amount is set by the Tax Authority based on the previous year's income. Payment coupons (shoverim) are sent at the beginning of the tax year.
+The advance amount is set by the Tax Authority based on the previous year's income. Payment coupons (shoverim) are sent at the beginning of the tax year. If a deadline falls on Shabbat or a holiday, it shifts to the next business day.
 
 ## Shabbat and Holiday Adjustments
 
@@ -85,7 +94,7 @@ Osek patur freelancers have fewer filing obligations:
 - **No VAT returns:** exempt from VAT filing
 - **Annual VAT declaration:** by January 31 of the following year, report previous year's turnover to the VAT office
 - **Bituach Leumi:** same monthly schedule as above
-- **Annual tax report:** same deadline (April 30, with possible extensions). Esek za'ir (micro business) may be exempt from the annual report.
+- **Annual tax report:** same deadline as other filers (Form 1301, paper May 31 / online June 30 for 2025 filed in 2026). Esek za'ir (micro business) may be exempt from the annual report.
 - **Threshold monitoring:** track revenue throughout the year; if the annual threshold (122,833 NIS for 2026) is exceeded, must convert to osek murshe
 
 ## Detailed VAT Reporting (From 2026)
