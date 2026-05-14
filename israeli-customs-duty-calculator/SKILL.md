@@ -1,6 +1,6 @@
 ---
 name: israeli-customs-duty-calculator
-description: "Classify products into Israeli 8-digit HS codes and calculate full landed cost for imports to Israel: customs duty, VAT 18%, and purchase tax (mas kniya). Use when user asks about Israel import tax, personal import threshold, customs duty on an online order from Amazon/AliExpress, FTA preferences from US/EU/UK/Canada, Shaar Olami tariff lookup, or the cost of bringing goods into Israel. Do NOT use for domestic VAT bookkeeping (use il-invoice-organizer) or for export documentation (use israeli-export-shipping-kit)."
+description: "Classify products into Israeli 8-digit HS codes and calculate full landed cost for imports to Israel: customs duty, VAT 18%, and purchase tax (mas kniya). Use when user asks about Israel import tax, personal import threshold, customs duty on an online order from Amazon/AliExpress, FTA preferences from US/EU/UK/Canada, Shaar Olami tariff lookup, or the cost of bringing goods into Israel. Do NOT use for domestic VAT bookkeeping (use israeli-vat-reporting) or for export documentation (use israeli-export-shipping-kit)."
 license: MIT
 compatibility: "Works with Claude Code, Cursor, GitHub Copilot, Windsurf, OpenCode, Codex, Antigravity, Gemini CLI. Python 3.8+ for helper scripts."
 ---
@@ -23,9 +23,11 @@ Importing goods into Israel (whether a single Amazon order or a commercial shipm
 | Gift | Individual sending to an Israeli | Treated as personal import, no special exemption |
 | Aliyah / oleh hadash belongings | New immigrant | Separate oleh exemption, consult the Aliyah unit |
 
+**Courier vs postal clearance:** how the parcel arrives changes who clears it. Courier shipments (DHL, FedEx, UPS) are self-cleared by the courier, which then bills the importer the duty, VAT, and a handling fee. Israel Post parcels go through a separate postal clearance process: low-value items can clear automatically, while items above the threshold get a payment demand the recipient settles before delivery. The tax math is the same either way; the fees and timeline differ.
+
 ### Step 2: Check the personal import threshold
 
-As of April 2026, the personal import VAT exemption is USD 75 (cost of goods, excluding shipping and insurance). The draft order from November 2025 that raised the threshold to 150 dollars was revoked by the Knesset on 24 February 2026.
+As of May 2026, the personal import VAT exemption is USD 75 (cost of goods, excluding shipping and insurance). The draft order from November 2025 that raised the threshold to 150 dollars was revoked by the Knesset on 24 February 2026.
 
 - Below USD 75: no customs, no VAT, no purchase tax
 - USD 75 to USD 500 (approx): VAT + purchase tax typically apply, customs duty is often waived for personal imports
@@ -83,6 +85,7 @@ A valid origin proof can eliminate the duty (but not VAT or purchase tax).
 | United Kingdom | UK-Israel Trade and Partnership Agreement (2019) | EUR.1 movement certificate, or invoice declaration under 6000 euros |
 | Canada | Modernized CIFTA (September 2019) | Form B239 certificate of origin |
 | EFTA (CH, NO, IS, LI) | EFTA-Israel Free Trade Agreement | EUR.1 movement certificate |
+| Mercosur (BR, AR, UY, PY) | Mercosur-Israel FTA (in force June 2010) | Mercosur-Israel certificate of origin |
 
 See `references/fta-preferences.md` for details and pitfalls.
 
@@ -126,7 +129,7 @@ Actions:
 5. VAT at 18 percent on (CIF + duty) is still due.
 6. Israel does NOT accept electronic signatures on EUR.1; the supplier must post the original.
 
-Result: Origin-prefereed landed cost is CIF plus 18 percent VAT plus broker fees. Without a valid EUR.1, full duty applies.
+Result: Origin-preferred landed cost is CIF plus 18 percent VAT plus broker fees. Without a valid EUR.1, full duty applies.
 
 ## Bundled Resources
 

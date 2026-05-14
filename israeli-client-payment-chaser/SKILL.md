@@ -10,7 +10,17 @@ compatibility: Works with Claude Code, OpenClaw, Cursor. OpenClaw recommended fo
 
 ## Instructions
 
-### Step 1: Import/Track Invoice Aging
+### Step 1: Establish the Statutory Payment Deadline
+Before chasing anything, fix the date the payment became legally late. This is governed by the **Payment Ethics to Suppliers Law, 5777-2017 (חוק מוסר תשלומים לספקים, תשע"ז-2017)**.
+
+- **Default term when no payment term was agreed:** 45 days. For a private business the clock runs from the end of the month in which the invoice was submitted; for state bodies it runs 45 days from invoice submission; local authorities pay within 45 days from the end of the month the invoice was issued. Engineering and construction contracts have longer caps (up to 85 days from submission, or 70 days from month-end).
+- An agreed contractual term overrides the default, but the law caps how far it can be pushed out.
+- Once the statutory (or agreed) due date passes, the debt is legally late: linkage and interest attach automatically, with no need for the creditor to "declare" lateness.
+- **Late-payment interest (dmei pigurim / ribit pigurim)** under this law accrues from the due date at the Accountant General's rate. Do NOT quote a self-invented percentage in a reminder or demand letter. State that statutory late-payment interest applies from the due date and that the exact rate is the current Accountant General rate, or have the user confirm the rate with their accountant. See references/legal-escalation.md.
+
+This statutory deadline, not a generic net-30/60/90 assumption, is what the aging buckets in Step 2 should be measured against.
+
+### Step 2: Import/Track Invoice Aging
 Import outstanding invoices (from israeli-e-invoice output, if available, or manual entry) and categorize by aging buckets:
 
 | Bucket | Age | Status |
@@ -28,7 +38,7 @@ Track per-client details:
 
 Store tracking data in persistent memory for ongoing monitoring across sessions. If persistent memory is unavailable, export as `payment-chaser-data.json` in the working directory and reload it at the start of each session.
 
-### Step 2: Configure Graduated Reminder Schedule
+### Step 3: Configure Graduated Reminder Schedule
 Set up a Shabbat/chagim-aware reminder escalation sequence. **No reminders may be sent on Shabbat (Friday sunset to Saturday sunset) or Jewish holidays.** If a scheduled reminder falls on a blocked day, move it to the next business day (typically Sunday). See references/legal-escalation.md for major holiday dates.
 
 - **Day 30, Friendly WhatsApp:**
@@ -46,7 +56,7 @@ Set up a Shabbat/chagim-aware reminder escalation sequence. **No reminders may b
 
 See references/reminder-templates.md for complete, customizable templates at each stage.
 
-### Step 3: Generate Hebrew Demand Letters (Michtav Hitchayvut)
+### Step 4: Generate Hebrew Demand Letters (Michtav Hitchayvut)
 Generate a formal Hebrew demand letter at the 60 or 90 day mark. The letter must include:
 
 1. **Creditor details:** Full name/business name, address, osek murshe/patur number
@@ -56,9 +66,14 @@ Generate a formal Hebrew demand letter at the 60 or 90 day mark. The letter must
 5. **Payment deadline:** Typically 14 days from letter date
 6. **Warning of legal action:** Clear statement that failure to pay will result in legal proceedings
 
-**Interest calculation:** As per the Adjudication of Interest and Linkage Law (חוק פסיקת ריבית והצמדה), interest on business debts accrues from the invoice due date. The rate is the Bank of Israel rate plus a margin. Verify the current rate at boi.org.il. Current Bank of Israel rate: 4.00% (held unchanged at the March 30, 2026 decision).
+**Interest calculation, two distinct statutes (do not conflate them):**
 
-**Amendment 9 interest reform (effective January 1, 2025):** The reform split late payment charges into "interest" (ribit) and "late payment fees" (dmei pigurim), and eliminated compound interest on enforcement debts. Late payment fees now accrue quarterly (starting 3 months after the due date) rather than compounding. When calculating interest for demand letters, use the simple interest method per the reformed law.
+1. **Interest a supplier may claim pre-suit** is governed by the Payment Ethics to Suppliers Law, 5777-2017. Late-payment interest (dmei pigurim) runs from the statutory or agreed due date at the **Accountant General's rate**. This is the figure to reference in a demand letter. It is NOT the Bank of Israel monetary-policy rate. Do not write a hard percentage into the letter unless the user's accountant has confirmed the current Accountant General rate; otherwise state that statutory late-payment interest applies from the due date.
+2. **Interest a court adjudicates on a judgment** is governed by the Adjudication of Interest and Linkage Law (חוק פסיקת ריבית והצמדה). The court sets interest plus CPI linkage (hatzmada) from the due date as part of the judgment. The agent does not compute this; the court does.
+
+**Do not quote the Bank of Israel base rate (currently 4.00%, the monetary-policy rate) as if it were the statutory late-payment rate.** They are different numbers serving different purposes.
+
+**2024-2025 regulations on late-payment charges:** Regulations effective January 1, 2025 split late charges into "interest" (ribit) and "late payment fees" (dmei pigurim) and eliminated compound interest on enforcement debts. Late payment fees now accrue quarterly (starting 3 months after the due date) rather than compounding. When estimating amounts for a demand letter, use the simple-interest method per the reformed regime, and verify the published quarterly rate.
 
 **Delivery options:**
 - Registered mail (doar rashum / דואר רשום): provides legal proof of sending. Keep the postal receipt.
@@ -77,6 +92,14 @@ Record and follow up on payment commitments:
 
 ### Step 5: Evaluate Small Claims Court (Tvi'ot Ktanot) Eligibility
 When a debt reaches 90+ days and collection efforts have failed, assess Small Claims Court eligibility:
+
+**Decide first: self-serve or involve a lawyer.** Small Claims is designed for self-representation, but recommend the user consult a lawyer instead of self-filing when any of these apply:
+- The debtor genuinely disputes liability (claims the work was defective, never ordered, or already paid).
+- The debtor appears insolvent or is in liquidation/insolvency proceedings (a judgment against an empty shell is worthless; a lawyer can advise on priority and timing).
+- The debt is near the statute-of-limitations deadline (3 years for commercial debts) and a procedural mistake could forfeit the claim entirely.
+- The debtor is cross-border (outside Israel), which raises jurisdiction and enforcement questions Small Claims cannot handle.
+- The amount exceeds the Small Claims threshold (must go to Magistrate Court, which requires representation).
+Otherwise, a documented, undisputed invoice under the threshold is a good self-serve candidate.
 
 **Threshold:** Up to 39,900 NIS (as of January 1, 2026; verify current amount at the courts administration website, updated periodically).
 
@@ -97,7 +120,16 @@ For amounts exceeding the Small Claims threshold, the claim must go to Magistrat
 
 See references/legal-escalation.md for the complete filing process.
 
-### Step 6: Generate Aging Reports and Cash Flow Forecasts
+### Step 6: Open an Enforcement Office (Hotza'a LaPo'al) File to Collect
+A Small Claims judgment is not money in the bank. To actually collect, the creditor must open an enforcement file with the Enforcement and Collection Authority (Rashut HaAchifa veHaGviya).
+
+- **After a judgment:** A request to enforce a monetary judgment can be filed only once 30 days have passed from the date the judgment was given. The creditor opens a "judgment" file (tik psak din), submits the judgment bearing the court stamp plus supporting documents, and pays an opening fee of roughly 1% of the debt plus a protocol fee. The enforcement registrar can then impose liens, garnish bank accounts and wages, and order asset seizure.
+- **Bounced-check / promissory-note shortcut (skips court entirely):** A dishonored cheque (with the bank's Notice of Dishonor) or a signed promissory note can be filed directly as a "notes and cheques" file (tik shtarot ve'hamcha'ot) at the Enforcement Office, with no Small Claims judgment needed first. The debtor then has a short window to object; if they do, the matter is referred to court. Use this route when the debt is backed by such an instrument.
+- Required documents: stamped judgment OR the cheque printout / signed promissory note, plus identification of the debtor and proof of the debt.
+
+See references/legal-escalation.md for the enforcement process.
+
+### Step 7: Generate Aging Reports and Cash Flow Forecasts
 Produce comprehensive collection management reports:
 
 **Aging report:**
@@ -170,14 +202,26 @@ Result: Comprehensive aging report with client risk scores. Cash flow forecast s
 | Bank of Israel - interest rates | https://www.boi.org.il/information/interestrates/primerates/ | Current BoI base rate used for statutory interest calculation |
 | Courts Administration - Small Claims service page | https://www.gov.il/he/service/filing_a_small_claim | Current threshold, filing process, jurisdiction rules |
 | Kol-Zchut - Filing a small claim (Hebrew) | https://www.kolzchut.org.il/he/%D7%94%D7%92%D7%A9%D7%AA_%D7%AA%D7%91%D7%99%D7%A2%D7%94_%D7%A7%D7%98%D7%A0%D7%94 | Plain-language eligibility and procedure guide |
-| Nevo - Adjudication of Interest and Linkage Law (text) | https://www.nevo.co.il/law_html/law00/75001.htm | Full statutory text, including Amendment 9 (2025) |
+| Nevo - Adjudication of Interest and Linkage Law (text) | https://www.nevo.co.il/law_html/law00/75001.htm | Full statutory text on court-adjudicated interest and linkage |
+| Nevo - Payment Ethics to Suppliers Law, 5777-2017 | https://www.nevo.co.il/law_html/law00/144599.htm | Statutory 45-day default payment term and late-payment interest |
+| Kol-Zchut - Payment deadline to suppliers | https://www.kolzchut.org.il/he/%D7%94%D7%9E%D7%95%D7%A2%D7%93_%D7%94%D7%90%D7%97%D7%A8%D7%95%D7%9F_%D7%9C%D7%AA%D7%A9%D7%9C%D7%95%D7%9D_%D7%AA%D7%9E%D7%95%D7%A8%D7%94_%D7%9C%D7%A1%D7%A4%D7%A7%D7%99%D7%9D_%D7%A2%D7%91%D7%95%D7%A8_%D7%A1%D7%97%D7%95%D7%A8%D7%94_%D7%90%D7%95_%D7%A9%D7%99%D7%A8%D7%95%D7%AA | Plain-language guide to the 45-day rule by purchaser type |
+| Enforcement Authority - judgment enforcement file | https://www.gov.il/he/service/claim_for_a_specified_amount_opening_file | Opening a Hotza'a LaPo'al file, fees, required documents |
+| Enforcement Authority - cheques and notes file | https://www.gov.il/he/service/opening_promissory_notes_and_checks_file | Filing a dishonored cheque or promissory note directly |
 | Israel Post - Registered mail service | https://www.israelpost.co.il | Registered mail (doar rashum) service and pricing |
 | HebCal - Jewish calendar | https://www.hebcal.com | Shabbat times and holiday dates for reminder scheduling |
 
+## Recommended MCP Servers
+
+| MCP Server | Why |
+|------------|-----|
+| `hebcal` | Step 3 (graduated reminder scheduling) and the Troubleshooting "Reminder sent on Shabbat/holiday" case both depend on Shabbat and chag-aware scheduling. Use it to resolve Shabbat entry/exit times and holiday dates so reminders never fire on a blocked day. |
+| `israel-law` / `kolzchut` | Optional. Look up the current text of the Payment Ethics to Suppliers Law, Small Claims procedure, and enforcement rules instead of relying on cached figures. |
+
 ## Gotchas
 - Israeli payment terms (shotef) work differently than net-30/60/90. "Shotef + 30" means end of current month plus 30 days, not 30 days from invoice date. Agents may miscalculate due dates.
-- Formal debt collection (hotza'a lapo'al) in Israel requires a court judgment, bounced check with bank Notice of Dishonor, promissory note, or other enforceable instrument. Agents may suggest filing a claim without the proper prerequisites.
-- Interest on late payments in Israel is regulated by the Late Payment Law (Chok Ichurei Tashlumim). The statutory interest rate changes periodically. Agents may use a generic or outdated rate.
+- A Small Claims judgment does not collect itself. To enforce it the creditor must open a Hotza'a LaPo'al file (see Step 6), and a judgment-enforcement file can only be opened 30 days after the judgment. Agents may stop at "you won" and forget the collection step.
+- Formal enforcement (hotza'a lapo'al) requires a court judgment, a bounced cheque with the bank Notice of Dishonor, a promissory note, or another enforceable instrument. A dishonored cheque or promissory note can be filed at the Enforcement Office directly, skipping court. Agents may suggest filing a claim without the proper prerequisites, or miss the direct-filing shortcut.
+- Late-payment interest a supplier claims pre-suit comes from the Payment Ethics to Suppliers Law, 5777-2017 (Accountant General rate), while interest on a judgment comes from the Adjudication of Interest and Linkage Law (set by the court). Do not quote the Bank of Israel monetary-policy rate (4.00%) as the statutory late-payment rate. Agents may conflate the statutes or invent a percentage.
 - Payment reminder communications in Israel must be in Hebrew for Hebrew-speaking clients. Agents may generate English-only reminders that lack legal standing in Israeli small claims court.
 - Statute of limitations (hithayyashnut): commercial debts have a 3-year limitation period; general civil debts have a 7-year period. This is critical for the 90+ day escalation guidance. If a debt is approaching the limitation deadline, escalation to legal action must be prioritized immediately.
 
@@ -196,5 +240,5 @@ Cause: Registered mail (doar rashum) was returned or not collected by debtor.
 Solution: Registered mail has legal standing even if not collected. Keep the postal receipt as proof of sending. If the debtor's address is wrong, attempt to verify through the Population Authority (Misrad HaPnim). Consider alternative delivery methods recognized by Israeli courts.
 
 ### Error: "Interest calculation disputed"
-Cause: Applied incorrect interest rate or calculation method.
-Solution: Israeli business debt interest follows the Adjudication of Interest and Linkage Law (חוק פסיקת ריבית והצמדה). Standard rate is the Bank of Israel rate + margin. Verify current rate at boi.org.il. For undisputed invoices, interest accrues from the due date.
+Cause: Applied the wrong interest rate or conflated the two statutes.
+Solution: Separate the two. Pre-suit, a supplier's late-payment interest comes from the Payment Ethics to Suppliers Law, 5777-2017, at the Accountant General's rate, accruing from the due date. Interest on a judgment is set by the court under the Adjudication of Interest and Linkage Law. Do not use the Bank of Israel monetary-policy rate as the late-payment rate. If the exact Accountant General rate is unknown, state that statutory late-payment interest applies from the due date and have the user confirm the rate with their accountant.

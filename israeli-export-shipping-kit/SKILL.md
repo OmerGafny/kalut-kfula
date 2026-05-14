@@ -52,7 +52,7 @@ Required fields (bilingual HE + EN is recommended for Israeli customs):
 - Declaration of origin (when claiming FTA preference, see Step 4)
 - Exporter signature, stamp, printed name
 
-Israeli exports are zero-rated for VAT under the 18 percent regime (exports are zero-rated), but the invoice must still show the VAT line as 0 for the Tax Authority.
+Israeli exports are zero-rated for VAT: the standard rate is 18 percent, but exports carry a 0 percent rate. The invoice must still show the VAT line explicitly as 0 for the Tax Authority.
 
 ### Step 3: Build the packing list
 
@@ -85,6 +85,8 @@ See `references/eur1-application-guide.md` for the EUR.1 fields and pitfalls, an
 | Courier (DHL, UPS, FedEx) | Waybill issued by the courier |
 
 The transport document must match the Incoterm: under FOB the buyer chooses the carrier and receives the B/L, under CIF the seller buys the freight and may be on the B/L as shipper.
+
+The export entry itself is filed electronically with Israeli Customs through the "Sha'ar Olami" (שער עולמי) system. In practice the freight forwarder or customs broker submits this declaration on the exporter's behalf, drawing on the commercial invoice, packing list, and origin document the exporter provides.
 
 ### Step 6: Optional documents
 
@@ -164,6 +166,7 @@ Actions:
 - An electronic signature on an EUR.1 is rejected by Israeli Customs. Plan time for the original stamped form to travel with the shipment.
 - The 6000 euros threshold for an invoice declaration applies to the total invoice value, not per line. A 5999 euros shipment can skip EUR.1; a 6001 euros one cannot (unless the exporter is approved).
 - US-Israel FTA requires a SIGNED declaration on the commercial invoice, not a separate certificate. The old hard-copy Green Form (Form A) has not been used since January 10, 2018.
+- This skill builds shipping paperwork; it does NOT determine whether goods need an export license. Controlled goods are a separate regime: defense and military items fall under the Defense Export Control Agency (אגף הפיקוח על היצוא הביטחוני) at the Ministry of Defense, and civilian dual-use items fall under the Export Control Agency at the Ministry of Economy and Industry. If the product could be military, dual-use, or otherwise controlled, the exporter must check licensing with the relevant agency before shipping. Do not rely on this skill for that determination.
 
 ## Reference Links
 

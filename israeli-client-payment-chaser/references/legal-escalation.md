@@ -29,7 +29,7 @@ A demand letter is not legally required before filing a claim, but Israeli court
 
 ### Filing Process
 1. **Prepare documentation:** Gather original invoice, contract/purchase order, delivery confirmation, demand letters sent (with postal receipts), and communication history
-2. **Complete the claim form:** Available at the court or online at the courts administration website (elyon1.court.gov.il)
+2. **Complete the claim form:** Available at the court or online via the Small Claims service page at https://www.gov.il/he/service/filing_a_small_claim
 3. **Pay filing fee:** 1% of the claim amount, minimum 50 NIS (2026)
 4. **Submit the claim:** File at the Small Claims Court in the debtor's jurisdiction
 5. **Serve the debtor:** The court sends the claim to the debtor, who has 30 days to respond
@@ -46,7 +46,42 @@ If multiple invoices to the same debtor exceed the Small Claims threshold when c
 - File separate claims for each invoice (if each is under the threshold)
 - File a single claim in Magistrate Court (Beit Mishpat Shalom) for the full amount (requires legal representation)
 
+## Enforcement Office (Hotza'a LaPo'al / הוצאה לפועל)
+
+A judgment does not collect itself. To enforce a debt the creditor opens a file with the Enforcement and Collection Authority (Rashut HaAchifa veHaGviya).
+
+### Judgment-enforcement file (tik psak din)
+- A request to enforce a monetary judgment can be filed only once **30 days have passed** from the date the judgment was given.
+- Submit the judgment bearing the court stamp plus documents supporting the debt.
+- **Opening fee:** roughly 1% of the debt at the date the file is opened, plus a protocol fee.
+- Once open, the enforcement registrar can impose liens, garnish bank accounts and wages, and order asset seizure.
+- Service page: https://www.gov.il/he/service/claim_for_a_specified_amount_opening_file
+
+### Cheques and promissory notes file (tik shtarot ve'hamcha'ot), skips court
+- A dishonored cheque (with the bank's Notice of Dishonor) or a signed promissory note can be filed **directly** at the Enforcement Office, with no prior court judgment.
+- The debtor then has a short window to file an objection; if they object, the matter is referred to court.
+- Required: the cheque printout or signed promissory note, plus identification of the debtor.
+- Service page: https://www.gov.il/he/service/opening_promissory_notes_and_checks_file
+
+## Statutory Payment Deadline (Payment Ethics to Suppliers Law, 5777-2017)
+
+The Payment Ethics to Suppliers Law (חוק מוסר תשלומים לספקים, תשע"ז-2017) sets when a payment to a supplier becomes legally late.
+
+- **Default term when no payment term was agreed:** 45 days.
+  - Private business: 45 days from the end of the month in which the invoice was submitted.
+  - Government office / state body: 45 days from the date the invoice was submitted.
+  - Local authority: 45 days from the end of the month in which the invoice was issued.
+  - Engineering and construction contracts: longer caps, up to 85 days from invoice submission or 70 days from the end of the month of submission.
+- An agreed contractual term overrides the default, subject to the caps the law imposes.
+- Once the due date passes, the debt is legally late and linkage plus late-payment interest attach automatically.
+- **Late-payment interest (dmei pigurim)** under this law runs from the due date at the **Accountant General's rate**. This is the rate to reference in a pre-suit demand letter. It is NOT the Bank of Israel monetary-policy rate. Verify the current Accountant General rate (the user's accountant can confirm) before stating a hard percentage.
+
 ## Interest Calculation Rules
+
+### Two distinct interest regimes
+- **Pre-suit (supplier's claim):** Payment Ethics to Suppliers Law, 5777-2017, Accountant General's rate, accruing from the due date. Used in demand letters.
+- **On a judgment:** Adjudication of Interest and Linkage Law, set by the court. The agent does not compute this.
+Do not quote the Bank of Israel base rate as the statutory late-payment rate; they are different figures.
 
 ### Adjudication of Interest and Linkage Law (חוק פסיקת ריבית והצמדה)
 - **Accrual start date:** Interest begins from the invoice due date (not the invoice issue date)
