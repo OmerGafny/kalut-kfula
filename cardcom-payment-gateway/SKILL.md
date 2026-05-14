@@ -1,22 +1,20 @@
 ---
 name: cardcom-payment-gateway
-description: Integrate Cardcom payment processing and Israeli invoice generation into applications -- covers Low Profile payments, tokenization, recurring billing, and automatic tax invoice/receipt creation per Israeli law. Use when user asks to accept payments via Cardcom, generate Israeli invoices with payments, set up "slikat ashrai" with hashbonit, handle recurring billing (hora'ot keva), or mentions "Cardcom", "CardCom API", "Low Profile", Israeli payment with invoicing, or needs combined payment + document generation. Supports REST API V11 and legacy endpoints. Do NOT use for Tranzila integration (use tranzila-payment-gateway), general accounting, or non-payment queries.
+description: Integrate Cardcom payment processing and Israeli invoice generation into applications, covering Low Profile payments, tokenization, recurring billing, and automatic tax invoice/receipt creation per Israeli law. Use when user asks to accept payments via Cardcom, generate Israeli invoices with payments, set up "slikat ashrai" with hashbonit, handle recurring billing (hora'ot keva), or mentions "Cardcom", "CardCom API", "Low Profile", Israeli payment with invoicing, or needs combined payment plus document generation. Targets the REST API V11. Do NOT use for Tranzila integration (use tranzila-payment-gateway), general accounting, or non-payment queries.
 license: MIT
-compatibility: Requires network access for Cardcom API calls. Works with Claude Code, Claude.ai, Cursor.
-version: 1.0.1
 ---
 
 # Cardcom Payment Gateway
 
 ## Overview
 
-Cardcom is an Israeli payment processor with a unique strength: integrated invoice and receipt generation compliant with Israeli tax law. While other Israeli gateways handle only the payment, Cardcom can automatically generate tax invoices (hashbonit mas) and receipts (kabala) as part of the payment flow -- something Israeli businesses are legally required to issue.
+Cardcom is an Israeli payment processor with a unique strength: integrated invoice and receipt generation compliant with Israeli tax law. While other Israeli gateways handle only the payment, Cardcom can automatically generate tax invoices (hashbonit mas) and receipts (kabala) as part of the payment flow, something Israeli businesses are legally required to issue.
 
-This skill guides integration with Cardcom's REST API V11 for payments, tokenization, recurring billing, and document generation.
+This skill guides integration with Cardcom's REST API V11 for payments, tokenization, recurring billing, and document generation. Every endpoint and field name in this skill is taken from the official Cardcom V11 OpenAPI specification.
 
-**Official docs:** Available through Cardcom developer portal (contact dev@secure.cardcom.co.il for access)
+**Official docs:** `https://secure.cardcom.solutions/Api/v11/Docs` (interactive API reference with the full OpenAPI schema)
 
-**Developer support:** `dev@secure.cardcom.co.il` or 03-9436100 (press 2)
+**Support center:** `https://support.cardcom.solutions`
 
 ## Instructions
 
@@ -24,91 +22,76 @@ This skill guides integration with Cardcom's REST API V11 for payments, tokeniza
 
 | Pattern | Card Data Handling | Best For |
 |---------|-------------------|----------|
-| **Low Profile (iframe/redirect)** | Cardcom handles card entry | Most integrations -- minimal PCI scope (SAQ-A) |
-| **OpenFields (embedded fields)** | Card inputs hosted by Cardcom in your form | Custom UI with PCI compliance (SAQ-A) |
-| **ChargeToken (server-to-server)** | Token only, no raw card data | Recurring charges, subscription billing |
+| **Low Profile (iframe/redirect)** | Cardcom handles card entry | Most integrations, minimal PCI scope (SAQ-A) |
+| **Transaction (server-to-server)** | Raw card data or token | Charging stored tokens, recurring billing |
 | **CreateDocument (server-to-server)** | No card data | Standalone invoice/receipt generation |
 
-Most Israeli merchants use **Low Profile** for initial payment + token creation, then **ChargeToken** for recurring charges. Use **OpenFields** when you need full control over the checkout design. Both payment methods can auto-generate invoices.
+Most Israeli merchants use **Low Profile** for the initial payment plus token creation, then the **Transaction** endpoint with the stored token for recurring charges. All payment flows can auto-generate invoices by attaching a `Document` object.
 
 ### Step 2: Set Up Authentication
 
 Cardcom API V11 credentials:
-- `TerminalNumber` -- Your terminal ID (use `1000` for testing)
-- `ApiName` -- API username (use `bWlyb24gY2FyZGNvbQ==` for testing)
-- `ApiPassword` -- API password
+- `TerminalNumber` (integer) -- your terminal ID (use `1000` for testing)
+- `ApiName` (string) -- API username
+- `ApiPassword` (string) -- API password (required only for refunds and document creation; not sent on a normal charge)
 
 **Test environment:**
-Terminal `1000` with the test credentials allows full API testing without real charges. Test card: `4580000000000000`, any future expiry, CVV `123`.
+Terminal `1000` with the demo `ApiName` allows API testing without real charges. Test card: `4580000000000000`, any future expiry, CVV `123`.
 
-Store credentials securely -- never in source code or client-side JavaScript.
+Store credentials securely, never in source code or client-side JavaScript.
 
 ### Step 3: Implement the Payment Flow
 
 #### Low Profile Integration (Recommended)
 
-This is a two-step process:
+This is a two-step process.
 
 **Step 3a: Create the payment page**
 
 ```
-POST https://secure.cardcom.solutions/Interface/LowProfile.aspx
+POST https://secure.cardcom.solutions/api/v11/LowProfile/Create
 Content-Type: application/json
 
 {
   "TerminalNumber": 1000,
   "ApiName": "your-api-name",
-  "ApiPassword": "your-api-password",
+  "Operation": "ChargeAndCreateToken",
   "ReturnValue": "unique-order-id",
   "Amount": 100.00,
   "SuccessRedirectUrl": "https://example.com/success",
   "FailedRedirectUrl": "https://example.com/failed",
   "WebHookUrl": "https://example.com/webhook",
+  "ISOCoinId": 1,
+  "Language": "he",
   "Document": {
-    "DocTypeToCreate": 101,
+    "DocumentTypeToCreate": "TaxInvoiceAndReceipt",
     "Name": "Customer Name",
+    "Email": "customer@example.com",
     "Products": [
-      {
-        "Description": "Product name",
-        "UnitCost": 100.00,
-        "Quantity": 1
-      }
+      { "Description": "Product name", "UnitCost": 100.00, "Quantity": 1 }
     ]
-  },
-  "CoinID": 1,
-  "Language": "he"
+  }
 }
 ```
 
-Response includes `Url` -- redirect customer there or embed as iframe.
+The response is a `CreateLowProfileResponse`: check `ResponseCode == 0` (success), read `Description` on failure. On success it returns `LowProfileId` (save it) and `Url` (redirect the customer there or embed as an iframe). `UrlToBit` and `UrlToPayPal` are also returned when those methods are enabled on your terminal.
+
+The `Operation` field controls behaviour: `ChargeOnly` (default), `ChargeAndCreateToken`, `CreateTokenOnly`, `SuspendedDeal`, `Do3DSAndSubmit`.
 
 **Step 3b: Get the results**
 
-After payment completes, Cardcom calls your `WebHookUrl` or you query:
+After payment completes, Cardcom calls your `WebHookUrl`, or you query:
 
 ```
-POST https://secure.cardcom.solutions/Interface/BillGoldGetLowProfileIndicator.aspx
+POST https://secure.cardcom.solutions/api/v11/LowProfile/GetLpResult
 {
   "TerminalNumber": 1000,
   "ApiName": "your-api-name",
-  "ApiPassword": "your-api-password",
-  "LowProfileCode": "code-from-step-3a"
+  "LowProfileId": "id-from-step-3a"
 }
 ```
 
-Check `DealResponse` = 0 for success. Extract `Token` for future charges.
-
-#### OpenFields Integration (Custom UI)
-
-OpenFields is Cardcom's newest integration pattern (2026). It lets you build your own payment form while Cardcom-hosted iframes handle sensitive card inputs:
-
-1. Create a Low Profile session via `/Interface/LowProfile.aspx`
-2. Embed Cardcom's OpenFields JS on your page
-3. Mount secure iframe fields for card number, expiry, and CVV inside your form
-4. On submit, the JS tokenizes card data and submits to Cardcom
-5. Retrieve results via `BillGoldGetLowProfileIndicator.aspx`
-
-This gives full design control while maintaining SAQ-A PCI compliance. Official examples: `https://github.com/CardCom` (React and vanilla JS).
+The response is a `LowProfileResult`: check `ResponseCode == 0`. On success it carries `TranzactionInfo` (transaction details), `TokenInfo` (the stored `Token` plus `CardMonth`/`CardYear`), `DocumentInfo` (the generated document), and `SuspendedInfo` (for suspended deals). Each nested object is `null` when not applicable.
 
 #### Alternative Payment Methods
 
@@ -116,9 +99,8 @@ The Low Profile response includes URLs for alternative payment methods when enab
 
 | Method | Response Field | Notes |
 |--------|---------------|-------|
-| **Bit** | `BitUrl` | Israel's most popular mobile payment app |
-| **Google Pay** | `GooglePayUrl` | For mobile and web |
-| **PayPal** | `PayPalUrl` | International payments |
+| **Bit** | `UrlToBit` | Israel's most popular mobile payment app |
+| **PayPal** | `UrlToPayPal` | International payments |
 
 Display these alongside the credit card form to give customers more payment options.
 
@@ -126,252 +108,227 @@ Display these alongside the credit card form to give customers more payment opti
 
 Cardcom's standout feature is automatic document generation with payments. This is critical for Israeli businesses because tax law requires issuing proper documents for every transaction.
 
-**Document types (DocTypeToCreate):**
+The document type is set with the **`DocumentTypeToCreate`** field, a STRING enum (not an integer). Common values:
 
-| Code | Hebrew | English | When to Use |
-|------|--------|---------|-------------|
-| 1 | hashbonit mas | Tax Invoice | B2B sales, services |
-| 2 | hashbonit zikui | Credit Note | Refunds, corrections |
-| 3 | kabala | Receipt | Payment confirmation |
-| 101 | hashbonit mas / kabala | Tax Invoice + Receipt | B2C with payment (most common) |
-| 400 | -- | Iframe document | Low Profile context |
+| Value | Hebrew | English | When to Use |
+|-------|--------|---------|-------------|
+| `Auto` | --- | Auto | Default; uses your admin-panel configuration |
+| `TaxInvoiceAndReceipt` | hashbonit mas / kabala | Tax Invoice + Receipt | B2C with payment (most common) |
+| `TaxInvoice` | hashbonit mas | Tax Invoice | B2B, when receipt is issued separately |
+| `Receipt` | kabala | Receipt | Payment confirmation only |
+| `TaxInvoiceAndReceiptRefund` | --- | Tax Invoice + Receipt Refund | Reversing a `TaxInvoiceAndReceipt` |
+| `TaxInvoiceRefund` | --- | Tax Invoice Refund | Reversing a `TaxInvoice` |
+| `ReceiptRefund` | --- | Receipt Refund | Reversing a `Receipt` |
+| `ProformaInvoice` | hashbonit iska / proforma | Proforma Invoice | Pre-sale quote document |
+| `DonationReceipt` | kabalat trumot | Donation Receipt | Registered non-profits |
 
-**Include document in payment flow:**
-Add the `Document` object to your Low Profile or ChargeToken request (as shown in Step 3a). Cardcom generates the document automatically when payment succeeds.
+The full enum (`DocumentToCreate` in the OpenAPI schema) also includes `Quote`, `Order`, `OrderConfirmation`, `DeliveryNote`, `DemandForPayment`, `ProformaDealInvoice`, `ReceiptForTaxInvoice`, `CouponDocumentAndReceipt`, and their `*Refund` variants. Verify the exact value you need against the official docs at `https://secure.cardcom.solutions/Api/v11/Docs`.
+
+**Include a document in a payment flow:**
+Add the `Document` object to your Low Profile `Create` or `Transaction` request. Cardcom generates the document automatically when the payment succeeds.
 
 **Standalone document creation:**
 
 ```
-POST https://secure.cardcom.solutions/Interface/CreateDocument.aspx
+POST https://secure.cardcom.solutions/api/v11/Documents/CreateDocument
 {
-  "TerminalNumber": 1000,
   "ApiName": "your-api-name",
   "ApiPassword": "your-api-password",
   "Document": {
-    "DocTypeToCreate": 1,
+    "DocumentTypeToCreate": "TaxInvoice",
     "Name": "Customer Ltd",
-    "VAT_Number": "123456789",
-    "Products": [
-      {
-        "Description": "Web development services",
-        "UnitCost": 5000.00,
-        "Quantity": 1,
-        "IsVatFree": false
-      }
-    ],
-    "SendByEmail": true,
+    "TaxId": "123456789",
     "Email": "customer@example.com",
-    "Language": "he",
-    "CoinID": 1
+    "IsSendByEmail": true,
+    "Languge": "he",
+    "ISOCoinID": 1,
+    "Products": [
+      { "Description": "Web development services", "UnitCost": 5000.00, "Quantity": 1 }
+    ]
   }
 }
 ```
 
-Response includes `InvoiceNumber`, `InvoiceType`, and `Link` to the PDF document.
+The response is a `DocumentInfo`: check `ResponseCode == 0`, then read `DocumentType`, `DocumentNumber`, `AccountId`, and `DocumentUrl` (link to the PDF).
+
+Note the real V11 field spellings inside the `Document` object: `DocumentTypeToCreate` (string enum), `Name` (the "document To", required, max 50 chars), `TaxId` (business registration or ID number, replaces the older `VAT_Number`), `IsSendByEmail` (replaces `SendByEmail`), `Languge` (the official V11 field spelling, missing the second `a`), `ISOCoinID` (replaces `CoinID`), `IsVatFree`, and `Products[]` with `Description`, `UnitCost`, `Quantity`, `IsVatFree`. See `references/document-types.md` for the complete field list.
 
 ### Step 5: Implement Token-Based Recurring Payments
 
 For subscriptions and recurring billing (hora'ot keva):
 
-1. **Create token during first payment:**
-   - Use Low Profile with token creation enabled
-   - Response includes `Token`, `CardValidityMonth`, `CardValidityYear`
+1. **Create a token during the first payment.** Use Low Profile with `Operation: "ChargeAndCreateToken"` (or `"CreateTokenOnly"`). The `LowProfileResult` returns `TokenInfo` with `Token`, `CardMonth`, `CardYear`, and `TokenExDate` (the date the token is purged from Cardcom).
 
-2. **Store token securely:**
-   - Save token (UUID format), card expiry, and last 4 digits
-   - Token is bound to your terminal
+2. **Store the token securely.** Save the `Token` string, card expiry, and last 4 digits. The token is bound to your terminal.
 
-3. **Charge the token:**
+3. **Charge the token** via the Transaction endpoint:
 
 ```
-POST https://secure.cardcom.solutions/Interface/BillGoldCharge.aspx
+POST https://secure.cardcom.solutions/api/v11/Transactions/Transaction
 {
   "TerminalNumber": 1000,
   "ApiName": "your-api-name",
-  "ApiPassword": "your-api-password",
   "Token": "token-uuid",
-  "CardValidityMonth": "12",
-  "CardValidityYear": "2027",
+  "CardExpirationMMYY": "1227",
   "Amount": 99.00,
+  "ISOCoinId": 1,
   "Document": {
-    "DocTypeToCreate": 101,
+    "DocumentTypeToCreate": "TaxInvoiceAndReceipt",
     "Name": "Subscriber Name",
+    "Email": "customer@example.com",
+    "IsSendByEmail": true,
     "Products": [
-      {
-        "Description": "Monthly subscription - February 2026",
-        "UnitCost": 99.00,
-        "Quantity": 1
-      }
-    ],
-    "SendByEmail": true,
-    "Email": "customer@example.com"
+      { "Description": "Monthly subscription", "UnitCost": 99.00, "Quantity": 1 }
+    ]
   }
 }
 ```
 
-Each token charge can automatically generate and email an invoice.
+The response is a `TransactionInfo`: check `ResponseCode == 0` (note `700` and `701` also count as success for J2/J5 validation-only transactions), then read `TranzactionId`, `Token`, `DocumentNumber`, and `DocumentUrl`. Each token charge can automatically generate and email an invoice when a `Document` object is attached.
 
 ### Step 6: Process Refunds
 
-Refund a transaction and optionally generate a credit note:
+Refund a transaction by its Cardcom transaction id:
 
 ```
-POST https://secure.cardcom.solutions/Interface/BillGoldRefund.aspx
+POST https://secure.cardcom.solutions/api/v11/Transactions/RefundByTransactionId
 {
-  "TerminalNumber": 1000,
   "ApiName": "your-api-name",
   "ApiPassword": "your-api-password",
-  "TransactionId": "original-transaction-id",
-  "Amount": 100.00,
-  "Document": {
-    "DocTypeToCreate": 2,
-    "Name": "Customer Name"
-  }
+  "TransactionId": 219282004,
+  "PartialSum": 100.00,
+  "CancelOnly": false,
+  "AllowMultipleRefunds": false
 }
 ```
 
-This both refunds the payment AND generates a credit note (hashbonit zikui) -- handling both the financial and tax compliance sides in one call.
+`ApiPassword` is required for refunds. `PartialSum` refunds part of the transaction (omit it to refund the full amount). `CancelOnly: true` voids a transaction before it is deposited. The response is a `RefundByTransactionIdResp`: check `ResponseCode == 0`, then read `NewTranzactionId` (the id of the refund transaction).
 
-### Step 7: Handle Token Replacements (Muhlafim)
+To issue the matching credit document, call `Documents/CreateDocument` with a refund `DocumentTypeToCreate` such as `TaxInvoiceAndReceiptRefund` or `TaxInvoiceRefund`.
 
-When credit cards are replaced (expired, lost, reissued), Cardcom can automatically update stored tokens:
+### Step 7: Suspended Deals (Deferred Charges)
 
-1. Check for updated tokens periodically via `GetMuhlafimByDate` or `GetNewMuhlafim`
-2. These endpoints return tokens where the underlying card was replaced by the issuer
-3. Update your stored token data (new expiry, last 4 digits) in your database
-4. Mark replacements as processed via `UpdateMuhlafimDone`
+A suspended deal authorizes a payment intent without an immediate charge:
 
-This prevents failed charges when customers receive new cards -- critical for subscription-based businesses.
+1. Create a Low Profile session with `Operation: "SuspendedDeal"`.
+2. The `LowProfileResult` returns `SuspendedInfo` with a `SuspendedDealId`.
+3. Charge the suspended deal later through the Cardcom admin panel or the Transaction API.
 
-### Step 8: Use Suspended Deals (Deferred Payments)
+Useful for pre-authorizations and services billed after delivery. The exact charge-later call is described in the official docs.
 
-Suspended deals let you authorize a payment without immediate charge:
+### Step 8: Handle Errors
 
-1. Create a suspended deal via Low Profile with `Operation: "SuspendDealOnly"`
-2. The payment is authorized but not charged
-3. Activate the deal later via `SuspendedDealActivateOne` when ready to charge
-4. Optionally cancel unused suspended deals via `RevokeLowProfileDeal`
+Every V11 endpoint returns a `ResponseCode` integer and a `Description` string. `ResponseCode == 0` means success; any non-zero value is a developer/transaction error and `Description` carries the human-readable reason.
 
-Useful for pre-authorizations, hotel bookings, or services billed after delivery.
+```python
+import requests
 
-### Step 9: Handle Errors
+resp = requests.post(
+    "https://secure.cardcom.solutions/api/v11/Transactions/Transaction",
+    json=payload,
+).json()
 
-Check response codes in every API call. A response of `0` means success.
+if resp.get("ResponseCode") == 0:
+    deal_id = resp["TranzactionId"]
+else:
+    log_error(f"Cardcom error {resp.get('ResponseCode')}: {resp.get('Description')}")
+```
 
-Common errors:
-
-| Code | Meaning | Action |
-|------|---------|--------|
-| 0 | Success | Proceed normally |
-| 5033 | Terminal number missing | Check TerminalNumber in request |
-| 5034 | Authentication failed | Verify ApiName and ApiPassword |
-| 5035 | Invalid amount | Ensure Amount is positive number |
-| 5100 | Card declined | Ask user to try another card |
-| 5101 | Expired card | Ask user to update card details |
-| 5102 | CVV incorrect | Ask user to re-enter CVV |
-| 5200 | Token not found | Verify token UUID and terminal match |
-| 5300 | Invoice creation failed | Check Document parameters |
-
-For the full API response reference, consult `references/api-responses.md`.
+Always check both the HTTP status (200 means the request was received) AND `ResponseCode` (0 means the operation succeeded). The official docs at `https://secure.cardcom.solutions/Api/v11/Docs` carry the full numeric error reference; do not hardcode error-code-to-message mappings, read `Description` instead. See `references/api-responses.md` for the handling pattern.
 
 ## Examples
 
 ### Example 1: E-commerce Checkout with Invoice
 User says: "I need to accept payments on my Israeli e-commerce site and generate tax invoices automatically"
 Actions:
-1. Choose: Low Profile integration with DocTypeToCreate=101 (tax invoice + receipt)
-2. Guide: Create Low Profile page with product details in Document object
-3. Implement: WebHook handler for payment confirmation
-4. Result: Customer pays, gets automatic hashbonit mas/kabala emailed as PDF
-Result: Full checkout flow with automatic Israeli tax document compliance.
+1. Choose Low Profile with `DocumentTypeToCreate: "TaxInvoiceAndReceipt"`.
+2. Create the Low Profile page via `LowProfile/Create` with product details in the `Document` object.
+3. Implement a `WebHookUrl` handler that calls `LowProfile/GetLpResult`.
+Result: Customer pays and receives an automatic hashbonit mas/kabala emailed as a PDF.
 
 ### Example 2: Monthly SaaS Subscription
 User says: "I run a SaaS product, I need to charge users 149 NIS monthly and send them invoices"
 Actions:
-1. First payment: Low Profile with token creation
-2. Store: Token, card expiry from response
-3. Monthly cron: ChargeToken with Document for each billing cycle
-4. Handle: Failed charges, expired cards, email invoices
+1. First payment: `LowProfile/Create` with `Operation: "ChargeAndCreateToken"`.
+2. Store the `Token`, `CardMonth`, `CardYear` from `TokenInfo`.
+3. Monthly cron: `Transactions/Transaction` with the token and a `Document` object for each billing cycle.
 Result: Automated recurring billing with monthly invoice generation.
 
 ### Example 3: Standalone Invoice Without Payment
 User says: "I need to generate a tax invoice for a bank transfer payment I already received"
 Actions:
-1. Use: CreateDocument endpoint (no payment processing)
-2. Set: DocTypeToCreate=1 (tax invoice)
-3. Include: Customer details, line items, amounts
-4. Send: Set SendByEmail=true with customer email
+1. Use `Documents/CreateDocument` (no payment processing).
+2. Set `DocumentTypeToCreate: "TaxInvoice"`.
+3. Include `Name`, `TaxId`, `Products[]`, set `IsSendByEmail: true` with the customer email.
 Result: Tax invoice generated and emailed without credit card processing.
 
 ### Example 4: Process a Refund with Credit Note
 User says: "Customer wants a refund for order #5678, need to issue a credit note too"
 Actions:
-1. Use: RefundByTransactionId endpoint
-2. Include: Document with DocTypeToCreate=2 (credit note)
-3. Process: Refund + credit note generated in single API call
-4. Verify: DealResponse=0 for success
-Result: Refund processed and hashbonit zikui (credit note) generated automatically.
+1. Call `Transactions/RefundByTransactionId` with `TransactionId` and `ApiPassword`.
+2. Check `ResponseCode == 0` and read `NewTranzactionId`.
+3. Call `Documents/CreateDocument` with `DocumentTypeToCreate: "TaxInvoiceAndReceiptRefund"`.
+Result: Refund processed and the matching credit document generated.
 
 ### Example 5: Accept Bit Payment
 User says: "I want to let customers pay with Bit in addition to credit cards"
 Actions:
-1. Enable: Bit on your Cardcom terminal via dashboard
-2. Create: Low Profile session as usual
-3. Display: Show the `BitUrl` from the response alongside the card form
-4. Handle: Same webhook flow -- DealResponse=0 for success
-Result: Customers can choose between credit card and Bit payment.
-
-### Example 6: Custom Checkout with OpenFields
-User says: "I want to design my own payment form but keep PCI compliance"
-Actions:
-1. Create: Low Profile session to get the OpenFields token
-2. Embed: Cardcom OpenFields JS and mount secure iframe fields in your form
-3. Style: Apply your own CSS to the form while card inputs remain Cardcom-hosted
-4. Submit: JS tokenizes and sends card data directly to Cardcom
-5. Retrieve: Get results via GetLpResult
-Result: Fully custom checkout design with SAQ-A PCI compliance.
+1. Enable Bit on your Cardcom terminal via the dashboard.
+2. Create a Low Profile session as usual via `LowProfile/Create`.
+3. Display the `UrlToBit` from the response alongside the card form.
+Result: Customers can choose between credit card and Bit payment, same webhook flow.
 
 ## Community Libraries
 
-- **@tsdiapi/cardcom** (TypeScript/Node.js) -- API V11 client with payments, refunds, tokenization, transaction queries. Install: `npm install @tsdiapi/cardcom`
-- **yadahan/laravel-cardcom** (PHP/Laravel) -- Full integration with charges, refunds, tokens, invoices, multi-terminal
-- **CardCom/OpenFields-FrontEnd-React** (React) -- Official React OpenFields example. See: `https://github.com/CardCom/OpenFields-FrontEnd-React`
-- **CardCom/OpenFields-Backend-Node** (Node.js) -- Official Node.js backend example
+- **@tsdiapi/cardcom** (TypeScript/Node.js) -- V11 API client with payments, refunds, tokenization, transaction queries. Install: `npm install @tsdiapi/cardcom`
+- **CardCom/OpenFields-FrontEnd-React** (React) -- official OpenFields example. See `https://github.com/CardCom/OpenFields-FrontEnd-React`
+- **CardCom/OpenFields-Backend-Node** (Node.js) -- official Node.js backend example. See `https://github.com/CardCom/OpenFields-Backend-Node`
+
+## Reference Links
+
+| Resource | URL |
+|----------|-----|
+| V11 API documentation (OpenAPI reference) | `https://secure.cardcom.solutions/Api/v11/Docs` |
+| Cardcom support center | `https://support.cardcom.solutions` |
+| OpenFields React example | `https://github.com/CardCom/OpenFields-FrontEnd-React` |
+| OpenFields Node.js example | `https://github.com/CardCom/OpenFields-Backend-Node` |
 
 ## Bundled Resources
 
 ### References
-- `references/api-endpoints.md` -- Complete Cardcom REST API V11 endpoint reference including Low Profile, Transactions, Documents, RecurringPayments, Financial, and CompanyOperations. Lists request/response fields for each endpoint. Consult when building API integrations or exploring available operations.
-- `references/api-responses.md` -- Full listing of Cardcom response codes with meanings and recommended handling for transaction, token, and invoice operations. Consult when debugging failed API calls.
-- `references/document-types.md` -- Israeli tax document type codes (1, 2, 3, 101, 400) with required fields, VAT handling, and usage guidelines per Israeli tax law. Consult when determining which document type to generate for a transaction.
+- `references/api-endpoints.md` -- Cardcom REST API V11 endpoint reference: LowProfile, Transactions, Documents, RecuringPayments, Financial, and CompanyOperations paths with their key request/response fields. Consult when building API integrations.
+- `references/api-responses.md` -- the V11 `ResponseCode` + `Description` response pattern, the per-operation response objects, and the recommended error-handling flow. Consult when debugging failed API calls.
+- `references/document-types.md` -- the `DocumentTypeToCreate` string enum, the `Document` object field list, and VAT handling per Israeli tax law. Consult when determining which document type to generate.
 
 ### Scripts
-- `scripts/validate_cardcom_response.py` -- Validates a Cardcom API response: checks response codes for transaction, token, and invoice operations, verifies required fields, and flags common integration issues. Run: `python scripts/validate_cardcom_response.py --help`
+- `scripts/validate_cardcom_response.py` -- Validates a Cardcom V11 API response: checks `ResponseCode`, surfaces `Description`, and verifies expected fields for transaction, token, and document operations. Run: `python scripts/validate_cardcom_response.py --help`
 
 ## Gotchas
-- Agents often send Cardcom API requests as `application/json`, but the V11 API expects JSON with a `Content-Type: application/json` header. Older Cardcom APIs used form-encoded data, so agents trained on older examples may use the wrong format.
-- The `TerminalNumber` must be sent as an integer, not a string. Agents commonly wrap it in quotes, causing error 5033.
-- Agents may hardcode VAT at 17%, but the current Israeli VAT rate is 18% (effective January 2025). Cardcom calculates VAT server-side, so the Document amounts should be net of VAT unless specified otherwise.
-- Cardcom's test terminal (1000) does not support all features available in production. Agents may write integration tests that pass in sandbox but fail in production due to terminal-specific configurations.
+- The V11 success check is `ResponseCode == 0`, NOT `DealResponse == 0`. `DealResponse` does not exist in V11; agents trained on older Cardcom examples invent it. Every V11 endpoint returns `ResponseCode` plus a `Description` string.
+- `DocumentTypeToCreate` is a STRING enum (`"TaxInvoiceAndReceipt"`, `"TaxInvoice"`, `"Receipt"`, ...), not an integer code. Integer document codes like `101` or `400` belong to legacy `.aspx` interfaces, not V11.
+- The `TerminalNumber` must be sent as an integer, not a string. Agents commonly wrap it in quotes.
+- `ApiPassword` is required for `RefundByTransactionId` and `CreateDocument`, but is NOT sent on a normal `LowProfile/Create` or `Transaction` charge.
+- Watch the real V11 field spellings: `Languge` (missing the second `a`) inside the `Document` object, `ISOCoinID` / `ISOCoinId`, `IsSendByEmail` (not `SendByEmail`), `TaxId` (not `VAT_Number`).
+- The current Israeli VAT rate is 18% (effective January 2025). Cardcom calculates VAT server-side, so document amounts are treated per the `IsVatFree` flag.
 
 ## Troubleshooting
 
-### Error: "5033 -- Terminal Number is Missing"
-Cause: TerminalNumber not included or sent as wrong type
-Solution: Ensure TerminalNumber is sent as an integer (not string) in the JSON body. For testing, use 1000.
-
-### Error: "5034 -- Authentication failed"
-Cause: Invalid ApiName or ApiPassword
-Solution: Verify credentials in your Cardcom dashboard. For testing, use terminal 1000 with the test API credentials. Credentials are separate from your login password.
+### Error: a non-zero `ResponseCode` on `LowProfile/Create`
+Cause: a validation or authentication problem with the request.
+Solution: Read the `Description` string in the response, it names the exact issue. Verify `TerminalNumber` is an integer and `ApiName` is correct. The full numeric error reference is at `https://secure.cardcom.solutions/Api/v11/Docs`.
 
 ### Error: "Low Profile page loads but payment fails"
-Cause: Often a WebHookUrl or redirect URL issue
-Solution: Ensure SuccessRedirectUrl, FailedRedirectUrl, and WebHookUrl are publicly accessible HTTPS URLs. Localhost URLs do not work -- use a tunnel (ngrok) for development.
+Cause: often a `WebHookUrl` or redirect URL issue.
+Solution: Ensure `SuccessRedirectUrl`, `FailedRedirectUrl`, and `WebHookUrl` are publicly accessible HTTPS URLs. Localhost URLs do not work, use a tunnel (ngrok) for development.
+
+### Error: "Refund returns a non-zero `ResponseCode`"
+Cause: `ApiPassword` missing, or the transaction is already deposited and you sent `CancelOnly: true`.
+Solution: Include `ApiPassword` on every refund request. Use `CancelOnly: true` only before deposit; after deposit, send a real refund (omit `CancelOnly` or set it `false`).
 
 ### Error: "Invoice created but not emailed"
-Cause: SendByEmail not set or email address missing
-Solution: Set `SendByEmail: true` and include a valid `Email` in the Document object. Check spam folders -- Cardcom sends from their domain.
+Cause: `IsSendByEmail` not set or email address missing.
+Solution: Set `IsSendByEmail: true` and include a valid `Email` in the `Document` object. Check spam folders, Cardcom sends from its own domain.
 
 ### Error: "Token charge succeeds but no invoice"
-Cause: Document object missing from ChargeToken request
-Solution: Include the full Document object with DocTypeToCreate, Name, and Products in every token charge request. Document generation is opt-in per transaction, not automatic.
+Cause: `Document` object missing from the `Transaction` request.
+Solution: Include the full `Document` object with `DocumentTypeToCreate`, `Name`, and `Products` in every token charge. Document generation is opt-in per transaction.

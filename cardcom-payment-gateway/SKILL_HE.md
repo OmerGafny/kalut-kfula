@@ -2,9 +2,11 @@
 
 ## סקירה
 
-קארדקום היא חברת סליקה ישראלית עם יתרון אחד ייחודי: הפקת חשבוניות וקבלות משולבת בתשלום, לפי חוק המס הישראלי. שערי תשלום אחרים מטפלים רק בתשלום עצמו, אבל קארדקום יכולה להפיק אוטומטית חשבוניות מס וקבלות כחלק מתהליך התשלום, דבר שעסקים ישראליים חייבים לספק לפי חוק.
+קארדקום היא חברת סליקה ישראלית עם יתרון ייחודי אחד: הפקת חשבוניות וקבלות משולבת בתשלום, לפי חוק המס הישראלי. שערי תשלום אחרים מטפלים רק בתשלום עצמו, אבל קארדקום יכולה להפיק אוטומטית חשבוניות מס וקבלות כחלק מתהליך התשלום, דבר שעסקים ישראליים חייבים לספק לפי חוק.
 
-המדריך הזה עובר אתכם דרך אינטגרציה עם REST API V11 של קארדקום לתשלומים, טוקניזציה, חיובים חוזרים והפקת מסמכים.
+המדריך הזה עובר אתכם דרך אינטגרציה עם REST API V11 של קארדקום לתשלומים, טוקניזציה, חיובים חוזרים והפקת מסמכים. כל endpoint וכל שם שדה במדריך הזה לקוחים ממפרט ה-OpenAPI הרשמי של קארדקום V11.
+
+תיעוד רשמי נמצא בכתובת `https://secure.cardcom.solutions/Api/v11/Docs`, מרכז התמיכה בכתובת `https://support.cardcom.solutions`.
 
 ## הוראות
 
@@ -12,22 +14,20 @@
 
 | דפוס | טיפול בנתוני כרטיס | מתאים ל- |
 |---------|-------------------|----------|
-| **Low Profile (iframe/redirect)** | קארדקום מטפלת בהזנת הכרטיס | רוב האינטגרציות -- היקף PCI מינימלי (SAQ-A) |
-| **OpenFields (שדות מוטמעים)** | קלט כרטיס מתארח בקארדקום בתוך הטופס שלכם | עיצוב מותאם עם עמידה ב-PCI (SAQ-A) |
-| **ChargeToken (שרת-לשרת)** | טוקן בלבד, ללא נתוני כרטיס גולמיים | חיובים חוזרים, מנויים |
+| **Low Profile (iframe/redirect)** | קארדקום מטפלת בהזנת הכרטיס | רוב האינטגרציות, היקף PCI מינימלי (SAQ-A) |
+| **Transaction (שרת-לשרת)** | נתוני כרטיס גולמיים או טוקן | חיוב טוקנים שמורים, חיובים חוזרים |
 | **CreateDocument (שרת-לשרת)** | ללא נתוני כרטיס | הפקת חשבונית/קבלה עצמאית |
 
-רוב בתי העסק הישראליים משתמשים ב-**Low Profile** לתשלום ראשון + יצירת טוקן, ואז ב-**ChargeToken** לחיובים חוזרים. תשתמשו ב-**OpenFields** כשאתם צריכים שליטה מלאה בעיצוב ה-checkout. כל שיטות התשלום יכולות להפיק חשבוניות אוטומטית.
+רוב בתי העסק הישראליים משתמשים ב-Low Profile לתשלום הראשון ויצירת טוקן, ואז ב-endpoint של Transaction עם הטוקן השמור לחיובים חוזרים. כל זרימות התשלום יכולות להפיק חשבוניות אוטומטית על ידי צירוף אובייקט `Document`.
 
 ### שלב 2: הגדרת אימות
 
 פרטי הגישה ל-Cardcom API V11:
-- `TerminalNumber` -- מזהה מסוף (תשתמשו ב-`1000` לבדיקות)
-- `ApiName` -- שם משתמש API (תשתמשו ב-`bWlyb24gY2FyZGNvbQ==` לבדיקות)
-- `ApiPassword` -- סיסמת API
+- `TerminalNumber` (מספר שלם), מזהה המסוף שלכם (תשתמשו ב-`1000` לבדיקות)
+- `ApiName` (מחרוזת), שם משתמש API
+- `ApiPassword` (מחרוזת), סיסמת API, נדרשת רק להחזרים ולהפקת מסמכים, לא נשלחת בחיוב רגיל
 
-**סביבת בדיקות:**
-מסוף `1000` עם פרטי הבדיקה מאפשר בדיקת API מלאה בלי חיובים אמיתיים. כרטיס בדיקה: `4580000000000000`, כל תפוגה עתידית, CVV `123`.
+סביבת בדיקות: מסוף `1000` עם ה-`ApiName` של ה-demo מאפשר בדיקת API בלי חיובים אמיתיים. כרטיס בדיקה: `4580000000000000`, כל תפוגה עתידית, CVV `123`.
 
 תשמרו פרטי גישה בצורה מאובטחת, אף פעם לא בקוד מקור או ב-JavaScript בצד הלקוח.
 
@@ -35,7 +35,7 @@
 
 #### אינטגרציית Low Profile (מומלץ)
 
-זה תהליך בשני שלבים:
+זה תהליך בשני שלבים.
 
 **שלב 3א: יצירת דף התשלום**
 
@@ -46,57 +46,43 @@ Content-Type: application/json
 {
   "TerminalNumber": 1000,
   "ApiName": "your-api-name",
-  "ApiPassword": "your-api-password",
+  "Operation": "ChargeAndCreateToken",
   "ReturnValue": "unique-order-id",
   "Amount": 100.00,
-  "SuccessRedirectUrl": "https://yoursite.com/success",
-  "FailedRedirectUrl": "https://yoursite.com/failed",
-  "WebHookUrl": "https://yoursite.com/webhook",
+  "SuccessRedirectUrl": "https://example.com/success",
+  "FailedRedirectUrl": "https://example.com/failed",
+  "WebHookUrl": "https://example.com/webhook",
+  "ISOCoinId": 1,
+  "Language": "he",
   "Document": {
-    "DocTypeToCreate": 101,
+    "DocumentTypeToCreate": "TaxInvoiceAndReceipt",
     "Name": "שם הלקוח",
+    "Email": "customer@example.com",
     "Products": [
-      {
-        "Description": "שם המוצר",
-        "UnitCost": 100.00,
-        "Quantity": 1
-      }
+      { "Description": "שם המוצר", "UnitCost": 100.00, "Quantity": 1 }
     ]
-  },
-  "CoinID": 1,
-  "Language": "he"
+  }
 }
 ```
 
-התגובה מחזירה `Url`, תפנו לשם את הלקוח או תטמיעו כ-iframe.
+התגובה היא `CreateLowProfileResponse`: תבדקו `ResponseCode == 0` (הצלחה), תקראו את `Description` בכשלון. בהצלחה היא מחזירה `LowProfileId` (תשמרו אותו) ו-`Url` (תפנו לשם את הלקוח או תטמיעו כ-iframe). `UrlToBit` ו-`UrlToPayPal` מוחזרים גם הם כשהאמצעים האלה מופעלים במסוף שלכם.
+
+השדה `Operation` שולט בהתנהגות: `ChargeOnly` (ברירת מחדל), `ChargeAndCreateToken`, `CreateTokenOnly`, `SuspendedDeal`, `Do3DSAndSubmit`.
 
 **שלב 3ב: קבלת התוצאות**
 
-אחרי שהתשלום מסתיים, קארדקום קוראת ל-`WebHookUrl` שלכם, או שאתם עושים polling:
+אחרי שהתשלום מסתיים, קארדקום קוראת ל-`WebHookUrl` שלכם, או שאתם עושים שאילתה:
 
 ```
 POST https://secure.cardcom.solutions/api/v11/LowProfile/GetLpResult
 {
   "TerminalNumber": 1000,
   "ApiName": "your-api-name",
-  "ApiPassword": "your-api-password",
-  "LowProfileCode": "code-from-step-3a"
+  "LowProfileId": "id-from-step-3a"
 }
 ```
 
-תבדקו `DealResponse` = 0 להצלחה. תחלצו את ה-`Token` לחיובים עתידיים.
-
-#### אינטגרציית OpenFields (עיצוב מותאם)
-
-OpenFields הוא דפוס האינטגרציה החדש של קארדקום (2026). הוא מאפשר לכם לבנות טופס תשלום משלכם בזמן ששדות הכרטיס הרגישים מתארחים ב-iframe של קארדקום:
-
-1. תיצרו סשן Low Profile דרך `/api/v11/LowProfile/Create`
-2. תטמיעו את OpenFields JS של קארדקום בדף שלכם
-3. תשלבו שדות iframe מאובטחים למספר כרטיס, תפוגה ו-CVV בתוך הטופס שלכם
-4. בשליחה, ה-JS מטוקניז את נתוני הכרטיס ושולח לקארדקום
-5. תקבלו תוצאות דרך `GetLpResult`
-
-זה נותן שליטה מלאה בעיצוב ועדיין שומר על עמידה ב-SAQ-A PCI. דוגמאות רשמיות: `https://github.com/CardCom` (React ו-vanilla JS).
+התגובה היא `LowProfileResult`: תבדקו `ResponseCode == 0`. בהצלחה היא נושאת את `TranzactionInfo` (פרטי העסקה), `TokenInfo` (ה-`Token` השמור יחד עם `CardMonth`/`CardYear`), `DocumentInfo` (המסמך שהופק), ו-`SuspendedInfo` (לעסקאות מושהות). כל אובייקט מקונן הוא `null` כשהוא לא רלוונטי.
 
 #### אמצעי תשלום חלופיים
 
@@ -104,9 +90,8 @@ OpenFields הוא דפוס האינטגרציה החדש של קארדקום (20
 
 | אמצעי | שדה בתגובה | הערות |
 |--------|---------------|-------|
-| **Bit** | `BitUrl` | אפליקציית התשלום הנייד הפופולרית ביותר בישראל |
-| **Google Pay** | `GooglePayUrl` | למובייל ואינטרנט |
-| **PayPal** | `PayPalUrl` | תשלומים בינלאומיים |
+| **Bit** | `UrlToBit` | אפליקציית התשלום הנייד הפופולרית ביותר בישראל |
+| **PayPal** | `UrlToPayPal` | תשלומים בינלאומיים |
 
 תציגו את אלה לצד טופס כרטיס האשראי כדי לתת ללקוחות יותר אפשרויות תשלום.
 
@@ -114,252 +99,226 @@ OpenFields הוא דפוס האינטגרציה החדש של קארדקום (20
 
 היתרון הייחודי של קארדקום הוא הפקת מסמכים אוטומטית עם התשלומים. זה קריטי לעסקים ישראליים כי חוק המס מחייב להנפיק מסמכים מתאימים לכל עסקה.
 
-**סוגי מסמכים (DocTypeToCreate):**
+סוג המסמך נקבע באמצעות השדה **`DocumentTypeToCreate`**, שהוא enum מסוג מחרוזת (לא מספר שלם). ערכים נפוצים:
 
-| קוד | סוג | מתי משתמשים |
-|------|--------|-------------|
-| 1 | חשבונית מס | מכירות B2B, שירותים |
-| 2 | חשבונית זיכוי | החזרים, תיקונים |
-| 3 | קבלה | אישור תשלום |
-| 101 | חשבונית מס / קבלה | B2C עם תשלום (הנפוץ ביותר) |
-| 400 | מסמך Iframe | בהקשר Low Profile |
+| ערך | סוג | מתי משתמשים |
+|-------|--------|-------------|
+| `Auto` | אוטומטי | ברירת מחדל, משתמש בהגדרות לוח הבקרה שלכם |
+| `TaxInvoiceAndReceipt` | חשבונית מס / קבלה | B2C עם תשלום (הנפוץ ביותר) |
+| `TaxInvoice` | חשבונית מס | B2B, כשהקבלה מונפקת בנפרד |
+| `Receipt` | קבלה | אישור תשלום בלבד |
+| `TaxInvoiceAndReceiptRefund` | זיכוי חשבונית מס / קבלה | ביטול של `TaxInvoiceAndReceipt` |
+| `TaxInvoiceRefund` | זיכוי חשבונית מס | ביטול של `TaxInvoice` |
+| `ReceiptRefund` | זיכוי קבלה | ביטול של `Receipt` |
+| `ProformaInvoice` | חשבונית עסקה / פרופורמה | מסמך הצעת מחיר טרום מכירה |
+| `DonationReceipt` | קבלת תרומות | עמותות רשומות |
 
-**איך לכלול מסמך בתהליך התשלום:**
-תוסיפו את אובייקט `Document` לבקשת Low Profile או ChargeToken (כמו שרואים בשלב 3א). קארדקום מפיקה את המסמך אוטומטית כשהתשלום מצליח.
+ה-enum המלא (`DocumentToCreate` במפרט ה-OpenAPI) כולל גם `Quote`, `Order`, `OrderConfirmation`, `DeliveryNote`, `DemandForPayment`, `ProformaDealInvoice`, `ReceiptForTaxInvoice`, `CouponDocumentAndReceipt` והגרסאות `*Refund` שלהם. תאמתו את הערך המדויק שאתם צריכים מול התיעוד הרשמי בכתובת `https://secure.cardcom.solutions/Api/v11/Docs`.
 
-**הפקת מסמך עצמאית:**
+איך לכלול מסמך בתהליך תשלום: תוסיפו את אובייקט `Document` לבקשת `LowProfile/Create` או `Transaction`. קארדקום מפיקה את המסמך אוטומטית כשהתשלום מצליח.
+
+הפקת מסמך עצמאית:
 
 ```
 POST https://secure.cardcom.solutions/api/v11/Documents/CreateDocument
 {
-  "TerminalNumber": 1000,
   "ApiName": "your-api-name",
   "ApiPassword": "your-api-password",
   "Document": {
-    "DocTypeToCreate": 1,
-    "Name": "שם הלקוח בע\"מ",
-    "VAT_Number": "123456789",
-    "Products": [
-      {
-        "Description": "שירותי פיתוח אתרים",
-        "UnitCost": 5000.00,
-        "Quantity": 1,
-        "IsVatFree": false
-      }
-    ],
-    "SendByEmail": true,
+    "DocumentTypeToCreate": "TaxInvoice",
+    "Name": "שם הלקוח בעמ",
+    "TaxId": "123456789",
     "Email": "customer@example.com",
-    "Language": "he",
-    "CoinID": 1
+    "IsSendByEmail": true,
+    "Languge": "he",
+    "ISOCoinID": 1,
+    "Products": [
+      { "Description": "שירותי פיתוח אתרים", "UnitCost": 5000.00, "Quantity": 1 }
+    ]
   }
 }
 ```
 
-התגובה מחזירה `InvoiceNumber`, `InvoiceType` ו-`Link` למסמך ה-PDF.
+התגובה היא `DocumentInfo`: תבדקו `ResponseCode == 0`, ואז תקראו את `DocumentType`, `DocumentNumber`, `AccountId` ו-`DocumentUrl` (קישור ל-PDF).
 
-### שלב 5: תשלומים חוזרים מבוססי טוקן (הוראות קבע)
+שימו לב לאיות האמיתי של השדות ב-V11 בתוך אובייקט `Document`: `DocumentTypeToCreate` (enum מחרוזת), `Name` (ה"document To", נדרש, עד 50 תווים), `TaxId` (מספר עוסק או מספר זהות, מחליף את `VAT_Number` הישן), `IsSendByEmail` (מחליף את `SendByEmail`), `Languge` (האיות הרשמי של V11, חסרה ה-`a` השנייה), `ISOCoinID` (מחליף את `CoinID`), `IsVatFree`, ו-`Products[]` עם `Description`, `UnitCost`, `Quantity`, `IsVatFree`. ראו את `references/document-types.md` לרשימת השדות המלאה.
 
-למנויים וחיובים חוזרים:
+### שלב 5: תשלומים חוזרים מבוססי טוקן
 
-1. **יצירת טוקן בתשלום הראשון:**
-   - תשתמשו ב-Low Profile עם יצירת טוקן מופעלת
-   - התגובה מחזירה `Token`, `CardValidityMonth`, `CardValidityYear`
+למנויים וחיובים חוזרים (הוראות קבע):
 
-2. **אחסון טוקן מאובטח:**
-   - תשמרו טוקן (בפורמט UUID), תפוגת כרטיס ו-4 ספרות אחרונות
-   - הטוקן קשור למסוף שלכם
+1. **יצירת טוקן בתשלום הראשון.** תשתמשו ב-Low Profile עם `Operation: "ChargeAndCreateToken"` (או `"CreateTokenOnly"`). ה-`LowProfileResult` מחזיר `TokenInfo` עם `Token`, `CardMonth`, `CardYear` ו-`TokenExDate` (התאריך שבו הטוקן נמחק ממערכת קארדקום).
 
-3. **חיוב הטוקן:**
+2. **אחסון הטוקן בצורה מאובטחת.** תשמרו את מחרוזת ה-`Token`, תפוגת הכרטיס ו-4 הספרות האחרונות. הטוקן קשור למסוף שלכם.
+
+3. **חיוב הטוקן** דרך endpoint של Transaction:
 
 ```
 POST https://secure.cardcom.solutions/api/v11/Transactions/Transaction
 {
   "TerminalNumber": 1000,
   "ApiName": "your-api-name",
-  "ApiPassword": "your-api-password",
   "Token": "token-uuid",
-  "CardValidityMonth": "12",
-  "CardValidityYear": "2027",
+  "CardExpirationMMYY": "1227",
   "Amount": 99.00,
+  "ISOCoinId": 1,
   "Document": {
-    "DocTypeToCreate": 101,
+    "DocumentTypeToCreate": "TaxInvoiceAndReceipt",
     "Name": "שם המנוי",
+    "Email": "customer@example.com",
+    "IsSendByEmail": true,
     "Products": [
-      {
-        "Description": "מנוי חודשי - פברואר 2026",
-        "UnitCost": 99.00,
-        "Quantity": 1
-      }
-    ],
-    "SendByEmail": true,
-    "Email": "customer@example.com"
+      { "Description": "מנוי חודשי", "UnitCost": 99.00, "Quantity": 1 }
+    ]
   }
 }
 ```
 
-כל חיוב טוקן יכול להפיק ולשלוח חשבונית במייל אוטומטית.
+התגובה היא `TransactionInfo`: תבדקו `ResponseCode == 0` (שימו לב ש-`700` ו-`701` נחשבים גם הם הצלחה לעסקאות אימות בלבד מסוג J2/J5), ואז תקראו את `TranzactionId`, `Token`, `DocumentNumber` ו-`DocumentUrl`. כל חיוב טוקן יכול להפיק ולשלוח חשבונית במייל אוטומטית כשמצורף אובייקט `Document`.
 
 ### שלב 6: ביצוע החזרים
 
-החזר עסקה עם הפקת חשבונית זיכוי אופציונלית:
+החזר עסקה לפי מזהה העסקה של קארדקום:
 
 ```
 POST https://secure.cardcom.solutions/api/v11/Transactions/RefundByTransactionId
 {
-  "TerminalNumber": 1000,
   "ApiName": "your-api-name",
   "ApiPassword": "your-api-password",
-  "TransactionId": "original-transaction-id",
-  "Amount": 100.00,
-  "Document": {
-    "DocTypeToCreate": 2,
-    "Name": "שם הלקוח"
-  }
+  "TransactionId": 219282004,
+  "PartialSum": 100.00,
+  "CancelOnly": false,
+  "AllowMultipleRefunds": false
 }
 ```
 
-הפעולה הזו מחזירה את הכסף וגם מפיקה חשבונית זיכוי, מטפלת בצד הפיננסי ובדרישות המס בקריאה אחת.
+`ApiPassword` נדרשת להחזרים. `PartialSum` מחזיר חלק מהעסקה (תשמיטו אותו כדי להחזיר את הסכום המלא). `CancelOnly: true` מבטל עסקה לפני שהיא הופקדה. התגובה היא `RefundByTransactionIdResp`: תבדקו `ResponseCode == 0`, ואז תקראו את `NewTranzactionId` (מזהה עסקת ההחזר).
 
-### שלב 7: טיפול בהחלפות טוקן (מוחלפים)
+כדי להנפיק את מסמך הזיכוי התואם, תקראו ל-`Documents/CreateDocument` עם `DocumentTypeToCreate` של זיכוי כמו `TaxInvoiceAndReceiptRefund` או `TaxInvoiceRefund`.
 
-כשכרטיסי אשראי מוחלפים (פג תוקף, אובדו, הונפקו מחדש), קארדקום יכולה לעדכן טוקנים שמורים אוטומטית:
+### שלב 7: עסקאות מושהות
 
-1. תבדקו מדי פעם טוקנים מעודכנים דרך `GetMuhlafimByDate` או `GetNewMuhlafim`
-2. ה-endpoints האלה מחזירים טוקנים שהכרטיס הבסיסי שלהם הוחלף על ידי המנפיק
-3. תעדכנו את נתוני הטוקן השמורים (תפוגה חדשה, 4 ספרות אחרונות) ב-DB שלכם
-4. תסמנו החלפות כמעובדות דרך `UpdateMuhlafimDone`
+עסקה מושהית מאשרת כוונת תשלום בלי חיוב מיידי:
 
-זה מונע חיובים כושלים כשלקוחות מקבלים כרטיסים חדשים, קריטי לעסקים מבוססי מנויים.
+1. תיצרו סשן Low Profile עם `Operation: "SuspendedDeal"`.
+2. ה-`LowProfileResult` מחזיר `SuspendedInfo` עם `SuspendedDealId`.
+3. תחייבו את העסקה המושהית מאוחר יותר דרך לוח הבקרה של קארדקום או דרך Transaction API.
 
-### שלב 8: עסקאות מושהות (Suspended Deals)
+שימושי להרשאות מראש ולשירותים שמחויבים אחרי אספקה. קריאת החיוב המאוחר המדויקת מתוארת בתיעוד הרשמי.
 
-עסקאות מושהות מאפשרות לאשר תשלום בלי לחייב מיד:
+### שלב 8: טיפול בשגיאות
 
-1. תיצרו עסקה מושהית דרך Low Profile עם `Operation: "SuspendDealOnly"`
-2. התשלום מאושר אבל לא מחויב
-3. תפעילו את העסקה מאוחר יותר דרך `SuspendedDealActivateOne` כשאתם מוכנים לחייב
-4. אופציונלי: תבטלו עסקאות מושהות שלא מומשו דרך `RevokeLowProfileDeal`
+כל endpoint ב-V11 מחזיר מספר שלם `ResponseCode` ומחרוזת `Description`. `ResponseCode == 0` משמעו הצלחה, כל ערך שאינו אפס הוא שגיאת מפתח/עסקה ו-`Description` נושא את הסיבה הקריאה לאדם.
 
-שימושי להרשאות מראש, הזמנות מלונות או שירותים שמחויבים אחרי אספקה.
+```python
+import requests
 
-### שלב 9: טיפול בשגיאות
+resp = requests.post(
+    "https://secure.cardcom.solutions/api/v11/Transactions/Transaction",
+    json=payload,
+).json()
 
-תבדקו קודי תגובה בכל קריאת API. תגובה של `0` זה הצלחה.
+if resp.get("ResponseCode") == 0:
+    deal_id = resp["TranzactionId"]
+else:
+    log_error(f"Cardcom error {resp.get('ResponseCode')}: {resp.get('Description')}")
+```
 
-שגיאות נפוצות:
-
-| קוד | משמעות | פעולה |
-|------|---------|--------|
-| 0 | הצלחה | תמשיכו רגיל |
-| 5033 | מספר מסוף חסר | תבדקו את TerminalNumber בבקשה |
-| 5034 | אימות נכשל | תוודאו את ApiName ו-ApiPassword |
-| 5035 | סכום לא תקין | תוודאו ש-Amount הוא מספר חיובי |
-| 5100 | הכרטיס סורב | תבקשו מהמשתמש לנסות כרטיס אחר |
-| 5101 | הכרטיס פג תוקף | תבקשו מהמשתמש לעדכן פרטי כרטיס |
-| 5102 | CVV שגוי | תבקשו מהמשתמש להזין CVV מחדש |
-| 5200 | טוקן לא נמצא | תוודאו UUID של טוקן ותאימות למסוף |
-| 5300 | הפקת חשבונית נכשלה | תבדקו את פרמטרי Document |
-
-למדריך המלא של תגובות ה-API, תסתכלו על `references/api-responses.md`.
+תמיד תבדקו גם את סטטוס ה-HTTP (200 משמעו שהבקשה התקבלה) וגם את `ResponseCode` (0 משמעו שהפעולה הצליחה). התיעוד הרשמי בכתובת `https://secure.cardcom.solutions/Api/v11/Docs` נושא את מדריך השגיאות המספרי המלא, אל תקודדו מיפוי קבוע של קוד שגיאה להודעה, תקראו את `Description` במקום. ראו את `references/api-responses.md` לדפוס הטיפול.
 
 ## דוגמאות
 
 ### דוגמה 1: checkout לחנות מקוונת עם חשבונית
 המשתמש אומר: "אני צריך לקבל תשלומים באתר המסחר האלקטרוני הישראלי שלי ולהפיק חשבוניות מס אוטומטית"
 פעולות:
-1. תבחרו: אינטגרציית Low Profile עם DocTypeToCreate=101 (חשבונית מס + קבלה)
-2. תיצרו: דף Low Profile עם פרטי מוצרים באובייקט Document
-3. תממשו: handler ל-WebHook לאישור תשלום
-4. תוצאה: הלקוח משלם ומקבל אוטומטית חשבונית מס/קבלה במייל כ-PDF
-תוצאה: תהליך checkout מלא עם עמידה אוטומטית בדרישות חוקי המס בישראל.
+1. תבחרו Low Profile עם `DocumentTypeToCreate: "TaxInvoiceAndReceipt"`.
+2. תיצרו את דף ה-Low Profile דרך `LowProfile/Create` עם פרטי המוצרים באובייקט `Document`.
+3. תממשו handler ל-`WebHookUrl` שקורא ל-`LowProfile/GetLpResult`.
+תוצאה: הלקוח משלם ומקבל אוטומטית חשבונית מס/קבלה במייל כ-PDF.
 
 ### דוגמה 2: מנוי SaaS חודשי
-המשתמש אומר: "אני מפעיל מוצר SaaS, אני צריך לחייב משתמשים 149 ש"ח בחודש ולשלוח להם חשבוניות"
+המשתמש אומר: "אני מפעיל מוצר SaaS, אני צריך לחייב משתמשים 149 שח בחודש ולשלוח להם חשבוניות"
 פעולות:
-1. תשלום ראשון: Low Profile עם יצירת טוקן
-2. תשמרו: טוקן ותפוגת כרטיס מהתגובה
-3. cron חודשי: ChargeToken עם Document לכל מחזור חיוב
-4. תטפלו ב: חיובים שנכשלו, כרטיסים שפג תוקפם, שליחת חשבוניות במייל
+1. תשלום ראשון: `LowProfile/Create` עם `Operation: "ChargeAndCreateToken"`.
+2. תשמרו את ה-`Token`, `CardMonth`, `CardYear` מתוך `TokenInfo`.
+3. cron חודשי: `Transactions/Transaction` עם הטוקן ואובייקט `Document` לכל מחזור חיוב.
 תוצאה: חיוב חוזר אוטומטי עם הפקת חשבונית חודשית.
 
 ### דוגמה 3: חשבונית עצמאית בלי תשלום
 המשתמש אומר: "אני צריך להפיק חשבונית מס על העברה בנקאית שכבר קיבלתי"
 פעולות:
-1. תשתמשו ב-endpoint CreateDocument (בלי עיבוד תשלום)
-2. תגדירו DocTypeToCreate=1 (חשבונית מס)
-3. תכללו: פרטי לקוח, פריטים, סכומים
-4. תגדירו SendByEmail=true עם מייל הלקוח
+1. תשתמשו ב-`Documents/CreateDocument` (בלי עיבוד תשלום).
+2. תגדירו `DocumentTypeToCreate: "TaxInvoice"`.
+3. תכללו `Name`, `TaxId`, `Products[]`, תגדירו `IsSendByEmail: true` עם מייל הלקוח.
 תוצאה: חשבונית מס מופקת ונשלחת במייל בלי לעבד כרטיס אשראי.
 
-### דוגמה 4: ביצוע החזר עם חשבונית זיכוי
+### דוגמה 4: ביצוע החזר עם מסמך זיכוי
 המשתמש אומר: "לקוח רוצה החזר על הזמנה מספר 5678, צריך גם להנפיק חשבונית זיכוי"
 פעולות:
-1. תשתמשו ב-endpoint RefundByTransactionId
-2. תכללו Document עם DocTypeToCreate=2 (חשבונית זיכוי)
-3. עיבוד: החזר + חשבונית זיכוי מופקים בקריאת API אחת
-4. תאמתו: DealResponse=0 להצלחה
-תוצאה: החזר מעובד וחשבונית זיכוי מופקת אוטומטית.
+1. תקראו ל-`Transactions/RefundByTransactionId` עם `TransactionId` ו-`ApiPassword`.
+2. תבדקו `ResponseCode == 0` ותקראו את `NewTranzactionId`.
+3. תקראו ל-`Documents/CreateDocument` עם `DocumentTypeToCreate: "TaxInvoiceAndReceiptRefund"`.
+תוצאה: ההחזר מעובד ומסמך הזיכוי התואם מופק.
 
 ### דוגמה 5: קבלת תשלום Bit
 המשתמש אומר: "אני רוצה לאפשר ללקוחות לשלם עם Bit בנוסף לכרטיס אשראי"
 פעולות:
-1. תפעילו Bit במסוף קארדקום דרך לוח הבקרה
-2. תיצרו סשן Low Profile כרגיל
-3. תציגו את `BitUrl` מהתגובה לצד טופס הכרטיס
-4. תטפלו: אותו תהליך webhook, DealResponse=0 להצלחה
-תוצאה: לקוחות יכולים לבחור בין כרטיס אשראי לתשלום Bit.
-
-### דוגמה 6: checkout מותאם עם OpenFields
-המשתמש אומר: "אני רוצה לעצב את טופס התשלום שלי אבל לשמור על עמידה ב-PCI"
-פעולות:
-1. תיצרו סשן Low Profile כדי לקבל טוקן OpenFields
-2. תטמיעו את OpenFields JS של קארדקום ושדות iframe מאובטחים בטופס שלכם
-3. תלבישו CSS משלכם על הטופס בזמן ששדות הכרטיס נשארים מתארחים בקארדקום
-4. בשליחה: ה-JS מטוקניז ושולח נתוני כרטיס ישירות לקארדקום
-5. תקבלו תוצאות דרך GetLpResult
-תוצאה: עיצוב checkout מותאם לחלוטין עם עמידה ב-SAQ-A PCI.
+1. תפעילו Bit במסוף קארדקום דרך לוח הבקרה.
+2. תיצרו סשן Low Profile כרגיל דרך `LowProfile/Create`.
+3. תציגו את `UrlToBit` מהתגובה לצד טופס הכרטיס.
+תוצאה: לקוחות יכולים לבחור בין כרטיס אשראי לתשלום Bit, אותו תהליך webhook.
 
 ## ספריות קהילתיות
 
-- **@tsdiapi/cardcom** (TypeScript/Node.js) -- לקוח API V11 עם תשלומים, החזרים, טוקניזציה, שאילתות עסקאות. התקנה: `npm install @tsdiapi/cardcom`
-- **yadahan/laravel-cardcom** (PHP/Laravel) -- אינטגרציה מלאה עם חיובים, החזרים, טוקנים, חשבוניות, רב-מסופי
-- **CardCom/OpenFields-FrontEnd-React** (React) -- דוגמת OpenFields רשמית ב-React. ראו: `https://github.com/CardCom/OpenFields-FrontEnd-React`
-- **CardCom/OpenFields-Backend-Node** (Node.js) -- דוגמת backend רשמית ב-Node.js
+- **@tsdiapi/cardcom** (TypeScript/Node.js), לקוח API V11 עם תשלומים, החזרים, טוקניזציה, שאילתות עסקאות. התקנה: `npm install @tsdiapi/cardcom`
+- **CardCom/OpenFields-FrontEnd-React** (React), דוגמת OpenFields רשמית. ראו `https://github.com/CardCom/OpenFields-FrontEnd-React`
+- **CardCom/OpenFields-Backend-Node** (Node.js), דוגמת backend רשמית. ראו `https://github.com/CardCom/OpenFields-Backend-Node`
+
+## קישורים לחומרי עזר
+
+| משאב | כתובת |
+|----------|-----|
+| תיעוד API V11 (מדריך OpenAPI) | `https://secure.cardcom.solutions/Api/v11/Docs` |
+| מרכז התמיכה של קארדקום | `https://support.cardcom.solutions` |
+| דוגמת OpenFields ב-React | `https://github.com/CardCom/OpenFields-FrontEnd-React` |
+| דוגמת OpenFields ב-Node.js | `https://github.com/CardCom/OpenFields-Backend-Node` |
 
 ## משאבים מצורפים
 
 ### חומרי עזר
-- `references/api-endpoints.md` -- מדריך מלא של endpoints של Cardcom REST API V11, כולל Low Profile, Transactions, Documents, RecurringPayments, Financial ו-CompanyOperations. מפרט שדות בקשה/תגובה לכל endpoint. תסתכלו על הקובץ הזה כשאתם בונים אינטגרציות API או בודקים אילו פעולות זמינות.
-- `references/api-responses.md` -- רשימה מלאה של קודי תגובה של קארדקום עם המשמעויות והטיפול המומלץ לפעולות עסקה, טוקן וחשבונית. תסתכלו על הקובץ הזה כשאתם מדבגים קריאות API שנכשלו.
-- `references/document-types.md` -- קודי סוגי מסמכי מס ישראליים (1, 2, 3, 101, 400) עם שדות נדרשים, טיפול במע"מ והנחיות שימוש לפי חוק המס הישראלי. תסתכלו על הקובץ הזה כשאתם מחליטים איזה סוג מסמך להפיק לעסקה.
+- `references/api-endpoints.md`, מדריך endpoints של Cardcom REST API V11: נתיבי LowProfile, Transactions, Documents, RecuringPayments, Financial ו-CompanyOperations עם שדות הבקשה/תגובה המרכזיים שלהם. תסתכלו עליו כשאתם בונים אינטגרציות API.
+- `references/api-responses.md`, דפוס התגובה `ResponseCode` + `Description` של V11, אובייקטי התגובה לכל פעולה, וזרימת הטיפול המומלצת בשגיאות. תסתכלו עליו כשאתם מדבגים קריאות API שנכשלו.
+- `references/document-types.md`, ה-enum המחרוזתי `DocumentTypeToCreate`, רשימת השדות של אובייקט `Document`, וטיפול במעמ לפי חוק המס הישראלי. תסתכלו עליו כשאתם מחליטים איזה סוג מסמך להפיק.
 
 ### סקריפטים
-- `scripts/validate_cardcom_response.py` -- מאמת תגובת API של קארדקום: בודק קודי תגובה לפעולות עסקה, טוקן וחשבונית, מוודא שדות נדרשים ומסמן בעיות אינטגרציה נפוצות. להרצה: `python scripts/validate_cardcom_response.py --help`
+- `scripts/validate_cardcom_response.py`, מאמת תגובת API של קארדקום V11: בודק `ResponseCode`, מציג את `Description`, ומוודא שדות צפויים לפעולות עסקה, טוקן ומסמך. להרצה: `python scripts/validate_cardcom_response.py --help`
 
 ## מלכודות נפוצות
-- סוכנים שולחים לפעמים בקשות API לקארדקום בפורמט שגוי. ה-API V11 מצפה ל-JSON עם Content-Type: application/json, אבל גרסאות ישנות השתמשו ב-form-encoded.
-- ה-TerminalNumber חייב להישלח כמספר שלם, לא כמחרוזת. סוכנים נוטים לעטוף אותו במירכאות, מה שגורם לשגיאה 5033.
-- סוכנים עלולים להרדים קוד עם מע"מ של 17%, אבל שיעור המע"מ הנוכחי בישראל הוא 18% (מינואר 2025). קארדקום מחשבת מע"מ בצד השרת, אז הסכומים ב-Document צריכים להיות לפני מע"מ אלא אם מצוין אחרת.
-- מסוף הבדיקות של קארדקום (1000) לא תומך בכל הפיצ'רים שזמינים בפרודקשן. סוכנים עלולים לכתוב בדיקות שעוברות ב-sandbox אבל נכשלות בפרודקשן בגלל הגדרות ספציפיות למסוף.
+- בדיקת ההצלחה ב-V11 היא `ResponseCode == 0`, לא `DealResponse == 0`. `DealResponse` לא קיים ב-V11, סוכנים שאומנו על דוגמאות קארדקום ישנות ממציאים אותו. כל endpoint ב-V11 מחזיר `ResponseCode` יחד עם מחרוזת `Description`.
+- `DocumentTypeToCreate` הוא enum מסוג מחרוזת (`"TaxInvoiceAndReceipt"`, `"TaxInvoice"`, `"Receipt"`, ...), לא קוד מספרי. קודי מסמך מספריים כמו `101` או `400` שייכים לממשקי `.aspx` ישנים, לא ל-V11.
+- ה-`TerminalNumber` חייב להישלח כמספר שלם, לא כמחרוזת. סוכנים נוטים לעטוף אותו במירכאות.
+- `ApiPassword` נדרשת ל-`RefundByTransactionId` ול-`CreateDocument`, אבל לא נשלחת בחיוב רגיל של `LowProfile/Create` או `Transaction`.
+- שימו לב לאיות האמיתי של השדות ב-V11: `Languge` (חסרה ה-`a` השנייה) בתוך אובייקט `Document`, `ISOCoinID` / `ISOCoinId`, `IsSendByEmail` (לא `SendByEmail`), `TaxId` (לא `VAT_Number`).
+- שיעור המעמ הנוכחי בישראל הוא 18% (מינואר 2025). קארדקום מחשבת מעמ בצד השרת, אז סכומי המסמך מטופלים לפי דגל `IsVatFree`.
 
 ## פתרון בעיות
 
-### שגיאה: "5033 -- Terminal Number is Missing"
-סיבה: TerminalNumber לא נכלל או נשלח בסוג שגוי
-פתרון: תוודאו ש-TerminalNumber נשלח כמספר שלם (לא מחרוזת) בגוף ה-JSON. לבדיקות תשתמשו ב-1000.
-
-### שגיאה: "5034 -- Authentication failed"
-סיבה: ApiName או ApiPassword לא תקינים
-פתרון: תוודאו את פרטי הגישה בלוח הבקרה של קארדקום. לבדיקות תשתמשו במסוף 1000 עם פרטי הבדיקה. פרטי ה-API נפרדים מסיסמת ההתחברות.
+### שגיאה: `ResponseCode` שאינו אפס ב-`LowProfile/Create`
+סיבה: בעיית אימות או ולידציה בבקשה.
+פתרון: תקראו את מחרוזת ה-`Description` בתגובה, היא מציינת את הבעיה המדויקת. תוודאו ש-`TerminalNumber` הוא מספר שלם ו-`ApiName` נכון. מדריך השגיאות המספרי המלא נמצא בכתובת `https://secure.cardcom.solutions/Api/v11/Docs`.
 
 ### שגיאה: "דף Low Profile נטען אבל התשלום נכשל"
-סיבה: בדרך כלל בעיה ב-WebHookUrl או בכתובות ה-redirect
-פתרון: תוודאו ש-SuccessRedirectUrl, FailedRedirectUrl ו-WebHookUrl הן כתובות HTTPS נגישות מהאינטרנט. כתובות localhost לא עובדות, תשתמשו ב-ngrok לפיתוח.
+סיבה: בדרך כלל בעיה ב-`WebHookUrl` או בכתובות ה-redirect.
+פתרון: תוודאו ש-`SuccessRedirectUrl`, `FailedRedirectUrl` ו-`WebHookUrl` הן כתובות HTTPS נגישות מהאינטרנט. כתובות localhost לא עובדות, תשתמשו ב-ngrok לפיתוח.
+
+### שגיאה: "החזר מחזיר `ResponseCode` שאינו אפס"
+סיבה: `ApiPassword` חסרה, או שהעסקה כבר הופקדה ושלחתם `CancelOnly: true`.
+פתרון: תכללו `ApiPassword` בכל בקשת החזר. תשתמשו ב-`CancelOnly: true` רק לפני הפקדה, אחרי הפקדה תשלחו החזר אמיתי (תשמיטו את `CancelOnly` או תגדירו אותו `false`).
 
 ### שגיאה: "חשבונית נוצרה אבל לא נשלחה במייל"
-סיבה: SendByEmail לא מוגדר או שחסר אימייל
-פתרון: תגדירו `SendByEmail: true` ותכללו `Email` תקין באובייקט Document. תבדקו בתיקיית ספאם, קארדקום שולחת מהדומיין שלה.
+סיבה: `IsSendByEmail` לא מוגדר או שחסר אימייל.
+פתרון: תגדירו `IsSendByEmail: true` ותכללו `Email` תקין באובייקט `Document`. תבדקו בתיקיית ספאם, קארדקום שולחת מהדומיין שלה.
 
 ### שגיאה: "חיוב טוקן מצליח אבל אין חשבונית"
-סיבה: אובייקט Document חסר מבקשת ChargeToken
-פתרון: תכללו את אובייקט Document המלא עם DocTypeToCreate, Name ו-Products בכל בקשת חיוב טוקן. הפקת מסמכים היא opt-in לכל עסקה, לא אוטומטית.
+סיבה: אובייקט `Document` חסר מבקשת ה-`Transaction`.
+פתרון: תכללו את אובייקט `Document` המלא עם `DocumentTypeToCreate`, `Name` ו-`Products` בכל חיוב טוקן. הפקת מסמכים היא opt-in לכל עסקה.

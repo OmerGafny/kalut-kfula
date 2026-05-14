@@ -4,9 +4,14 @@
 
 ### Form 1301 - Annual Individual Tax Return (דוח שנתי ליחיד)
 - **Who files:** Individuals, sole proprietors, freelancers meeting filing criteria
-- **Deadline:** April 30 (extensions via CPA agreement, typically until September 30)
+- **Deadline:** for the 2025 return (filed 2026), June 30 for online filers and May 31 for paper filers. April 30 is the legacy paper baseline from earlier years. CPA-represented filers get the later quota extension (often September 30 or later)
 - **Key sections:** Personal details, employment income, business income, rental income, capital/investment income, foreign income, deductions, tax credits
 - **Common appendices:** 1320 (P&L for self-employed), 1321 (non-business income), 1322/1325 (capital gains), 1327 (foreign income), 1343 (depreciation), 6111 (financial statements)
+
+### Form 135 - Short Annual Return (דוח שנתי מקוצר)
+- **Who files:** Salaried individuals not required to file a full Form 1301 who want to claim a refund (unapplied nekudot zikui, mid-year job change, donations, pension credits)
+- **Deadline:** under Section 160 of the Income Tax Ordinance, a refund can be claimed for up to 6 years back
+- **Note:** if the filer has business income, foreign income, or capital gains, they must file the full Form 1301 instead
 
 ### Form 106 - Annual Salary Summary for Employee (טופס 106)
 - **Who issues:** Employers to each employee
@@ -73,7 +78,8 @@
 
 | Form | Standard Deadline | Extension Available |
 |------|-------------------|---------------------|
-| 1301 | April 30 | Yes, via CPA (typically September 30) |
+| 1301 | June 30 online filers / May 31 paper filers (2025 return; April 30 is the legacy paper baseline) | Yes, via CPA quota (often September 30 or later) |
+| 135 | Within 6 years of the tax year (Section 160 refund window) | Not applicable, the 6-year window is the limit |
 | 1214 | May 31 | Yes, must request before deadline |
 | 126 | April 30 | Limited |
 | 856 | April 30 | Limited |

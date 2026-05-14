@@ -1,6 +1,6 @@
 ---
 name: israeli-tax-returns
-description: Prepare and file Israeli tax returns with Reshut HaMisim. Covers Form 1301 (individual), Form 1214 (corporate), Form 126 (employer salary), Form 856 (supplier payments), Form 6111 (financial statements), mikdamot (advance payments), Mas Shevach (real estate capital gains), and securities capital gains (Forms 1322/1325). Use when user asks about "doch shnati", "tax return Israel", "Form 1301", "Form 1214", "mas hachnasa", "mikdamot", "mas shevach declaration", "capital gains report", "nekudot zikui", "mas yesafim", or "דוח שנתי". Guides income classification, deductions, tax credits, surtax, deadlines, and SHAAM submission. Do NOT use for VAT reporting (use israeli-vat-reporting), withholding tax (use israeli-tax-withholding), crypto tax (use israeli-crypto-tax-reporter), payroll (use israeli-payroll-calculator), or invoicing (use israeli-e-invoice).
+description: Prepare and file Israeli tax returns with Reshut HaMisim. Covers Form 1301 (individual), Form 1214 (corporate), Form 126 (employer salary), Form 856 (supplier payments), Form 6111 (financial statements), mikdamot (advance payments), Mas Shevach (real estate capital gains), and securities capital gains (Forms 1322/1325). Use when user asks about "doch shnati", "tax return Israel", "Form 1301", "Form 1214", "mas hachnasa", "mikdamot", "mas shevach declaration", "capital gains report", "nekudot zikui", "mas yesafim", or "דוח שנתי". Guides income classification, deductions, tax credits, surtax, deadlines, and SHAAM submission. Do NOT use for VAT reporting (use israeli-vat-reporting), withholding tax (use israeli-tax-withholding), crypto tax (use israeli-crypto-tax-reporter), payroll (use israeli-payroll-calculator), invoicing (use israeli-e-invoice), or Section 102 employee stock options (use israeli-stock-options-tax). This skill covers securities capital gains via Forms 1322/1325, not Section 102 equity grants.
 license: MIT
 allowed-tools: Bash(python:*) WebFetch
 compatibility: Works with Claude Code, OpenClaw, Cursor, Windsurf, Codex, GitHub Copilot, opencode, antigravity.
@@ -16,14 +16,21 @@ Determine which tax return or report the user needs to prepare. Israeli tax law 
 
 | Form | Hebrew Name | Who Files | Deadline | Frequency |
 |------|-------------|-----------|----------|-----------|
-| 1301 | דוח שנתי ליחיד | Individuals, sole proprietors, freelancers | April 30 (extensions possible via CPA) | Annual |
-| 1214 | דוח שנתי לחברה | Companies (Chevra Ba'am, Chevra Pratit) | May 31 (5 months after tax year end) | Annual |
+| 1301 | דוח שנתי ליחיד | Individuals, sole proprietors, freelancers | June 30 for online filers; May 31 for paper filers (CPA-represented filers get the later quota extension) | Annual |
+| 135 | דוח שנתי מקוצר | Salaried individuals filing a short return to claim a refund | Within 6 years of the relevant tax year (Section 160 refund window) | Annual / on demand |
+| 1214 | דוח שנתי לחברה | Companies (Chevra Ba'am, Chevra Pratit) | May 31 (5 months after tax year end), extensions available | Annual |
 | 126 | דוח מעסיק על משכורות | Employers reporting employee salaries and withholdings | April 30 | Annual |
 | 856 | דוח על תשלומים לספקים | Businesses reporting payments to suppliers/freelancers | April 30 | Annual |
 | 6111 | דוח כספי אחיד | Businesses with turnover above 300,000 NIS (incl. VAT) | Submitted with 1301 or 1214 | Annual |
 | Mikdamot | מקדמות מס הכנסה | Self-employed and businesses with advance payment assessments | 15th of the month after the period | Bi-monthly |
 | Mas Shevach | הצהרת מס שבח | Anyone selling real estate in Israel | 30 days from sale date (40 days if requesting exemption) | Per transaction |
 | 1322/1325 | דוח רווח הון מניירות ערך | Anyone with capital gains from securities sales | 30 days from sale (or annual with Form 1301) | Per transaction or annual |
+
+The Form 1301 deadline moved later for the 2025 tax year (filed in 2026): online
+filers have until June 30, paper (non-online) filers until May 31. April 30 is
+the legacy paper baseline that older years used; state the online deadline
+explicitly, since most filers submit online. CPA-represented filers receive the
+later extension under the CPA association's quota arrangement with the ITA.
 
 Ask the user:
 - Which return type do they need?
@@ -72,6 +79,22 @@ Israeli law offers three options for taxing residential rental income:
 | Exempt | 0% | Monthly rent below the exempt ceiling (5,654 NIS/month, 2025-2027, frozen, no longer indexed) |
 | Flat rate | 10% | On gross rent, no deductions allowed. Payment by January 31 of following year |
 | Marginal | Progressive rates (10%-50%) | Full deduction of expenses (depreciation, mortgage interest, maintenance). Filed with Form 1301 |
+
+### Step 2.5: Short Return for Salaried Refund-Seekers (Form 135)
+
+Form 135 (דוח שנתי מקוצר, the short annual return) is the common entry point for
+salaried employees who are not required to file a full Form 1301 but want to
+claim a refund. Typical cases: nekudot zikui that the employer did not apply, a
+mid-year job change, donations under Section 46, or pension contributions that
+were never credited.
+
+- A salaried filer who only wants a refund usually files Form 135, not the full
+  1301.
+- **Refund-claim window:** under Section 160 of the Income Tax Ordinance, a
+  refund can be claimed for up to 6 years back. A filer in 2026 can still claim
+  refunds for tax years 2020-2025.
+- If the person has business income, foreign income, capital gains, or crosses
+  the mandatory-filing thresholds, they must file the full Form 1301 instead.
 
 ### Step 3: Nekudot Zikui (Tax Credit Points) Calculation
 
@@ -301,7 +324,7 @@ All returns are submitted electronically via the Tax Authority's online system (
 - Authorization is per-client, per-year
 
 **Filing extensions:**
-- Individual returns (Form 1301): standard deadline April 30, CPA clients typically receive automatic extensions through the CPA association's agreement with the Tax Authority (usually extending to September 30 or later, based on quota system)
+- Individual returns (Form 1301): the 2025 return (filed 2026) is due June 30 for online filers and May 31 for paper filers. April 30 is the legacy paper baseline from earlier years. CPA clients typically receive automatic extensions through the CPA association's quota agreement with the Tax Authority (often to September 30 or later)
 - Company returns (Form 1214): standard deadline May 31, extensions available
 - Extension requests must be filed before the original deadline
 
@@ -369,7 +392,7 @@ Actions:
 - `references/tax-brackets-credits.md` - Current income tax brackets (2025, frozen through 2027), nekudot zikui point values and eligibility categories, surtax thresholds, and corporate tax rates. Consult for any income tax calculation or when verifying tax credit point entitlements.
 
 ## Gotchas
-- Israeli annual tax returns (doch shnati) have a standard deadline of April 30 for all filers, with May 31 for electronic/double-entry filing. Self-employed with CPA representation get extensions via the CPA association agreement with the Tax Authority (typically September 30). Agents may use the US April 15 deadline.
+- The Israeli individual return (Form 1301) deadline for the 2025 tax year, filed in 2026, is June 30 for online filers and May 31 for paper filers. April 30 is only the legacy paper baseline from earlier years, not the current online deadline. Self-employed filers with CPA representation get later extensions via the CPA association quota agreement (often September 30 or later). Agents may use the US April 15 deadline or the stale Israeli April 30 figure.
 - Israeli tax returns use Form 1301 for individuals, not 1040. Agents may reference US form numbers and fields that do not exist in the Israeli system.
 - Capital gains in Israel are reported on a separate schedule and may have different rates (25% for financial assets, up to 50% for real estate depending on holding period and property count). Agents may apply a single capital gains rate.
 - Tax credit points (neku'dot zikui) must be claimed annually and vary by personal status (marital, children, new oleh, discharged soldier). Agents may use a default value without checking eligibility.

@@ -1,9 +1,7 @@
 ---
 name: israeli-stock-options-tax
-description: "Calculate tax on stock options and RSUs for Israeli tech employees under Section 102. Use when user asks about option exercise tax, RSU taxation, startup exit proceeds, Section 102 tracks, trustee holding period, capital gains vs income track comparison, or 'how much tax on my options'. Produces a detailed tax breakdown with net proceeds. Do NOT use for crypto tax (use israeli-crypto-tax-reporter), ESOP plan setup (use israeli-startup-toolkit), controlling shareholder profit extraction (use israeli-corporate-tax-strategy), annual tax returns (use israeli-tax-returns), or payroll (use israeli-payroll-calculator)."
+description: "Calculate tax on stock options and RSUs for Israeli tech employees under Section 102. Use when user asks about option exercise tax, RSU taxation, startup exit proceeds, Section 102 tracks, trustee holding period, capital gains vs income track comparison, or 'how much tax on my options'. Walks through a detailed tax breakdown with net proceeds. Do NOT use for crypto tax (use israeli-crypto-tax-reporter), ESOP plan setup (use israeli-startup-toolkit), controlling shareholder profit extraction (use israeli-corporate-tax-strategy), annual tax returns (use israeli-tax-returns), or payroll (use israeli-payroll-calculator)."
 license: MIT
-allowed-tools: Bash(python:*) WebFetch
-compatibility: Works with Claude Code, OpenClaw, Cursor, Windsurf, Codex, GitHub Copilot, opencode, antigravity.
 ---
 
 # Israeli Stock Options Tax Calculator
@@ -48,9 +46,9 @@ Section 102 of the Israeli Income Tax Ordinance (Pkudat Mas Hachnasa) offers sev
 - Is a trustee (ne'eman) holding the options/shares? If no trustee, it is 102 Non-Trustee or 3(i).
 - Which track did the company elect: capital gains (honi) or income (peiroti)? Check the grant letter or ask HR.
 
-**The 24-month rule:** Under both 102 trustee tracks, the trustee must hold the options AND the exercised shares for at least 24 months from the END OF THE TAX YEAR in which the options were granted. If the employee sells before 24 months, the entire gain is taxed as employment income at marginal rates. This is the most expensive mistake an employee can make.
+**The 24-month rule:** Under both 102 trustee tracks, the trustee must hold the options AND the exercised shares for at least 24 months counted from the END OF THE TAX YEAR in which the options were granted. If the employee sells before that period ends, the entire gain is taxed as employment income at marginal rates. This is the most expensive mistake an employee can make.
 
-**Correction for common misconception:** The 24-month period starts from the GRANT date (not the vesting date or exercise date). If options were granted on March 15, 2024, the earliest sale date for capital gains treatment is March 15, 2026.
+**Correction for a common misconception:** The 24-month clock does NOT run from the grant date itself, the vesting date, or the exercise date. It runs from the end of the tax year of grant (December 31 of the grant year). If options were granted on March 15, 2024, the clock starts December 31, 2024, so the earliest sale date for capital gains treatment is December 31, 2026, not March 15, 2026.
 
 ### Step 3: Calculate Tax per Track
 
@@ -211,7 +209,38 @@ Help the employee think about WHEN to exercise:
 | **Exercise at exit** (exercise and sell simultaneously) | No out-of-pocket cost. Guaranteed liquidity. | If 24-month period has not elapsed, entire gain is taxed as income. |
 | **Staged exercise** (exercise in batches over multiple tax years) | Spreads income across years, may avoid surtax. | Complexity. Multiple 24-month clocks. |
 
-**Critical warning for early exercise:** If the employee exercises options early (pays the exercise price to get shares), they must ensure the trustee continues to hold the shares for the full 24-month period from grant date. Early exercise does NOT restart or shorten the 24-month clock.
+**Critical warning for early exercise:** If the employee exercises options early (pays the exercise price to get shares), they must ensure the trustee continues to hold the shares for the full 24-month period counted from the end of the tax year of grant. Early exercise does NOT restart or shorten the 24-month clock.
+
+## Examples
+
+### Example 1: Capital-Gains-Track Exit (held past 24 months)
+
+User says: "I have 10,000 options, strike 2 NIS, granted June 2022. Our company is being acquired and my shares sell for 50 NIS each. They were held by a trustee the whole time. How much tax?"
+
+Walkthrough:
+1. Track: trustee held the shares, company elected the capital gains track, so this is Section 102 Capital Gains (Honi).
+2. 24-month check: granted June 2022, so the clock started December 31, 2022. The sale in 2026 is well past 24 months. Capital gains treatment is preserved.
+3. Gross gain: (50 - 2) x 10,000 = 480,000 NIS.
+4. Tax: 480,000 x 25% = 120,000 NIS.
+5. Surtax: if the employee's total annual income (salary plus this gain) stays below 721,560 NIS, no surtax. If it crosses the threshold, 5% applies to the portion of capital gain above it.
+6. Bituach Leumi and health tax: 0 on the capital gains track.
+7. Net proceeds: 480,000 - 120,000 = 360,000 NIS (before any surtax).
+
+Result: about 120,000 NIS tax, 360,000 NIS net, an effective rate of 25% on the gain.
+
+### Example 2: Early Sale Before 24 Months (reclassification)
+
+User says: "I sold my Section 102 shares 14 months after grant because I needed the cash. Strike was 1 NIS, I sold at 21 NIS, 5,000 shares. My salary is 28,000 NIS/month."
+
+Walkthrough:
+1. 24-month check: 14 months is short of the required period (counted from the end of the grant tax year, the gap is even larger than 14 months). The capital gains track election is voided.
+2. Reclassification: the ENTIRE gain is treated as employment income, not capital gain.
+3. Gross gain: (21 - 1) x 5,000 = 100,000 NIS, added on top of the 336,000 NIS annual salary.
+4. Tax on the 100,000 NIS: marginal rates, landing largely in the 35% bracket given the salary base (up to 47% for any portion above 560,280 NIS annual).
+5. Bituach Leumi and health tax: now apply to this employment income portion (subject to the monthly ceiling).
+6. Surtax: 3% if total annual income crosses 721,560 NIS.
+
+Result: the early sale roughly doubles the tax versus the 25% capital gains rate. There is no way to reverse the reclassification once the shares are sold early.
 
 ## Recommended MCP Servers
 
@@ -222,7 +251,7 @@ Help the employee think about WHEN to exercise:
 
 ## Gotchas
 
-1. **24-month clock starts at GRANT, not exercise.** Agents commonly assume the holding period starts when options are exercised. It starts from the date the options were granted (or more precisely, the end of the tax year in which they were granted). Getting this wrong means telling the employee they can sell earlier than they actually can without losing capital gains treatment.
+1. **24-month clock starts at the END OF THE TAX YEAR OF GRANT, not at exercise or at the grant date itself.** Agents commonly assume the holding period starts when options are exercised, or on the grant date. It starts from the end of the tax year in which the options were granted (December 31 of the grant year). Getting this wrong means telling the employee they can sell earlier than they actually can without losing capital gains treatment.
 
 2. **Surtax is 5% on capital gains, not 3%.** Since 2025, capital income above 721,560 NIS/year is subject to both the 3% general surtax AND an additional 2% surtax on capital income. Agents often cite only the 3% figure. The correct combined surtax on capital gains above the threshold is 5%.
 
@@ -236,7 +265,7 @@ Help the employee think about WHEN to exercise:
 
 | Source | URL | What to Check |
 |--------|-----|---------------|
-| Section 102 full text (Hebrew) | https://www.nevo.co.il/law_html/law01/073_004.htm | Exact legal requirements for each track |
+| Income Tax Ordinance full text (Hebrew, Section 102 lives in the ordinance) | https://www.nevo.co.il/law_html/law01/255_001.htm | Exact legal requirements for each track |
 | ITA ESOP circulars | https://www.gov.il/he/departments/israel_tax_authority | Latest professional circulars on Section 102 |
 | PWC Israel Individual Tax | https://taxsummaries.pwc.com/israel/individual/taxes-on-personal-income | Current tax brackets and rates |
 | CWS Israel Tax Guide 2026 | https://www.cwsisrael.com/israeli-tax-changes-2026-complete-guide/ | 2026 bracket changes and surtax thresholds |
@@ -254,5 +283,5 @@ Section 102 applies to Israeli employees of Israeli companies. If the Israeli su
 ### "The exit is a stock-for-stock deal (not cash)"
 In a stock-for-stock acquisition, the tax event occurs when the employee SELLS the acquired shares, not at the merger itself. The cost basis carries over. However, if the employee receives cash as part of the deal, that cash portion triggers an immediate tax event.
 
-### "I exercised before 24 months -- what now?"
+### "I exercised before 24 months, what now?"
 The entire gain is reclassified as employment income, taxed at marginal rates (up to 47% + 3% surtax) plus Bituach Leumi and health insurance. This is significantly more expensive than the 25% capital gains rate. There is no way to reverse this.

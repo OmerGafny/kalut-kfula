@@ -1,91 +1,75 @@
-# Cardcom Response Codes
+# Cardcom V11 Response Pattern
 
-## Response Code Location
+## ResponseCode + Description
 
-Every Cardcom API response includes a numeric code. Check the relevant field based on the operation:
-- **Payments:** `DealResponse`
-- **Tokens:** `TokenResponse`
-- **Documents:** `InvoiceResponseCode`
+Every Cardcom V11 API response is a JSON object that carries two top-level fields:
 
-A value of `0` always means success.
+- **`ResponseCode`** (integer) -- `0` means success. Any non-zero value is a
+  developer or transaction error.
+- **`Description`** (string) -- a human-readable explanation of the `ResponseCode`.
 
-## Transaction Response Codes (DealResponse)
+There is no `DealResponse`, `TokenResponse`, or `InvoiceResponseCode` field in V11.
+Those belong to the legacy `.aspx` interfaces. In V11, always check `ResponseCode`
+and read `Description` for the reason.
 
-| Code | Meaning | Category | Action |
-|------|---------|----------|--------|
-| 0 | Success | OK | Proceed normally |
-| 1 | Card declined by issuer | Card | Ask customer to try another card |
-| 2 | Stolen card | Card | Do not retry, contact processor |
-| 3 | Call credit company | Card | Customer should call card issuer |
-| 4 | Transaction not approved | Card | Retry or use different card |
-| 6 | CVV error | Card | Ask customer to re-enter CVV |
-| 10 | Partial amount approved | Card | Decide: accept partial or cancel |
-| 33 | Card expired | Card | Ask customer to update card |
-| 36 | Card restricted | Card | Customer should contact issuer |
-| 39 | Invalid card number | Card | Ask customer to re-enter number |
-| 61 | Over credit limit | Card | Try smaller amount or different card |
-| 65 | Over daily transaction limit | Card | Try again tomorrow or different card |
-| 75 | Too many PIN attempts | Card | Customer should contact issuer |
+For `Transactions/Transaction`, J2/J5 validation-only operations return
+`ResponseCode` `700` or `701`, which also count as success.
 
-## Token Response Codes (TokenResponse)
+## Per-operation response objects
 
-| Code | Meaning | Category | Action |
-|------|---------|----------|--------|
-| 0 | Token created/charged successfully | OK | Store token securely |
-| 1 | Token creation failed | Token | Retry the payment flow |
-| 2 | Token not found | Token | Verify token UUID and terminal match |
-| 3 | Token expired | Token | Re-create token with new payment |
-| 4 | Token blocked | Token | Contact Cardcom support |
+| Endpoint | Response object | Success fields to read |
+|----------|-----------------|------------------------|
+| `LowProfile/Create` | `CreateLowProfileResponse` | `LowProfileId`, `Url`, `UrlToBit`, `UrlToPayPal` |
+| `LowProfile/GetLpResult` | `LowProfileResult` | `TranzactionId`, `ReturnValue`, `TranzactionInfo`, `TokenInfo`, `DocumentInfo`, `SuspendedInfo` |
+| `Transactions/Transaction` | `TransactionInfo` | `TranzactionId`, `Token`, `ApprovalNumber`, `DocumentNumber`, `DocumentUrl` |
+| `Transactions/RefundByTransactionId` | `RefundByTransactionIdResp` | `NewTranzactionId` |
+| `Documents/CreateDocument` | `DocumentInfo` | `DocumentType`, `DocumentNumber`, `AccountId`, `DocumentUrl` |
 
-## Invoice Response Codes (InvoiceResponseCode)
+In `LowProfileResult`, the nested objects (`TranzactionInfo`, `TokenInfo`,
+`DocumentInfo`, `SuspendedInfo`) are `null` when not applicable to the operation
+that ran. For example, `TokenInfo` is populated only for `ChargeAndCreateToken`
+and `CreateTokenOnly` operations.
 
-| Code | Meaning | Category | Action |
-|------|---------|----------|--------|
-| 0 | Document created successfully | OK | Use InvoiceNumber from response |
-| 1 | Missing required fields | Doc | Check Name, Products, DocType |
-| 2 | Invalid document type | Doc | Use valid DocTypeToCreate (1,2,3,101,400) |
-| 3 | VAT number invalid | Doc | Verify VAT_Number format (9 digits) |
-| 4 | Products array empty | Doc | Include at least one product line |
-| 5 | Document cancelled | Doc | Cannot modify; create a new document |
+## Error codes
 
-## API/HTTP Error Codes
+Cardcom V11 uses a single numeric `ResponseCode` space. The full numeric
+error reference (developer errors, card-decline reasons, document errors) is
+maintained in the official Cardcom documentation; do not hardcode a
+code-to-message table. Instead, branch on `ResponseCode == 0` for success and
+surface the `Description` string for everything else.
 
-| Code | Meaning | Category | Action |
-|------|---------|----------|--------|
-| 5033 | Terminal number missing | Auth | Add `TerminalNumber` to request body |
-| 5034 | Authentication failed | Auth | Verify `ApiName` and `ApiPassword` |
-| 5035 | Invalid amount | Validation | Ensure `Amount` is a positive number |
-| 5036 | Invalid currency | Validation | Use valid `CoinID` (1=ILS, 2=USD, 3=EUR) |
-| 5037 | Missing return URL | Validation | Add `SuccessRedirectUrl` (LowProfile) |
-| 5100 | Card declined (general) | Card | Ask user to try another card |
-| 5101 | Card expired | Card | Ask user to update card details |
-| 5102 | CVV incorrect | Card | Ask user to re-enter CVV |
-| 5200 | Token not found | Token | Verify token UUID and terminal ownership |
-| 5201 | Token expired or revoked | Token | Re-create token via new payment |
-| 5300 | Invoice creation failed | Doc | Check Document object parameters |
-| 5301 | Document type not enabled | Doc | Enable document type in Cardcom dashboard |
+See the official Cardcom error reference at
+`https://secure.cardcom.solutions/Api/v11/Docs` and the support center at
+`https://support.cardcom.solutions`.
 
 ## Handling Pattern
 
 ```python
-response = call_cardcom_api(endpoint, payload)
+import requests
 
-if response.get("DealResponse") == 0:
-    # Success -- extract InternalDealNumber, Token, InvoiceNumber
-    deal_id = response["InternalDealNumber"]
-elif response.get("DealResponse") in [1, 4, 61, 65]:
-    # Card issue -- prompt customer to retry
-    show_error("Payment declined. Please try a different card.")
-elif response.get("DealResponse") in [2, 36]:
-    # Blocked card -- do not retry
-    show_error("Card cannot be used. Contact your bank.")
+resp = requests.post(
+    "https://secure.cardcom.solutions/api/v11/Transactions/Transaction",
+    json=payload,
+    timeout=30,
+).json()
+
+if resp.get("ResponseCode") == 0:
+    # Success: extract TranzactionId, Token, DocumentNumber, DocumentUrl
+    transaction_id = resp["TranzactionId"]
 else:
-    # Unexpected -- log full response for debugging
-    log_error(f"Cardcom error: {response}")
+    # Failure: Description carries the exact reason
+    log_error(
+        f"Cardcom error {resp.get('ResponseCode')}: {resp.get('Description')}"
+    )
+    show_error("Payment could not be completed. Please try again.")
 ```
 
 ## Notes
 
-- Always check both HTTP status (200 = request received) AND response code (0 = operation succeeded)
-- A 200 HTTP status with a non-zero DealResponse means the API call was valid but the operation failed
-- Log the full response body for any non-zero codes to aid debugging
+- Always check both the HTTP status (`200` = request received) AND `ResponseCode`
+  (`0` = operation succeeded). A `200` with a non-zero `ResponseCode` means the
+  request was valid but the operation failed.
+- Log the full response body, including `Description`, for any non-zero
+  `ResponseCode` to aid debugging.
+- For `LowProfileResult`, also inspect the nested object `ResponseCode` values
+  (for example `DocumentInfo.ResponseCode`) when a document was requested.

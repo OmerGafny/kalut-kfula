@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Calculate Israeli tax withholding (nikui mas bemakor) amounts.
 
-Determines the correct withholding rate for a payment type and calculates
-the withholding amount, net payment, and VAT.
+Determines the correct withholding rate for a payment type and calculates the
+withholding amount, net payment, and VAT.
 
 Usage:
     python scripts/calculate_withholding.py --type services --amount 10000
@@ -17,17 +17,23 @@ from dataclasses import dataclass
 
 VAT_RATE = 0.18  # Standard Israeli VAT rate (raised from 17% on Jan 1, 2025)
 
-# Default withholding rates by payment type
+# Default withholding rates by payment type, used when the payee has no
+# withholding certificate. These are the no-certificate ITA defaults; a valid
+# certificate typically brings the rate down to 0-5%.
 DEFAULT_RATES = {
-    "services": 0.20,          # 20% - Section 164
-    "services_company": 0.25,  # 25% - Section 164 (companies)
-    "rent": 0.35,              # 35% - Section 170
+    "services": 0.30,          # 30% - Section 164 (individuals, no certificate;
+                               #       can reach ~47% for an unverified payee)
+    "services_company": 0.30,  # up to 30% - Section 164 (companies; tax office
+                               #             may classify lower, 20-30%)
+    "rent": 0.35,              # 35% - Section 170 (business/commercial property)
+    "rent_residential": 0.30,  # 30% - Section 170 (residential property)
     "royalties": 0.23,         # 23% - Section 170
     "interest": 0.25,          # 25% - Section 164
     "dividends": 0.25,         # 25% - Section 164
     "dividends_major": 0.30,   # 30% - Major shareholder (>10%)
     "non_resident": 0.25,      # 25% - Section 170
-    "contractor": 0.20,        # 20% - Construction services
+    "contractor": 0.30,        # 30% - Construction/service contractors,
+                               #       no certificate
 }
 
 
@@ -109,8 +115,12 @@ def format_result(result: WithholdingResult) -> str:
         f"    VAT to payee:      +{result.vat_amount:>10,.2f} NIS",
         f"    Total disbursed:    {result.net_payment + result.withholding_amount + result.vat_amount:>10,.2f} NIS",
         f"",
-        f"  NOTE: Withholding is on pre-VAT amount. VAT is paid separately.",
-        f"  Report on Form 856 by the 15th of the following month.",
+        f"  NOTE: Withholding is on the pre-VAT amount. VAT is paid separately.",
+        f"  Report and pay on Form 102 (periodic deductions report) by the",
+        f"  15th of the following month. The annual per-payee reconciliation",
+        f"  is Form 856, due April 30 of the following year.",
+        f"  With no certificate the services default is 30% (not 20%); a valid",
+        f"  certificate usually reduces it to 0-5%.",
     ]
     return "\n".join(lines)
 

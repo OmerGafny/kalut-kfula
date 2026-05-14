@@ -105,7 +105,7 @@ These brackets apply to active income (employment, self-employment, business inc
 
 | Obligation | Deadline | Penalty for Late Filing |
 |------------|----------|------------------------|
-| Form 1301 (individual) | April 30 | Interest + linkage differences + potential fines |
+| Form 1301 (individual) | June 30 online filers / May 31 paper filers for the 2025 return (April 30 is the legacy paper baseline); CPA-represented filers get the later quota extension | Interest + linkage differences + potential fines |
 | Form 1214 (corporate) | May 31 | Interest + linkage differences + potential fines |
 | Form 126 (employer) | April 30 | Administrative fines |
 | Form 106 (to employees) | March 1 | Administrative fines |

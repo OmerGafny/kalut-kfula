@@ -22,12 +22,12 @@
 ## How to Apply
 
 ### Online Application (Recommended)
-1. Log in to SHAAM portal: https://www.misim.gov.il
-2. Navigate to "Certificates" section
-3. Select certificate type
-4. Provide required documents (tax returns, financial statements)
-5. Submit application
-6. Processing time: 2-4 weeks
+1. Use the ITA online services (the gmishurim system): `https://www.gov.il/he/service/itc-gmishurim`
+2. Navigate to the certificates section
+3. Select the certificate type
+4. Provide the required documents (tax returns, financial statements)
+5. Submit the application
+6. Renew annually for the new tax year
 
 ### Required Documents
 - Valid TIN registration
@@ -38,11 +38,11 @@
 
 ## Verification
 Payers should verify certificates:
-1. Check certificate is current year
-2. Verify TIN matches the payee
-3. Optionally verify via SHAAM portal
-4. Keep copy of certificate on file
-5. If certificate expires mid-year, revert to default rate
+1. Check the certificate is for the current year
+2. Verify the TIN matches the payee
+3. Verify status through the ITA gmishurim lookup: `https://taxinfo.taxes.gov.il/gmishurim/firstPage.aspx`
+4. Keep a copy of the certificate on file
+5. If the certificate expires mid-year, revert to the default rate
 
 ## Common Issues
 - Certificate not issued in time: Use default rate, apply for retroactive adjustment

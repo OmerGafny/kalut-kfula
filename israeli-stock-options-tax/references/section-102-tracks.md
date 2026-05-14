@@ -10,7 +10,7 @@ Section 102 of the Israeli Income Tax Ordinance (Pkudat Mas Hachnasa) provides a
 |---------|-------------------------|---------------------|-----------------|--------------|
 | Tax rate on gain | 25% flat (30% for 10%+ holders) | Split: marginal + 25% | Marginal (10%-47%) | Marginal (10%-47%) |
 | Trustee required | Yes | Yes | No | No |
-| Holding period | 24 months from grant | 24 months from grant | None | None |
+| Holding period | 24 months from the end of the tax year of grant | 24 months from the end of the tax year of grant | None | None |
 | Employer deduction | No | Yes | Yes | Yes |
 | Bituach Leumi | No | Yes (on employment portion) | Yes | Yes |
 | Health insurance | No | Yes (on employment portion) | Yes | Yes |
@@ -24,7 +24,7 @@ Section 102 of the Israeli Income Tax Ordinance (Pkudat Mas Hachnasa) provides a
 2. ITA-approved trustee (ne'eman) appointed to hold shares
 3. Plan specifies capital gains track election
 4. Options/shares deposited with trustee within 30 days of board approval
-5. Trustee holds for minimum 24 months from end of grant tax year
+5. Trustee holds for a minimum of 24 months counted from the end of the tax year of grant
 6. Company does NOT claim tax deduction for the option expense
 
 ### Tax Calculation
@@ -86,4 +86,22 @@ Tax treatment:
 | Deposit with trustee | 30 days after board approval | May invalidate 102 treatment |
 | Form 146 (quarterly) | End of quarter | Reporting violation, possible plan disqualification |
 | Form 156 (annual) | March 31 of following year | Reporting violation |
-| 24-month holding | 24 months from grant date | Gain reclassified as employment income |
+| 24-month holding | 24 months counted from the end of the tax year of grant | Gain reclassified as employment income |
+
+## 2025 Section 102 Plan-Submission Amendment
+
+The ITA published a professional circular on December 9, 2024 that changed how
+Section 102 plans are filed, effective for plans submitted from January 1, 2025:
+
+- **Online-only submission:** Section 102 plan filings are now online-only. The
+  submitter must complete a detailed questionnaire describing the plan and its
+  terms.
+- **Red-flag screening:** the ITA uses the questionnaire data to detect possible
+  deficiencies and "red flags" that a plan, or a specific grant within it, may
+  fail to meet the Section 102 conditions.
+- **Pre-approval for Put/Call plans:** plans that contain Put and/or Call options
+  can obtain advance approval from the ITA's professional division, on conditions
+  the division sets.
+
+This changes the company-side filing mechanics, not the employee-side tax tracks
+or the 24-month rule.

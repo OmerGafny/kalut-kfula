@@ -1,6 +1,6 @@
 {
   "author": "skills-il",
-  "version": "1.1.3",
+  "version": "2.0.0",
   "category": "tax-and-finance",
   "tags": {
     "he": [
@@ -26,7 +26,7 @@
   },
   "display_description": {
     "he": "אינטגרציה עם קארדקום לסליקת אשראי, הפקת חשבוניות מס וקבלות אוטומטית",
-    "en": "Integrate Cardcom payment processing and Israeli invoice generation into applications -- covers Low Profile payments, tokenization, recurring billing, and automatic tax invoice/receipt creation per Israeli law. Use when user asks to accept payments via Cardcom, generate Israeli invoices with payments, set up \"slikat ashrai\" with hashbonit, handle recurring billing (hora'ot keva), or mentions \"Cardcom\", \"CardCom API\", \"Low Profile\", Israeli payment with invoicing, or needs combined payment + document generation. Supports REST API V11 and legacy endpoints. Do NOT use for Tranzila integration (use tranzila-payment-gateway), general accounting, or non-payment queries."
+    "en": "Integrate Cardcom payment processing and Israeli invoice generation into applications, covering Low Profile payments, tokenization, recurring billing, and automatic tax invoice/receipt creation per Israeli law. Use when user asks to accept payments via Cardcom, generate Israeli invoices with payments, set up \"slikat ashrai\" with hashbonit, handle recurring billing (hora'ot keva), or mentions \"Cardcom\", \"CardCom API\", \"Low Profile\", Israeli payment with invoicing, or needs combined payment plus document generation. Targets the REST API V11. Do NOT use for Tranzila integration (use tranzila-payment-gateway), general accounting, or non-payment queries."
   },
   "supported_agents": [
     "claude-code",
