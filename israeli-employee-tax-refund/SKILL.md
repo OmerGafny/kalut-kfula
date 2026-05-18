@@ -59,7 +59,7 @@ If the user has multiple Form 106s from the same tax year (job change), sum fiel
 
 The Section 9(6) family of exemptions (קצבת ילדים, זקנה, שאירים, נכות כללית, מענק לידה, ניידות) covers permanent or family-status BTL allowances — not income-replacement payments while temporarily out of work. Do not assume "BTL paid me, so it must be exempt" for maternity, unemployment, or work-injury per-diem.
 
-A common refund pattern: BTL withheld tax at a flat or graduated rate during the BTL payment period; that withholding then over-shoots once the year's salary and BTL income are reconciled together under the annual graduated bracket walk. The over-withholding portion comes back as a refund.
+A common refund pattern, contrary to a frequent misconception: the refund usually originates from the **salary side**, not the BTL side. BTL typically **under-withholds** tax on דמי לידה / דמי אבטלה (often at a low flat rate or none), so the BTL portion taken alone can leave the recipient owing additional tax. The refund appears because the employer over-withheld during the months actually worked (the employer's monthly withholding assumed a full 12-month salary, but the year ended with fewer paid months because of leave). Once the year is reconciled — salary withholding plus BTL withholding versus the actual annual tax on the combined income — the net is usually a refund, but the **source** of the refund is the salary withholding the employer collected, not BTL over-withholding.
 
 ### Step 3: Determine the Refund Window
 
@@ -110,7 +110,7 @@ Total: 8.5 credit points spread over 54 months. For olim who arrived BEFORE 1.1.
 
 The mortgage interest benefit for olim is delivered indirectly through other olim concessions on the property purchase, not through a discrete deduction in this skill's scope. Do not promise the user a "mortgage interest refund" under Section 35.
 
-Note that Section 35 credit points are NOT available to ordinary returning residents (תושב חוזר), only to olim chadashim and a narrow historical category of "tושב חוזר vatik" who returned 16.5.2010 - 30.9.2012 under the Milchan-era window. Regular returning residents get the 10-year foreign-income exemption under Section 14, which is out of scope for this skill (route them to `israeli-tax-returns`).
+Note that Section 35 credit points are NOT available to ordinary returning residents (תושב חוזר). Regular returning residents get the 10-year foreign-income exemption under Section 14 ITO, which is out of scope for this skill (route them to `israeli-tax-returns`). Veteran returning residents (תושב חוזר ותיק) under the Milchan amendment have their own benefit track and should also be routed to `israeli-tax-returns`.
 
 ### Step 5: Estimate the Refund
 
@@ -128,7 +128,7 @@ Estimate the refund as (correct tax under the brackets and credits) minus (tax a
 | 46,691 ₪ and above | 560,281 ₪ and above | 47% (Section 121 ITO top bracket) |
 | Plus mas yesafim | Annual income above 721,560 ₪ | Additional 3% surtax (Section 121B ITO), applied on top of the 47% |
 
-The 2026 brackets are largely unchanged from 2024-2025 with a slight expansion of some bands. For prior tax years, look up the brackets that applied to that year (do not extrapolate the 2026 brackets backward).
+For prior tax years, look up the brackets that applied to that year (do not extrapolate the 2026 brackets backward).
 
 **2026 credit-point (נקודת זיכוי) values:**
 
@@ -143,8 +143,10 @@ The 2026 brackets are largely unchanged from 2024-2025 with a slight expansion o
 |-----------|-----------------|
 | Israeli resident (base) | 2.25 |
 | Female resident (additional 0.5) | 2.75 |
-| Each child up to age 5 | 2.5 (graduated by age) |
-| Each child age 6-17 | 1 |
+| Each child up to age 5 (2024+ schedule, per parent) | 2.5 in birth year, 4.5 age 1, 4.5 age 2, 3.5 age 3, 2.5 age 4, 2.5 age 5 |
+| Each child age 6-17 (to mother, post-2022) | 2 |
+| Each child age 6-17 (to father) | 1 |
+| Each child age 6-17 (pre-2022) | 1 (mother) / 0 (father) |
 | Single parent (חד-הורי) | Additional points per scheme |
 | New immigrant (post-2022 arrival) | 1 point year 1, 3 points years 1.5-2.5, 2 points year 3, 1 point year 4 (per Step 4 trigger 7 table) |
 | Master's graduate (2023+) | 0.5 point per year for 2 years after graduation |
@@ -296,11 +298,12 @@ Companion skill: `hebrew-ocr-forms` can extract field 042 / 158 / 172 / 218 from
 | Kol-Zchut: reserve-duty points | https://www.kolzchut.org.il/he/%D7%A0%D7%A7%D7%95%D7%93%D7%95%D7%AA_%D7%96%D7%99%D7%9B%D7%95%D7%99_%D7%9E%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94_%D7%9C%D7%9C%D7%95%D7%97%D7%9E%D7%99_%D7%9E%D7%99%D7%9C%D7%95%D7%90%D7%99%D7%9D | Section 39B schedule per Amendment 283 |
 | Kol-Zchut: Section 46 donations | https://www.kolzchut.org.il/he/%D7%96%D7%99%D7%9B%D7%95%D7%99_%D7%9E%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94_%D7%91%D7%A9%D7%9C_%D7%AA%D7%A8%D7%95%D7%9E%D7%94_(%D7%A1%D7%A2%D7%99%D7%A3_46) | 207 ₪ minimum, 10,354,816 ₪ ceiling, 35% credit rate, 2026 digital-reporting rule |
 | Kol-Zchut: yishuv mezakeh | https://www.kolzchut.org.il/he/%D7%96%D7%99%D7%9B%D7%95%D7%99_%D7%9E%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94_%D7%9C%D7%AA%D7%95%D7%A9%D7%91%D7%99%D7%9D_%D7%91%D7%A4%D7%A8%D7%99%D7%A4%D7%A8%D7%99%D7%94 | Annual settled-area list and per-locality percentages |
-| Kol-Zchut: Form 106 fields | https://www.kolzchut.org.il/he/%D7%98%D7%95%D7%A4%D7%A1_106 | Field 042 / 158 / 172 / 218 explainer |
+| Kol-Zchut: Form 106 overview | https://www.kolzchut.org.il/he/%D7%98%D7%95%D7%A4%D7%A1_106 | What Form 106 is, when it is issued, who issues it |
+| Claltax: Form 106 field map | https://claltax.com/%D7%98%D7%95%D7%A4%D7%A1-106-%D7%A9%D7%9B%D7%99%D7%A8-%D7%95%D7%92%D7%9E%D7%9C%D7%90%D7%99/ | Field 042 / 158 / 172 / 218 / 219 explainer with Hebrew labels |
 | Kol-Zchut: income tax brackets | https://www.kolzchut.org.il/he/%D7%9E%D7%93%D7%A8%D7%92%D7%95%D7%AA_%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94 | 2026 monthly and annual bracket table |
 | Kol-Zchut: Section 9(5) disability exemption | https://www.kolzchut.org.il/he/%D7%A4%D7%98%D7%95%D7%A8_%D7%9E%D7%9E%D7%A1_%D7%94%D7%9B%D7%A0%D7%A1%D7%94_%D7%9C%D7%90%D7%A0%D7%A9%D7%99%D7%9D_%D7%A2%D7%9D_%D7%A0%D7%9B%D7%95%D7%AA | 2026 ceilings: 445,200 / 81,960 / 684,000 ₪ |
 | Bituach Leumi: annual confirmation for income tax | https://www.btl.gov.il | Order the annual אישור שנתי למס הכנסה for maternity, unemployment, work-injury, pregnancy-preservation payments |
-| Kol-Zchut: unemployment income reconciliation | https://www.kolzchut.org.il/he/%D7%A0%D7%99%D7%9B%D7%95%D7%99_%D7%94%D7%9B%D7%A0%D7%A1%D7%95%D7%AA_%D7%9E%D7%93%D7%9E%D7%99_%D7%90%D7%91%D7%98%D7%9C%D7%94 | How BTL withholding integrates with annual tax reconciliation |
+| FinBiz Academy: maternity tax pattern | https://finbizacademy.co.il/baby_born/ | Why the salary side is the typical refund source after maternity / unpaid leave (BTL typically under-withholds) |
 
 ## Troubleshooting
 

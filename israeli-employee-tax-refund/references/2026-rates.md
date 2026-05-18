@@ -23,7 +23,7 @@ Source: Kol-Zchut "נקודות זיכוי ממס הכנסה" page.
 | 46,691 ₪ and above | 560,281 ₪ and above | 47% (Section 121 ITO, top employment bracket) |
 | Plus mas yesafim | Annual income above 721,560 ₪ | Additional 3% surtax (Section 121B ITO), applied on top of 47% |
 
-The 2026 brackets are largely unchanged from 2024-2025 with a slight expansion of some bands. There was no specific "31.3.2026 amendment".
+For prior tax years, look up the brackets that applied to that year on kolzchut.org.il rather than extrapolating the 2026 table.
 
 ## Reserve duty credit points (Section 39B, Amendment 283 התשפ"ו-2025)
 
@@ -93,7 +93,7 @@ Total: 8.5 credit points across 54 months (4.5 years).
 
 For pre-2022 arrivals: 4.5 / 2 / 1 across 18 / 12 / 12 months (total 7.5 points, 42 months).
 
-Returning residents (תושב חוזר) generally do NOT qualify for Section 35; only a narrow window of returnees (16.5.2010 - 30.9.2012) under the Milchan-era amendment qualified. Most returnees use the 10-year foreign-income exemption under Section 14 instead.
+Returning residents (תושב חוזר) generally do NOT qualify for Section 35. Most returnees use the 10-year foreign-income exemption under Section 14 instead. Veteran returning residents (תושב חוזר ותיק, after 10+ years abroad) have a separate Milchan-amendment benefit track that is out of scope here.
 
 ## Section 40g — Academic credit-points schedule
 
