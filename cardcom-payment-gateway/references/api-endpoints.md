@@ -98,6 +98,21 @@ endpoint in the V11 schema; do not invoke those.
 | `ReturnValue` | string | Your order id, returned unchanged in `GetLpResult` and webhooks |
 | `NumOfPayments` | int | Installment count (tashlumim); `1` = single charge |
 
+## Alternative Payment Methods on Low Profile
+
+| Method | Exposure on Low Profile | Where to enable |
+|--------|------------------------|-----------------|
+| Bit | `UrlToBit` field on `CreateLowProfileResponse` | Cardcom admin panel, terminal settings |
+| PayPal | `UrlToPayPal` field on `CreateLowProfileResponse` | Cardcom admin panel, terminal settings |
+| Apple Pay | wallet button rendered inside the hosted Low Profile page | Cardcom admin panel, terminal settings |
+| Google Pay | wallet button rendered inside the hosted Low Profile page | Cardcom admin panel, terminal settings |
+
+Bit and PayPal have explicit URL fields you can render separately. Apple Pay and Google Pay are rendered inside the hosted Low Profile page itself once enabled on the terminal, so the API response does not expose dedicated URL fields for them.
+
+## API Version
+
+V11 is the current API as of 2026. There is no public V12. Legacy `.aspx` interfaces with integer document codes (e.g. `101`, `400`) and the `DealResponse` shape predate V11; do not use them in new integrations.
+
 ## API Docs
 
 Official documentation: `https://secure.cardcom.solutions/Api/v11/Docs`

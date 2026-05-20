@@ -12,9 +12,11 @@ Cardcom is an Israeli payment processor with a unique strength: integrated invoi
 
 This skill guides integration with Cardcom's REST API V11 for payments, tokenization, recurring billing, and document generation. Every endpoint and field name in this skill is taken from the official Cardcom V11 OpenAPI specification.
 
-**Official docs:** `https://secure.cardcom.solutions/Api/v11/Docs` (interactive API reference with the full OpenAPI schema)
+**Official docs:** `https://secure.cardcom.solutions/Api/v11/Docs` (interactive API reference with the full OpenAPI schema). V11 is the current API as of 2026; there is no public V12.
 
 **Support center:** `https://support.cardcom.solutions`
+
+**Cardcom in the Israeli landscape:** competes with Tranzila, Israpay, and Bit Business. Cardcom's pricing in 2026 is roughly 1.2-1.4% per transaction with optional monthly plans starting around 59 NIS/month for the invoicing add-on; exact numbers are quoted per merchant. The distinguishing feature for Israeli businesses remains the built-in tax document generation. For Tranzila integration use the `tranzila-payment-gateway` skill instead.
 
 ## Instructions
 
@@ -99,10 +101,12 @@ The Low Profile response includes URLs for alternative payment methods when enab
 
 | Method | Response Field | Notes |
 |--------|---------------|-------|
-| **Bit** | `UrlToBit` | Israel's most popular mobile payment app |
+| **Bit** | `UrlToBit` | Israel's most popular mobile payment app, routed through Cardcom |
 | **PayPal** | `UrlToPayPal` | International payments |
+| **Apple Pay** | rendered inside the hosted Low Profile page | Listed on `cardcom.solutions` as a supported wallet on the hosted payment page |
+| **Google Pay** | rendered inside the hosted Low Profile page | Same as Apple Pay, surfaced as a wallet button on the Low Profile page |
 
-Display these alongside the credit card form to give customers more payment options.
+`UrlToBit` and `UrlToPayPal` are explicit URL fields you can show alongside the card form. Apple Pay and Google Pay surface as wallet buttons inside the hosted Low Profile page itself once enabled on the terminal, so no separate URL field is exposed. Enable each method on your terminal in the Cardcom admin panel before relying on it in production.
 
 ### Step 4: Generate Israeli Tax Documents
 
@@ -155,7 +159,12 @@ Note the real V11 field spellings inside the `Document` object: `DocumentTypeToC
 
 ### Step 5: Implement Token-Based Recurring Payments
 
-For subscriptions and recurring billing (hora'ot keva):
+For subscriptions and recurring billing (hora'ot keva), Cardcom supports two flavours:
+
+- **Card-based recurring**, charging a stored credit-card `Token` on a schedule. Covered in this step.
+- **MASAV bank standing orders**, debiting the customer's Israeli bank account directly. Managed through the `RecuringPayments` endpoints (`RecuringPayments/GetRecurringPayment`, `GetRecurringPaymentHistory`, `IsBankNumberValid`). Use this when the customer prefers a bank debit over a card charge or when the card is unavailable. The Cardcom dashboard provisions the underlying instruction.
+
+For card-based recurring:
 
 1. **Create a token during the first payment.** Use Low Profile with `Operation: "ChargeAndCreateToken"` (or `"CreateTokenOnly"`). The `LowProfileResult` returns `TokenInfo` with `Token`, `CardMonth`, `CardYear`, and `TokenExDate` (the date the token is purged from Cardcom).
 
@@ -270,13 +279,13 @@ Actions:
 3. Call `Documents/CreateDocument` with `DocumentTypeToCreate: "TaxInvoiceAndReceiptRefund"`.
 Result: Refund processed and the matching credit document generated.
 
-### Example 5: Accept Bit Payment
-User says: "I want to let customers pay with Bit in addition to credit cards"
+### Example 5: Accept Bit, Apple Pay, and Google Pay
+User says: "I want to let customers pay with Bit, Apple Pay, and Google Pay in addition to credit cards"
 Actions:
-1. Enable Bit on your Cardcom terminal via the dashboard.
+1. Enable each method (Bit, Apple Pay, Google Pay) on your Cardcom terminal via the dashboard.
 2. Create a Low Profile session as usual via `LowProfile/Create`.
-3. Display the `UrlToBit` from the response alongside the card form.
-Result: Customers can choose between credit card and Bit payment, same webhook flow.
+3. Display `UrlToBit` from the response alongside the card form. Apple Pay and Google Pay surface as wallet buttons inside the Low Profile page itself, no extra URL needed.
+Result: Customers can choose between credit card, Bit, Apple Pay, and Google Pay, same webhook flow.
 
 ## Community Libraries
 
@@ -309,7 +318,10 @@ Result: Customers can choose between credit card and Bit payment, same webhook f
 - The `TerminalNumber` must be sent as an integer, not a string. Agents commonly wrap it in quotes.
 - `ApiPassword` is required for `RefundByTransactionId` and `CreateDocument`, but is NOT sent on a normal `LowProfile/Create` or `Transaction` charge.
 - Watch the real V11 field spellings: `Languge` (missing the second `a`) inside the `Document` object, `ISOCoinID` / `ISOCoinId`, `IsSendByEmail` (not `SendByEmail`), `TaxId` (not `VAT_Number`).
-- The current Israeli VAT rate is 18% (effective January 2025). Cardcom calculates VAT server-side, so document amounts are treated per the `IsVatFree` flag.
+- The current Israeli VAT rate is 18% (effective January 2025; the January 2026 budget proposal to raise it to 19% was rejected). Cardcom calculates VAT server-side, so document amounts are treated per the `IsVatFree` flag.
+- **PCI scope**: hosted Low Profile keeps you in SAQ-A. Server-to-server `Transaction` with raw `CardNumber`/`CVV2` lands in SAQ-D. PCI DSS v4.0 became mandatory March 2025, so prefer Low Profile or tokens unless you have a real reason to touch raw card data.
+- **Settlement timing** is configured on the terminal, not per request. Weekly settlement deposits on the Wednesday following the transaction; monthly settlement deposits on the 6th of the following month. Don't try to set this in the API.
+- **Apple Pay and Google Pay don't have separate URL fields** like `UrlToBit` / `UrlToPayPal`. They surface as wallet buttons inside the hosted Low Profile page once enabled on the terminal in the admin panel.
 
 ## Troubleshooting
 
