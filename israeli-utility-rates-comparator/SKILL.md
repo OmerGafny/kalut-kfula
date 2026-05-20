@@ -1,33 +1,37 @@
 ---
 name: israeli-utility-rates-comparator
-description: Compare electricity providers, water tariffs, natural gas rates, and arnona (municipal property tax) across Israeli municipalities and utility companies. Use when a user needs to understand IEC tariff structures, calculate solar panel ROI, compare tiered water pricing, or evaluate arnona differences between cities. Covers electricity market deregulation, independent power producers, Mekorot water pricing, and municipal rate variations. Do NOT use for commercial/industrial utility contracts, telecommunications comparisons, or utility infrastructure investment analysis.
+description: Compare electricity providers, water tariffs, cooking-gas (LPG) rates, cellular plans, fiber internet packages, and arnona (municipal property tax) across Israeli municipalities and utility companies. Use when a user needs to understand IEC tariff structures, calculate solar panel ROI, compare tiered water pricing, pick a cheap cellular plan, switch to fiber internet, or evaluate arnona differences between cities. Covers electricity market deregulation, independent power producers, Mekorot water pricing, cellular operators and MVNOs, fiber-optic infrastructure, and municipal rate variations. Do NOT use for commercial/industrial utility contracts at scale, or utility infrastructure investment analysis.
 license: MIT
 allowed-tools: Bash(python:*) WebFetch
 ---
 
-# Israeli Utility Rates Comparator
+# Israeli Utility & Telecom Rates Comparator
 
 ## Instructions
 
 ### Step 1: Identify Which Utility to Compare
 
-Determine which utility cost the user wants to analyze. Israeli household utilities include:
+Determine which utility cost the user wants to analyze. Israeli household utilities and recurring service costs include:
 
 **Electricity (חשמל):**
-- Israel Electric Corporation (IEC / חברת החשמל) is the dominant provider
-- The electricity market is undergoing deregulation; independent producers now compete
+- Israel Electric Corporation (IEC / חברת החשמל) owns transmission, distribution, and meter reading
+- The household supply market is open: by end-2025 roughly 280,000 households had moved to private suppliers and the count keeps climbing
 - Tariffs are set by the Electricity Authority (רשות החשמל)
-- Time-of-use (TOU) pricing available for smart meter customers
+- Time-of-use (TOU) pricing available for smart-meter customers (about 1M meters / ~30% of households as of 2026)
 
 **Water (מים):**
 - Mekorot (מקורות) is the national water company supplying bulk water
 - Municipal water corporations (taagidei mayim) handle local distribution
 - Tiered pricing: ascending block tariff system where price per cubic meter increases with consumption
 
-**Natural Gas (גז טבעי) and Cooking Gas (גז בישול):**
-- Natural gas infrastructure expanding via Energean/Delek pipelines
-- Many homes still use cooking gas balloons (balonei gaz)
-- Natural gas connection available in newer buildings and select areas
+**Cooking Gas (גז בישול / גפ"מ) and Natural Gas (גז טבעי):**
+- Most households still use LPG cooking-gas balloons (12kg) or centralized building tanks
+- Natural gas infrastructure expanding via Energean (Karish/Athena) pipelines, mostly in newer buildings
+- LPG tariffs published by the Energy Ministry per locality
+
+**Cellular and Internet (סלולר ואינטרנט):**
+- Cellular market opened to MVNOs in 2012 (Hot Mobile, Golan Telecom, Rami Levy Mobile, 019, Home Cellular and others); unlimited plans dropped to single-digit-to-low-double-digit shekels
+- Internet has split into infrastructure (Bezeq, HOT, IBC/Unlimited fiber, partner-built fiber) and content/ISP (Bezeq Beinleumi, Cellcom, Partner, 013, 014/Cellact, Triple-C, Hot-Net), most consumers buy as a single bill ("שוק סיטונאי") today
 
 **Arnona (ארנונה):**
 - Municipal property tax charged by local authorities
@@ -75,7 +79,13 @@ The residential electricity market is open to private suppliers. As of end-2025,
 
 **Critical: switching does NOT replace the full bill.** Independent suppliers compete only on the **generation** (ייצור) component, which is roughly 60-70% of the bill. The household continues to pay IEC for distribution (חלוקה), transmission (הולכה), the public broadcasting fee, and meter charges. The supplier discount applies only to the energy portion.
 
-**Cooling-off period:** Under the Consumer Protection Law (חוק הגנת הצרכן), residential customers have a 14-day right to cancel after signing with an alternate supplier. Always read the cancellation clauses before signing, and keep a copy of the contract.
+**Cooling-off period:** Under the Consumer Protection Law (חוק הגנת הצרכן), residential customers have a 14-day right to cancel after signing with an alternate supplier. Always read the cancellation clauses before signing, and keep a copy of the contract. The Energy Ministry is also working to shorten the supplier-switching window from 14 days to 7 days during 2026.
+
+**Discounts on the electricity bill (separate from supplier choice):**
+- **Seniors with income supplement (השלמת הכנסה):** 50% discount on consumption up to 400 kWh/month (or 800 kWh per bi-monthly bill). The Energy Minister is advancing a plan to deepen this to 65% for old-age + income-supplement, old-age-disability, and Holocaust survivors, verify status at gov.il before quoting 65% as fact.
+- **Holocaust survivors (ניצולי שואה):** 50% discount on up to 400 kWh/month
+- **Disabled (נכים) with high disability percentage:** discount tiers per Bituach Leumi recognition
+- The discount is applied automatically once Bituach Leumi shares eligibility with IEC; nothing to file each month, but verify the discount line appears on your bill.
 
 ### Step 3: Calculate Solar Panel ROI
 
@@ -92,11 +102,11 @@ Solar panels (panelim sola'riyyim) are increasingly popular in Israel due to hig
 1. **System cost**: in 2026, typically 3,500-4,000 ILS per kWp turnkey installed. Common residential sizes: 3 kW ~11,000-13,000 ILS; 5 kW ~18,000-22,000 ILS; 10 kW ~38,000-48,000 ILS basic, up to ~75,000 ILS for premium panels or battery-paired systems.
 2. **Annual production**: Israel averages 1,500-1,800 kWh per installed kWp (Negev gets ~1,800, north gets ~1,400-1,500, central ~1,600)
 3. **Current electricity cost**: multiply production by the current IEC tariff (Jan 2026 standard residential ~0.6432 ILS/kWh inc. 18% VAT)
-4. **Annual savings**: production in kWh multiplied by tariff rate (savings on offset consumption) plus the export tariff (~0.213 ILS/kWh in 2026) for excess production fed to the grid
+4. **Annual savings**: production in kWh multiplied by tariff rate (savings on offset consumption) plus the export tariff (~0.48 ILS/kWh for residential under the long-standing 25-year hesder, with a newer two-track proposal at ~0.60 ILS/kWh for the first 5 years then ~0.38 ILS/kWh for installations up to 30 kW) for excess production fed to the grid. Confirm the exact track on the installer's quote.
 5. **Payback period**: system cost divided by annual savings (typically 4-7 years in Israel, faster in the south)
 6. **System lifetime**: 25+ years with gradual degradation (~0.5% per year)
 7. **Maintenance**: minimal, panel cleaning 1-2 times per year
-8. **Connection approval**: net metering is still active, but new installations may also be offered alternate models (קול קורא tariffs / SmartGrid feed-in) per Electricity Authority decisions 1573 and 45-46. Confirm which model the installer is quoting.
+8. **Connection approval**: net metering (decision 1573) is still active, with a newer urban premium of +6 agorot/kWh and updated tracks under decisions 45-46 for installations >100 kW. Confirm which model the installer is quoting.
 
 **Steps to evaluate solar:**
 1. Check roof orientation (south-facing is optimal in Israel)
@@ -178,7 +188,67 @@ To determine if switching to natural gas is worthwhile:
 3. Get a natural gas connection quote (installation + monthly fees)
 4. Calculate break-even point (typically 2-4 years if infrastructure exists)
 
-### Step 6: Arnona Comparison Between Cities
+### Step 6: Cellular and Internet Comparison
+
+The Israeli telecom market is one of the cheapest in the developed world after a decade of post-2012 MVNO entry and a fiber-optic rollout that finished covering most of the country between 2022 and 2025. Most households can save 50-200 ILS/month by switching providers, but the comparison has to look at the **total** bill (line + roaming + add-ons) and at lock-in / introductory pricing carefully.
+
+**Cellular providers (2026):**
+
+| Provider | Type | Typical unlimited plan (NIS/month) |
+|----------|------|-------------------------------------|
+| Cellcom, Partner, Pelephone | MNO (owns network) | 30-60 (premium) |
+| HOT Mobile | MNO | 25-40 |
+| Rami Levy Mobile | MVNO on Pelephone | ~20 (unlimited calls + 50GB+ data) |
+| Golan Telecom | MVNO | ~30 (unlimited calls + SMS + 50GB+ data) |
+| 019 Mobile | MVNO/operator | 10-40 depending on tier (e.g., Bundle Ten ~10 NIS/month for 100MB) |
+| Home Cellular | MVNO | ~20-30 |
+| Bezeq International Mobile, We4G, YouPhone | Smaller players | 20-40 |
+
+The cheapest plans cluster around **20-30 NIS/month for unlimited domestic calls + 50GB+ data**, with no setup fee and no real contract (cancel anytime, "תוכנית ללא התחייבות"). Premium plans (60-100 NIS) typically include 5G priority, international minutes, roaming bundles, content perks. Most "unlimited" data plans actually fair-use throttle after 50-100GB but it rarely matters for normal use.
+
+**Cellular gotchas:**
+- **Introductory price escalates.** Many "מבצע" plans are X NIS for 12 months then jump 50-100% afterward. Read the תקנון carefully, set a calendar reminder, and switch again before the price hike.
+- **Bundled vs unbundled.** Telecom companies push "triple play" (cellular + TV + internet) packages with discounts; the discount usually vanishes if you cancel one of the three.
+- **Number portability is free and fast**, switching takes ~1 day, no fees, no forms. The new supplier handles it.
+- **eSIM is supported** by all MNOs and most MVNOs; useful for second lines (e.g., a cheap data plan for hotspot use).
+
+**Home internet (2026):**
+
+Israel's home internet has separate "infrastructure" (תשתית) and "ISP/content" (ספק / שירותי אינטרנט) layers. Since the wholesale-market reform, most households buy a **bundled** package where one company bills for both (called "שוק סיטונאי" or "חבילת ספק ותשתית").
+
+| Infrastructure operator | Coverage | Notes |
+|--------------------------|----------|-------|
+| Bezeq (BFiber) | National | Fiber-to-the-home rolled out 2021-2025 |
+| HOT | National (especially central + Haifa) | Cable + fiber |
+| IBC / Unlimited | ~260 localities | FTTH, symmetric speeds 100Mbps-5Gbps |
+| Cellcom + Partner self-built fiber | Selected cities | Independent fiber rollouts |
+
+| Speed tier | Typical 2026 bundled price (NIS/month) |
+|------------|-----------------------------------------|
+| 100Mbps | 70-90 |
+| 300Mbps | 90-110 |
+| 600Mbps | 100-130 |
+| 1Gbps | 120-160 (lowest from HOT-Net ~99 NIS, BFiber ~149 NIS) |
+| 2.5-5Gbps | 180-300+ |
+
+**Internet gotchas:**
+- **Two bills vs one.** Older households still have separate "infrastructure" bills (Bezeq Bzona / HOT) and "ISP" bills (Bezeq Beinleumi, Cellcom, Partner, 013/Netvision, 014, 018 Xfone, Triple-C, Rimon). Consolidating to a wholesale-market bundle ("ספק יחיד") usually drops the price 20-40 NIS/month.
+- **ADSL on copper is being phased out.** If you still have ADSL, you almost certainly qualify for fiber at the same address, check at the four infra operators' coverage pages.
+- **Promotional period.** Same pattern as cellular: cheap for 12 months, then bumps up. Switching back to a different ISP at month 12 is the usual play and is free with no router replacement if you own a fiber-compatible ONT.
+- **Router rental.** Some ISPs charge 10-20 NIS/month for a router; bring your own or buy outright to skip that line.
+
+**Triple-play bundle (חבילה משולשת):**
+- Telecom companies often bundle cellular + internet + TV (Yes / HOT Box / Cellcom TV / Partner TV / Sting TV / Free TV) for a 20-40% discount vs buying separately
+- Bundle math is only worth it if you actually want TV; otherwise unbundling and using HOT Net / Bezeq fiber + a cheap cellular MVNO + a streaming service (Netflix / Disney+ / Sting / Yes+) is almost always cheaper
+
+**How to comparison-shop:**
+1. **Pull last 3 months of bills** for cellular, internet, TV to see actual usage (data per line, peak speed observed, TV channels you watch)
+2. **Run an Israeli comparator**: kamaze.co.il, kamazeole.co.il, israeliphoneplans.com, mishtalemli.co.il, or the Ministry of Communications official comparator at gov.il
+3. **Get 2-3 quotes** by phone; tell each company you're shopping and ask for "מחיר שמירת לקוח" (retention price), usually 15-30% lower than the published price
+4. **Time the switch**: cellular portability is free; internet may have a 1-2 week overlap so schedule installation before cancellation
+5. **For new immigrants or those without Hebrew**: israeliphoneplans.com and No Fryers blog publish English-language guides that explain plan structure and oleh-specific tips
+
+### Step 7: Arnona Comparison Between Cities
 
 Arnona (municipal property tax) is the largest recurring utility-like cost for Israeli households. Rates vary dramatically between municipalities.
 
@@ -221,14 +291,14 @@ Note: Rates vary by zone within each city and change annually. Always verify cur
 **Discount stacking rule:** Only one discount tier applies per property at a time, per תקנות הסדרים במשק המדינה (הנחה מארנונה), תשנ"ג-1993. A household qualifying for both senior and low-income discounts receives the larger of the two, not the sum. Apply for whichever gives the highest reduction.
 
 **Filing an arnona objection (hassagah):** If you believe the bill is wrong (incorrect property size, wrong zone classification, missing discount, balcony charged at full rate), there is a formal escalation path:
-1. **Hassagah** — file a written objection with the municipal arnona manager within **90 days** of receiving the bill. Cite the specific calculation error and attach evidence (measurement, classification documents, photos of enclosed vs open balcony).
-2. **Response** — the municipality must respond within 60 days. Silence after 60 days is treated as deemed-rejection and the clock for the next step starts.
-3. **Appeal to ועדת ערר** — if rejected, you have **30 days** to appeal to the local arnona objection committee (ועדת ערר לארנונה).
-4. **Administrative court** — if the ועדת ערר ruling is against you, escalate to בית משפט לעניינים מנהליים within 45 days of the decision.
+1. **Hassagah**, file a written objection with the municipal arnona manager within **90 days** of receiving the bill. Cite the specific calculation error and attach evidence (measurement, classification documents, photos of enclosed vs open balcony).
+2. **Response**, the municipality must respond within 60 days. Silence after 60 days is treated as deemed-rejection and the clock for the next step starts.
+3. **Appeal to ועדת ערר**, if rejected, you have **30 days** to appeal to the local arnona objection committee (ועדת ערר לארנונה).
+4. **Administrative court**, if the ועדת ערר ruling is against you, escalate to בית משפט לעניינים מנהליים within 45 days of the decision.
 
 For IEC and water-corporation billing disputes (not arnona), the small-claims court (בית משפט לתביעות קטנות, 38,500 ILS cap in 2026) is often a faster path.
 
-### Step 7: Tips for Reducing Utility Bills
+### Step 8: Tips for Reducing Utility Bills
 
 **Electricity:**
 1. Switch to TOU tariff if you have or can get a smart meter
@@ -253,14 +323,22 @@ For IEC and water-corporation billing disputes (not arnona), the small-claims co
 4. Report any changes in household composition that may qualify for discounts
 5. If you run a business from home, verify you're not being overcharged with commercial rates for your entire property
 
-### Step 8: Smart Meter Adoption and Monitoring
+**Cellular & Internet:**
+1. Compare your current plan against MVNOs (Rami Levy Mobile, Golan, 019), most users overpay 30-60 NIS/month
+2. Call retention before switching: ask for "מחיר שמירת לקוח", saves 15-30% with no provider change
+3. Set a calendar reminder for the end of the introductory period (usually month 12) and re-shop or re-negotiate
+4. Unbundle the triple play if you don't use the TV: a cheap fiber + MVNO + streaming combo is almost always cheaper
+5. Port your number for free, there are no fees, no forms, and it usually takes one business day
+6. Drop the router rental, own your ONT/router, save 10-20 NIS/month
+
+### Step 9: Smart Meter Adoption and Monitoring
 
 **Smart meters (monéi chokhéakh):**
-- IEC has installed approximately 1 million smart meters as of 2026 (~30% of households); rollout continues, prioritizing high-consumption households and dense urban areas first
+- IEC has installed approximately 1 million smart meters as of 2026 (~30% of households); the announced target is **3.7 million smart meters by end-2028**, prioritizing high-consumption households and dense urban areas
 - Allow real-time consumption monitoring
-- Enable TOU pricing
+- Enable TOU pricing and accurate readings for private suppliers (the supplier needs interval data, not a monthly estimate)
 - Check eligibility at iec.co.il, call **103** (also reachable as 055-7000103 for SMS / WhatsApp), or use the IEC app
-- Self-paid expedited installation (~265 ILS) is available where IEC has not yet deployed in the area
+- Self-paid expedited installation (~260 ILS) is available where IEC has not yet deployed in the area, with typical wait of 2-12 weeks
 
 **Monitoring tools:**
 - IEC app (available on iOS and Android): view real-time consumption, billing history, and payment options
@@ -287,7 +365,7 @@ Actions:
 5. Payback period: 36,000 / 9,600 = ~3.75 years
 6. 25-year total savings: (9,600 * 25) - 36,000 = ~204,000 ILS (not accounting for panel degradation ~0.5%/year and tariff changes)
 7. Check roof suitability: Modi'in gets good solar irradiance, verify south-facing roof availability and shading
-8. Recommend getting 3 installer quotes; confirm whether the quote uses net metering or one of the newer feed-in models (decisions 1573/45-46), since the export tariff (~0.213 ILS/kWh in 2026) is lower than the consumption rate
+8. Recommend getting 3 installer quotes; confirm whether the quote uses the legacy net-metering hesder (decision 1573, ~0.48 ILS/kWh export) or the newer two-track proposal (~0.60 ILS/kWh for first 5 years then ~0.38 ILS/kWh for installations up to 30 kW). The export tariff is lower than the consumption rate either way, so self-consumption beats export.
 9. Check with the municipality for any heter bniya requirements for roof modifications
 
 Result: User receives a detailed ROI analysis showing that solar panels would pay for themselves in approximately 4 years with total savings exceeding 200,000 ILS over the system lifetime, making it a strong investment.
@@ -348,15 +426,24 @@ Result: User receives a practical action plan for shifting consumption to off-pe
 - Israeli utility bills include 18% VAT (raised from 17% on 1 Jan 2025; the 2026 increase to 19% was rejected by the cabinet in Dec 2025). Be explicit about whether quoted prices include or exclude VAT, especially when comparing alternate-supplier offers, since some advertise the pre-VAT generation rate.
 - The Olim Hadashim arnona discount is 90% on up to 100 sqm for 12 months out of the 24 months following aliyah registration, NOT yearly. Agents may incorrectly describe it as multi-year (e.g., "90% first year, 10% years 2-5"). Disabled olim recognized by Bituach Leumi get up to 80% indefinitely under a separate provision.
 - The IEC customer-service number is **103** (also 055-7000103 for SMS/WhatsApp). The legacy `*2730` short code is no longer in use; agents that emit it will send users to a dead number.
+- **Solar export tariff.** The legacy net-metering surplus tariff (decision 1573) for residential rooftop is ~0.48 ILS/kWh fixed for 25 years. The 2025 two-track proposal would pay ~0.60 ILS/kWh for the first 5 years then ~0.38 ILS/kWh (installations up to 30 kW, higher band for the first 15 kW only). Older docs sometimes quote ~0.21 ILS/kWh, that figure is not the current residential rate. Always quote the contract's actual hesder line.
+- **Cellular and internet "promo expiry".** Most plans advertise a low introductory price (often X NIS for 12 months) that doubles or more after the promo period. Agents that quote the intro price as the "real" monthly cost will mislead the user. Always check the תקנון for "מחיר לאחר תום תקופת המבצע".
+- **Number portability is free, fast, and no-paperwork.** Suggesting users "cancel first then sign up new" is wrong, they should sign with the new provider, who handles portability in ~1 business day. Cancelling first creates a service gap.
 
 ## Reference Links
 
 | Source | URL | What to Check |
 |--------|-----|---------------|
-| Electricity Authority (PUA) | https://www.gov.il/he/departments/electricity_authority | Current quarterly electricity tariffs, TOU schedules, regulatory updates |
+| Electricity Authority (PUA) | https://www.gov.il/he/departments/electricity_authority | Current half-yearly electricity tariffs, TOU schedules, regulatory updates |
+| 2026 tariff book (official PDF) | https://www.gov.il/BlobFolder/generalpage/tarriffbook/he/Files_netunei_hasmal_sefer_tariff_01_2026.pdf | Full Jan 2026 tariff tables, all categories |
 | Israel Electric Corporation | https://www.iec.co.il | Residential tariff plans, smart meter rollout, consumption monitoring |
+| IEC TOU low-voltage tariffs | https://www.iec.co.il/content/tariffs/contentpages/taozb-namuch | Current peak/off-peak schedules for residential customers |
 | Water Authority | https://www.gov.il/he/departments/water_authority | Tiered water rates, household allocation, municipal corporations |
+| Water tariff book (Jan 2026) | https://www.gov.il/he/pages/rates_general1 | Full water + sewage tariff tables and updates |
 | Natural Gas Authority | https://www.gov.il/he/departments/natural_gas_authority | Consumer gas pricing, supplier list, connection rules |
+| LPG cooking gas comparator (Energy Ministry) | https://migdal-webpages.energy-apps.org/gpmCalculator | Compare LPG cooking-gas tariffs by locality and supplier |
+| Ministry of Communications | https://www.gov.il/he/departments/ministry_of_communications | Cellular and internet regulation, complaints, supplier list |
+| Kolzchut, senior electricity discount | https://www.kolzchut.org.il/he/הנחה_בחשבון_חשמל_למקבלי_קצבת_זיקנה_עם_השלמת_הכנסה | 50% (proposed 65%) discount up to 400 kWh/month for seniors + income supplement |
 | Arnona property tax rates | https://www.gov.il/he/service/arnona-payment | Municipal arnona tariffs and discount eligibility |
 | Kolzchut, olim arnona discount | https://www.kolzchut.org.il/he/הנחה_בארנונה_לעולים_חדשים | Exact eligibility window (12 months out of 24), 100 sqm cap, special-needs olim rules |
 | Kolzchut, senior arnona discount | https://www.kolzchut.org.il/he/הנחה_בארנונה_לאזרחים_ותיקים | Senior age threshold (women 62 / men 67), income tests, discount tiers |
@@ -386,3 +473,15 @@ Solution: Call IEC customer service at **103** (or send SMS / WhatsApp to 055-70
 Cause: Arnona calculations can be confusing because the published rate per sqm may not include additions like special area surcharges (tosefet ezor), stairwell charges (misparim klalit), shared area allocations, or adjustments for semi-enclosed spaces (mirpesot, mamadim) that are measured at partial rates. Some municipalities also have different rates for different floors or building ages.
 
 Solution: Request a detailed arnona calculation breakdown (pirutt chishuv arnona) from your municipality's arnona department. Verify the property size they have on file matches your actual measured area (sometimes construction records have errors). Check if enclosed balconies (mirpeset sugéret) are being charged at full rate or partial rate (typically 60-75% of full rate for semi-enclosed spaces). The mamad (safe room) is usually charged at full rate if it's a standard room but verify this. If you believe there's an error, file a formal objection (hassaga) within 90 days of receiving the bill. You can also request a municipal surveyor to re-measure your property.
+
+### Error: "My cellular bill jumped after the promo period and I want out"
+
+Cause: Most Israeli cellular plans advertise a low introductory price (e.g., 19 NIS/month) for 12 or 24 months, then automatically escalate to the standard rate (often 50-100% higher) once the promo expires. The תקנון discloses this but most customers miss it.
+
+Solution: You can switch providers at any time, there is **no fixed term and no cancellation fee** for "תוכנית ללא התחייבות" (no-commitment plans, which is most of the market). Sign up with a new provider (Rami Levy, Golan, 019, or a retention deal with your current MNO) and they will handle number portability automatically in about one business day. Do NOT cancel your current line first, sign the new one first and let portability handle the transfer to avoid a service gap. If you signed an "התחייבות" (commitment) plan, check the early-exit fee, but even with the fee, switching is often cheaper than continuing at the post-promo price.
+
+### Error: "I have separate Bezeq + ISP bills and want to consolidate to a single fiber bill"
+
+Cause: Many households still have the legacy split-bill model: one bill from the infrastructure operator (Bezeq for copper/fiber, HOT for cable) and a second bill from the ISP / "ספק" (Bezeq Beinleumi, Cellcom, Partner, 013/Netvision, 014, 018 Xfone, Triple-C, Rimon). This was the only option before the wholesale-market reform; today most consumers can collapse it into a single bill.
+
+Solution: Pick a wholesale-market bundle from any of the four infrastructure operators (Bezeq BFiber, HOT, IBC/Unlimited, Cellcom/Partner-built fiber) or from an ISP that resells over wholesale ("שוק סיטונאי"). The new provider takes care of cancellation with the old infrastructure and old ISP, swaps the ONT/router (you may keep your own if compatible), and starts billing as a single line. Expected price drop: 20-40 NIS/month. If your address still has only ADSL on copper, check the fiber coverage maps, fiber coverage in 2026 reaches >90% of Israeli households and the upgrade is typically free for a new contract.
