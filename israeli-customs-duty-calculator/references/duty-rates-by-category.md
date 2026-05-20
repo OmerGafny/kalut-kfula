@@ -58,4 +58,4 @@ vat         = base_for_vat * 0.18
 landed      = CIF + duty + purchase_tax + vat + broker_fees
 ```
 
-For personal imports, if CIF is below the current threshold (USD 75 as of April 2026), no taxes apply at all. Above it, the full landed-cost calculation runs.
+For personal imports, if the product value (excluding shipping and insurance, when itemized separately) is below the current threshold (USD 130 as of May 2026), no taxes apply at all. Between USD 130 and USD 500 only VAT applies, customs duty is waived under the personal-import regime, and purchase tax can still apply on specific items. Above USD 500 the full landed-cost calculation runs. Above USD 1,000 the shipment is treated as commercial and requires a customs broker. Tobacco, e-cigarettes, alcohol, and alcoholic beverages are excluded from the personal-import exemption regardless of value.

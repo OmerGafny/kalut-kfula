@@ -7,8 +7,16 @@ Computes the cascading tax sequence used by Israeli Customs:
 
 Constants:
   - Israel VAT rate: 18% (since January 1, 2025).
-  - Personal import threshold: USD 75 (as of April 2026, after Knesset
-    reversed the November 2025 Smotrich decree that had raised it to USD 150).
+  - Personal import threshold: USD 130 (as of May 2026). The threshold
+    moved 75 -> 150 in December 2025, was revoked back to 75 by the
+    Knesset on 24 February 2026, and was reset to 130 by a new Finance
+    Ministry order signed less than 24 hours later (effective midnight
+    24-25 February 2026). Confirm via the official calculator before
+    quoting a number.
+  - Tobacco, e-cigarettes, alcohol, and alcoholic beverages are EXCLUDED
+    from the personal-import exemption regardless of value. This script
+    does NOT model that exclusion automatically; callers must override
+    --personal for those product categories.
 
 Sources for each constant are cited in the skill's evidence.json.
 
@@ -31,7 +39,7 @@ from typing import Optional
 
 # Constants grounded in evidence.json
 VAT_RATE = Decimal("0.18")
-PERSONAL_IMPORT_THRESHOLD_USD = Decimal("75")
+PERSONAL_IMPORT_THRESHOLD_USD = Decimal("130")
 
 
 def money(x: Decimal) -> Decimal:
