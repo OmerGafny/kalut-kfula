@@ -102,7 +102,13 @@ The following expenses are generally not deductible for tax purposes:
 
 4. **E-invoice allocation number (Israel Invoice Model) / מספר הקצאה (מודל חשבוניות ישראל):** B2B tax invoices above the SHAAM threshold must carry a Tax Authority allocation number (מספר הקצאה) to be eligible for VAT input deduction. Threshold by issue date: NIS 20,000 in 2025; NIS 10,000 from 1 Jan 2026; NIS 5,000 from 1 Jun 2026 (permanent floor). / סף לפי תאריך הוצאת החשבונית: 20,000 ש"ח ב-2025; 10,000 ש"ח מ-1.1.2026; 5,000 ש"ח מ-1.6.2026 (רצפה קבועה).
 
-5. **Record retention / שמירת מסמכים:** Business records and invoices must be retained for 7 years per Israeli tax law.
+5. **Record retention / שמירת מסמכים:** Business records and invoices must be retained for 7 years per Israeli tax law. Electronic and digital storage is allowed as long as the records reproduce accurately and remain legible.
+
+6. **Osek Patur turnover ceiling 2026 / תקרת עוסק פטור 2026:** NIS 122,833 (raised from NIS 120,000 used in 2024–2025). Once crossed, the freelancer must convert to Osek Murshe from the date of breach. / 122,833 ש"ח מ-2026 (עלתה מ-120,000 ש"ח).
+
+7. **Invoice issuance window / חלון הנפקת חשבונית:** A tax invoice must be issued within 14 days of the taxable supply or payment, whichever comes first. / חשבונית מס חייבת להיות מונפקת תוך 14 יום ממועד האספקה או התשלום, לפי המוקדם.
+
+8. **VAT rate stability 2026 / יציבות שיעור המע"מ 2026:** The Ministry of Finance proposed a rise to 19% from January 2026 as part of budget talks. The proposal was rejected; the rate remains 18% throughout 2026. / האוצר הציע 19% מינואר 2026. ההצעה נדחתה. השיעור נשאר 18%.
 
 ## Sources / מקורות
 

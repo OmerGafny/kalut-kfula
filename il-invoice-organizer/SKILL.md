@@ -97,6 +97,10 @@ Determine supplier and customer business status:
 
 Important: You can only deduct input VAT (mas tsumos) from tax invoices issued by Osek Murshe (or Hevra Peratit) suppliers. Receipts from Osek Patur do not have VAT to deduct.
 
+**Osek Patur turnover ceiling (2026): NIS 122,833** (raised from NIS 120,000 in 2024–2025). Once a freelancer crosses this annual turnover, they must convert to Osek Murshe from the date of the breach and notify the VAT office. Certain professions (lawyers, doctors, architects, engineers, accountants and a few others) are barred from Osek Patur status regardless of turnover.
+
+**Invoice issuance timing**: Israeli tax law requires a tax invoice (Heshbonit Mas) to be issued within 14 days of the taxable supply or of payment, whichever comes first. Invoices dated more than 14 days after the supply may be challenged by the Tax Authority.
+
 ### Step 6: Generate Accountant-Ready Export
 Organize the data for the accountant (ro'eh cheshbon).
 
@@ -111,6 +115,20 @@ Include summary:
 - Total input VAT (mas tsumos) to reclaim
 - Missing invoices or data gaps flagged
 - Separate section for non-deductible items
+
+### Step 7: Align with Filing Deadlines
+Surface the relevant filing windows so the user knows when the accountant needs the organized batch.
+
+| Filing | Frequency | Threshold / Trigger | Deadline |
+|--------|-----------|--------------------|----------|
+| VAT return (Doch Tkufati) | Bi-monthly | Annual turnover ≤ NIS 1.51M | 15th of the month after the period |
+| VAT return | Monthly | Annual turnover > NIS 1.51M | 15th of the next month |
+| Income tax annual return (Doch Shnati) | Annual | All self-employed | 30 April (paper) / 31 May (online); via מייצג can extend to Nov–Dec |
+| Bituach Leumi advances | Monthly | All self-employed | 15th of next month |
+
+Hand the categorized batch to the accountant at least 7-10 days before the VAT deadline so they have time to reconcile and file. For invoices over the SHAAM threshold without an allocation number, flag urgently: the deadline to request a corrected invoice from the supplier is before that period's VAT filing.
+
+**Osek Zair (Small Dealer) option**: a self-employed individual with annual revenue ≤ NIS 122,833 may elect the "Small Dealer" track on the annual return and deduct a **flat 30% of revenue as expenses** instead of actual expenses. The election is **not available** if the freelancer has employees, has inadequate books, more than 25% of revenue is from a related party, the freelancer is a 10%+ shareholder in a company, or other Finance Minister exclusions apply. When this election is in play, this skill should still organize invoices for backup and Bituach Leumi purposes, but the categorized totals will not flow to the income tax return.
 
 ## Examples
 
@@ -167,6 +185,9 @@ Result: Total VAT 356.95 NIS, but only 237.97 NIS is deductible. The remaining 1
 - Israeli invoice numbers are not globally unique. Different suppliers can have the same invoice number. Always index by supplier + invoice number combination.
 - Hebrew OCR on scanned invoices frequently misreads the characters vav (ו) and zayin (ז), and confuses final-mem (ם) with samekh (ס). Verify extracted amounts and names.
 - The SHAAM allocation-number threshold is staged (NIS 10,000 from 1 Jan 2026, dropping to NIS 5,000 from 1 Jun 2026). Apply the threshold that was in force on the invoice issue date, not today.
+- The Ministry of Finance proposed a VAT rise to 19% for January 2026 during the 2026 budget talks. That proposal was rejected; the rate **remains 18%** through 2026. Do not pre-apply a 19% rate to invoices regardless of how confident the source looks.
+- The Osek Patur turnover ceiling rose from NIS 120,000 to NIS 122,833 starting 2026. Agents that hardcode 120,000 will flag legitimate Osek Patur status as "over threshold" for revenues between 120,001 and 122,833.
+- An invoice dated more than 14 days after the underlying supply or payment can be challenged by the Tax Authority. Flag suspiciously late invoices for the accountant.
 
 ## Reference Links
 
