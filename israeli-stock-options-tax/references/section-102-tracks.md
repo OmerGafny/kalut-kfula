@@ -20,10 +20,10 @@ Section 102 of the Israeli Income Tax Ordinance (Pkudat Mas Hachnasa) provides a
 ## Capital Gains Track (Mislul Honi) - Detailed
 
 ### Requirements
-1. Company files Section 102 plan with ITA (Reshut HaMisim)
+1. Company files Section 102 plan with ITA (Reshut HaMisim). Grants under the plan can only be made starting 30 days after the plan is submitted to the ITA.
 2. ITA-approved trustee (ne'eman) appointed to hold shares
 3. Plan specifies capital gains track election
-4. Options/shares deposited with trustee within 30 days of board approval
+4. Board resolution approving the grant forwarded to the trustee within 45 days of the date of grant; signed option agreement delivered to the trustee within 90 days of the date of grant (deemed-compliance safe harbors; both clocks anchor on the grant date, not the board-resolution date)
 5. Trustee holds for a minimum of 24 months counted from the end of the tax year of grant
 6. Company does NOT claim tax deduction for the option expense
 
@@ -34,9 +34,11 @@ Section 102 of the Israeli Income Tax Ordinance (Pkudat Mas Hachnasa) provides a
 - Surtax: 5% (3% general + 2% capital) on annual income above 721,560 NIS
 
 ### Effective Rate Examples (2026)
-- Gain of 500,000 NIS, no other capital income: 25% = 125,000 NIS tax
-- Gain of 1,000,000 NIS, no other income: 25% on first 721,560 + 30% on remaining 278,440 = 263,922 NIS tax
-- Gain of 2,000,000 NIS: 25% on first 721,560 + 30% on remaining 1,278,440 = 563,922 NIS tax
+Formula: 25% on the entire gain, plus 5% surtax on the portion of total annual income above 721,560 NIS (when the gain itself is the only income above the threshold, the surtax portion equals gain - 721,560).
+
+- Gain of 500,000 NIS, no other income: 25% × 500,000 = 125,000 NIS tax (gain stays below threshold, no surtax)
+- Gain of 1,000,000 NIS, no other income: 25% × 1,000,000 + 5% × (1,000,000 - 721,560) = 250,000 + 13,922 = 263,922 NIS tax
+- Gain of 2,000,000 NIS, no other income: 25% × 2,000,000 + 5% × (2,000,000 - 721,560) = 500,000 + 63,922 = 563,922 NIS tax
 
 ## Income Track (Mislul Peiroti) - Detailed
 
@@ -82,8 +84,9 @@ Tax treatment:
 
 | Event | Deadline | Consequence of Missing |
 |-------|----------|----------------------|
-| File 102 plan with ITA | Before first grant | Grants default to 3(i) |
-| Deposit with trustee | 30 days after board approval | May invalidate 102 treatment |
+| File 102 plan with ITA | Before first grant | Grants default to 3(i); grants only effective starting 30 days after ITA plan filing |
+| Forward board resolution to trustee | 45 days after date of grant | May invalidate 102 treatment (deemed-compliance safe harbor) |
+| Deliver signed option agreement to trustee | 90 days after date of grant | May invalidate 102 treatment (deemed-compliance safe harbor) |
 | Form 146 (quarterly) | End of quarter | Reporting violation, possible plan disqualification |
 | Form 156 (annual) | March 31 of following year | Reporting violation |
 | 24-month holding | 24 months counted from the end of the tax year of grant | Gain reclassified as employment income |

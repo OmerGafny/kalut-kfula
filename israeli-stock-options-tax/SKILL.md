@@ -249,6 +249,35 @@ Result: the early sale roughly doubles the tax versus the 25% capital gains rate
 | `tase-mcp` | Current TASE stock prices for Israeli-listed companies |
 | `boi-exchange` | USD/ILS exchange rates for converting option values |
 
+### Step 9: US Dual Citizens and Relocators
+
+Many Israeli tech employees are US citizens or green card holders (or relocate to/from the US). Two extra layers apply:
+
+**For US citizens employed in Israel under Section 102:**
+- Israel taxes the gain under Section 102 (25% capital gains track, or marginal income track).
+- The US still taxes the same gain on the US 1040 because US citizens are taxed on worldwide income. US ISO/NSO labels do NOT control Israeli characterization, Section 102 governs the Israeli side regardless.
+- For NSOs and RSUs, the US taxes ordinary income at exercise/vest, while Israel under the capital gains track defers tax until sale. This creates a TIMING MISMATCH where the employee owes US tax years before Israel's tax event, making the Foreign Tax Credit hard to claim against US income that has already been taxed.
+- Practical mitigation: file Form 1116 (Foreign Tax Credit) in the year of Israeli sale, treat the Israeli tax as a credit against US capital gains. Be aware that under the US-Israel tax treaty (1995), Israel has primary taxing rights for Israeli-source employment income.
+- For ISOs granted by a US parent: AMT may apply at US exercise even though Israel taxes nothing under Section 102 trustee track until sale. Always model both sides.
+
+**For employees who relocate OUT OF Israel:**
+- Section 100A (the Israeli exit tax) treats all unsold assets, including unvested options and unsold 102 shares, as deemed-sold one day before the cessation of Israeli residency.
+- The employee can elect to defer the tax until actual sale (no interest charge until sale, but the Israeli portion is locked in based on residency-end values).
+- The Israeli portion of the gain is usually allocated based on days of work performed in Israel vs abroad over the vesting period.
+- This is a frequent double-taxation trap, the new country of residence often does not credit the Israeli exit tax. Get a CPA who handles relocation.
+
+### Step 10: Stock-for-Stock Acquisitions (Section 104H)
+
+If the exit is structured as a stock-for-stock merger (e.g., your startup is acquired by Acquirer Inc., and you receive Acquirer shares in exchange for your 102 shares), Section 104H provides a TAX-DEFERRED ROLLOVER:
+
+- The exchange itself is not a taxable event.
+- The cost basis of the old 102 shares carries over to the new Acquirer shares.
+- The original grant date (and the 24-month clock) is preserved.
+- The capital gains track election is preserved.
+- Tax is deferred until the Acquirer shares are actually sold for cash.
+
+If the deal is a mix of cash + stock, the cash portion is taxed immediately and the stock portion rolls over. The trustee usually continues to hold the new Acquirer shares for the remainder of the 24-month period.
+
 ## Gotchas
 
 1. **24-month clock starts at the END OF THE TAX YEAR OF GRANT, not at exercise or at the grant date itself.** Agents commonly assume the holding period starts when options are exercised, or on the grant date. It starts from the end of the tax year in which the options were granted (December 31 of the grant year). Getting this wrong means telling the employee they can sell earlier than they actually can without losing capital gains treatment.
@@ -260,6 +289,12 @@ Result: the early sale roughly doubles the tax versus the 25% capital gains rate
 4. **The employee cannot choose their track.** The company selects the track (capital gains or income) when filing the 102 plan with the ITA. Agents sometimes present this as an employee decision. The employee can only optimize timing and amounts, not the track itself.
 
 5. **Foreign parent company shares have different rules.** When an Israeli subsidiary grants options on the PARENT company's shares (e.g., a US-listed parent), Section 102 still applies if properly structured, but withholding and reporting mechanics differ. The employer must withhold tax at source upon sale, and Form 867 from the trustee may show different fields than domestic grants.
+
+6. **US citizens face phantom-income timing mismatch.** A US-citizen Israeli employee owes US tax on NSO exercise and RSU vest under US rules, while Israeli tax under Section 102 capital gains track is deferred until sale. Without active Foreign Tax Credit planning, this leads to double taxation. Section 102 cannot override the US worldwide-income rule.
+
+7. **Exit tax (Section 100A) applies to relocators.** An employee who leaves Israel triggers a deemed sale of unsold 102 shares and unvested options one day before ceasing Israeli residency. The Israeli portion is allocated by Israeli vs foreign workdays during vesting. The new country of residence often does not credit this tax, creating a double-taxation trap.
+
+8. **The 30-day clock is the PLAN-FILING clock, not the deposit clock.** Grants under a 102 plan can only be made starting 30 days after the plan is submitted to the ITA. Deposit-with-trustee deadlines are different and both anchor on the DATE OF GRANT (not the board-resolution date): 45 days from the date of grant for the board-resolution copy, and 90 days from the date of grant for the signed option agreement.
 
 ## Reference Links
 
@@ -285,3 +320,12 @@ In a stock-for-stock acquisition, the tax event occurs when the employee SELLS t
 
 ### "I exercised before 24 months, what now?"
 The entire gain is reclassified as employment income, taxed at marginal rates (up to 47% + 3% surtax) plus Bituach Leumi and health insurance. This is significantly more expensive than the 25% capital gains rate. There is no way to reverse this.
+
+### "I'm a US citizen working in Israel, do I pay tax twice?"
+Both Israel and the US tax the gain, but you can claim a Foreign Tax Credit (Form 1116) on the US side for the Israeli tax actually paid. The challenge is timing: under Israeli Section 102 capital gains track, tax is paid at sale; under US rules, NSO exercise and RSU vest are taxable events that can occur years earlier. Coordinate with a CPA who handles US-Israel cross-border employees. Under the US-Israel tax treaty, Israel has primary taxing rights on Israeli-source employment income, including stock-based compensation earned while working in Israel.
+
+### "I'm leaving Israel, what about my options?"
+Section 100A treats unsold 102 shares and unvested options as deemed-sold one day before you cease Israeli residency. You can pay the Israeli tax at exit OR elect to defer to actual sale (no interest accrues during deferral, but the Israeli portion is locked in to residency-end values). Israel allocates the gain based on Israeli vs foreign workdays during vesting. The new country of residence may not credit the Israeli exit tax, so this is a known double-taxation risk that needs cross-border planning before you board the plane.
+
+### "We are being acquired in a stock-for-stock deal, what is my tax event?"
+Under Section 104H, a stock-for-stock acquisition is a tax-deferred rollover: no Israeli tax at the merger, the original cost basis carries over to the new acquirer shares, and the 24-month clock + capital gains track election are preserved. Tax is triggered only when you eventually sell the acquirer shares for cash. If the deal is mixed (some cash, some stock), the cash portion triggers an immediate Israeli tax event on its proportional share of the gain.
