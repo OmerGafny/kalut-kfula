@@ -67,25 +67,37 @@ The 52% rate includes: 47% base + 3% surtax + 2% additional surtax on non-labor 
 
 | Income Range | Employee NI | Employee Health | Employer NI |
 |-------------|------------|----------------|-------------|
-| Up to 7,703 NIS/month | 0.4% | 3.1% | 4.46% |
-| 7,703 - 51,910 NIS/month | 7.0% | 5.0% | 7.38% |
+| Up to 7,703 NIS/month | 1.04% | 3.23% | 4.46% |
+| 7,703 - 51,910 NIS/month | 7.0% | 5.17% | 7.38% |
 | Above 51,910 NIS/month | 0% (ceiling) | 0% (ceiling) | 0% (ceiling) |
 
 ### Regular Employees (for comparison)
 
 | Income Range | Employee NI | Employee Health | Employer NI |
 |-------------|------------|----------------|-------------|
-| Up to 7,703 NIS/month | 0.4% | 3.1% | 4.51% |
-| 7,703 - 51,910 NIS/month | 7.0% | 5.0% | 7.60% |
+| Up to 7,703 NIS/month | 1.04% | 3.23% | 4.51% |
+| 7,703 - 51,910 NIS/month | 7.0% | 5.17% | 7.60% |
 
 ### Self-Employed
 
 | Income Range | NI Rate | Health Rate | Total |
 |-------------|---------|-------------|-------|
-| Up to 7,703 NIS/month | 2.87% | 3.1% | 5.97% |
-| 7,703 - 51,910 NIS/month | 12.83% | 5.0% | 17.83% |
+| Up to 7,703 NIS/month | 4.47% | 3.23% | 7.70% |
+| 7,703 - 51,910 NIS/month | 12.83% | 5.17% | 18.00% |
 
-52% of NI amount is tax-deductible.
+52% of NI amount is tax-deductible (Section 47A).
+
+### Controlling Shareholder With Zero Salary (BL Minimum)
+
+A baal shlita drawing no salary still owes Bituach Leumi directly as a non-employee with no taxable employment income. 2026 minimums:
+
+| Component | Monthly Minimum |
+|-----------|-----------------|
+| NI | ~143 NIS |
+| Health | ~123 NIS |
+| Combined floor | ~266 NIS |
+
+Liability sits on the individual, not the company. If the shareholder has non-employment income (dividends, rental, interest, capital gains), percentage-based rates apply on that income above the floor.
 
 ## Section 3(tet) and 3(yod) Deemed Interest Rates (2026)
 
@@ -95,6 +107,25 @@ The 52% rate includes: 47% base + 3% surtax + 2% additional surtax on non-labor 
 ## VAT
 
 - Standard rate: **18%** (increased from 17% on January 1, 2025)
+
+## Trapped Profits / Closely-Held Company Reforms (Amendment 277, in force 2025)
+
+Amendment 277 to the Income Tax Ordinance restructured taxation of closely-held companies (chevrot meatim):
+
+- **2% additional corporate-tax surcharge** on excess undistributed retained earnings of a closely-held company. A basic exemption shield (~750,000 NIS) and activity/asset shields apply.
+- **Section 62A tightened.** Controlling-shareholder threshold dropped to 25% (was 10% in the old §62A); single-client test reduced to 22 of the prior 36 months (was 30 of 36); profits above a 25% margin on personal-effort revenue are attributed to the shareholder at marginal rates regardless of distribution.
+- **+2% surtax on non-labor income** above the 721,560 threshold (in addition to the standard 3% Section 121B surtax). Effective for tax year 2025 onward.
+
+## Pension and Keren Hishtalmut Ceilings (2026 reference)
+
+| Item | 2026 Value |
+|------|-----------|
+| Keren Hishtalmut, self-employed deductible ceiling | 13,203 NIS/year |
+| Keren Hishtalmut, exempt annual deposit ceiling | 20,566 NIS |
+| Keren Hishtalmut, salaried max qualifying monthly salary | 15,751 NIS/month |
+| Pension qualifying income ceiling (hakhnasa mezakeh) | 232,800 NIS/year |
+| Pension deduction ceiling (hakhnasa mukeret) | 25,608 NIS/year |
+| Pension credit ceiling | 12,804 NIS/year |
 
 ## Key Thresholds
 

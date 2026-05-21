@@ -40,9 +40,9 @@ INCOME_TAX_BRACKETS = [
 NI_THRESHOLD_LOW = 7_703 * 12   # 92,436
 NI_THRESHOLD_HIGH = 51_910 * 12  # 622,920
 
-# Employee NI + Health rates
-EMPLOYEE_NI_LOW = 0.004 + 0.031   # 3.5%
-EMPLOYEE_NI_HIGH = 0.07 + 0.05    # 12%
+# Employee NI + Health rates (2026: NI 1.04%/7.0% per 2024 budget; health 3.23%/5.17% per 2025 amendment)
+EMPLOYEE_NI_LOW = 0.0104 + 0.0323  # 4.27%
+EMPLOYEE_NI_HIGH = 0.07 + 0.0517   # 12.17%
 
 # Employer NI rates (controlling shareholder)
 EMPLOYER_NI_LOW = 0.0446
@@ -111,10 +111,15 @@ def analyze_salary(profit: float, credit_points: float, current_salary: float = 
     gross = solve_gross_salary(profit, current_salary)
     total_salary = current_salary + gross
     employer_ni = calc_employer_ni(total_salary) - calc_employer_ni(current_salary)
-    income_tax = calc_income_tax(total_salary) - calc_income_tax(current_salary)
+    income_tax_total = calc_income_tax(total_salary)
+    income_tax_current = calc_income_tax(current_salary)
     employee_ni = calc_employee_ni(total_salary) - calc_employee_ni(current_salary)
-    credit_reduction = credit_points * CREDIT_POINT_ANNUAL if current_salary == 0 else 0
-    net_tax = max(0, income_tax - credit_reduction)
+    credit_reduction = credit_points * CREDIT_POINT_ANNUAL
+    # Credit points reduce total tax owed up to zero (applies regardless of current_salary).
+    # Marginal incremental tax = (total_tax_after_credits) - (current_tax_after_credits)
+    net_total = max(0, income_tax_total - credit_reduction)
+    net_current = max(0, income_tax_current - credit_reduction)
+    net_tax = net_total - net_current
     surtax = calc_surtax(total_salary) - calc_surtax(current_salary)
     total_tax = net_tax + surtax + employee_ni + employer_ni
     net = gross - net_tax - surtax - employee_ni
@@ -146,14 +151,15 @@ def analyze_optimal_mix(profit: float, credit_points: float, current_salary: flo
     best_net = 0
     best_cost = 0
     step = 10_000
+    cr = credit_points * CREDIT_POINT_ANNUAL
     for salary_cost in range(step, int(profit), step):
         gross = solve_gross_salary(salary_cost, current_salary)
         total_sal = current_salary + gross
         emp_ni = calc_employer_ni(total_sal) - calc_employer_ni(current_salary)
-        inc_tax = calc_income_tax(total_sal) - calc_income_tax(current_salary)
         ee_ni = calc_employee_ni(total_sal) - calc_employee_ni(current_salary)
-        cr = credit_points * CREDIT_POINT_ANNUAL if current_salary == 0 else 0
-        net_tax = max(0, inc_tax - cr)
+        net_total = max(0, calc_income_tax(total_sal) - cr)
+        net_current = max(0, calc_income_tax(current_salary) - cr)
+        net_tax = net_total - net_current
         s_surtax = calc_surtax(total_sal) - calc_surtax(current_salary)
         net_sal = gross - net_tax - s_surtax - ee_ni
 
