@@ -282,6 +282,20 @@
       "source_url": "https://www.gov.il/he/departments/targetaudience/taxes-audience-returning-citizen",
       "raw_snippet": "תושבים חוזרים | רשות המסים בישראל. Official ITA portal page for returning residents at gov.il. Verified live via Playwright 2026-05-23 (curl returns 403 due to bot blocking; browser loads fine).",
       "fetched_on": "2026-05-23"
+    },
+    {
+      "id": "shivat-zion-tax-benefits-olim",
+      "claim": "Shivat Zion publishes a plain-English explainer of the 10-year tax exemption for olim and qualifying returning residents.",
+      "source_url": "https://shivatzion-support.freshdesk.com/en/support/solutions/articles/501000348713-tax-benefits-for-olim",
+      "raw_snippet": "an exemption for ten years on reporting and paying taxes on all non-Israeli sourced income. New Olim (new immigrants); Qualifying returning residents (toshav chozer vatik).",
+      "fetched_on": "2026-05-24"
+    },
+    {
+      "id": "shivat-zion-toshav-chozer-overview",
+      "claim": "Shivat Zion publishes a plain-English overview of the Toshav Chozer status.",
+      "source_url": "https://shivatzion-support.freshdesk.com/en/support/solutions/articles/501000348813-returning-resident-toshav-chozer",
+      "raw_snippet": "Toshav Chozer (Returning Resident) Overview. Available advantages include: Reduced taxes on household goods imports, Business startup assistance, Income tax benefits, Acclimatization Year (Shnat Histaglut), Employment and training support.",
+      "fetched_on": "2026-05-24"
     }
   ]
 }

@@ -228,6 +228,8 @@ None. This skill is text-based planning. No live API integration with Mas Hachna
 | S. Horowitz on equity-comp sourcing | https://s-horowitz.com/taxation-of-stock-options-for-employees-who-became-israeli-residents/ |
 | Philip Stein, US-Israel treaty | https://www.pstein.com/our-firm/us-israel-tax-treaty/ |
 | IRS, US-Israel treaty PDF | https://www.irs.gov/pub/irs-trty/israel.pdf |
+| Shivat Zion, Tax Benefits for Olim (plain-English overview) | https://shivatzion-support.freshdesk.com/en/support/solutions/articles/501000348713-tax-benefits-for-olim |
+| Shivat Zion, Toshav Chozer overview | https://shivatzion-support.freshdesk.com/en/support/solutions/articles/501000348813-returning-resident-toshav-chozer |
 
 ## Troubleshooting
 

@@ -228,6 +228,8 @@ python3 scripts/cashflow-projection.py --json my-plan.json
 | S. Horowitz על מקור הכנסה לתגמול הוני | https://s-horowitz.com/taxation-of-stock-options-for-employees-who-became-israeli-residents/ |
 | Philip Stein, אמנת ישראל-ארה"ב | https://www.pstein.com/our-firm/us-israel-tax-treaty/ |
 | IRS, אמנת ישראל-ארה"ב PDF | https://www.irs.gov/pub/irs-trty/israel.pdf |
+| שיבת ציון, הטבות מס לעולים (סקירה באנגלית) | https://shivatzion-support.freshdesk.com/en/support/solutions/articles/501000348713-tax-benefits-for-olim |
+| שיבת ציון, סקירת תושב חוזר | https://shivatzion-support.freshdesk.com/en/support/solutions/articles/501000348813-returning-resident-toshav-chozer |
 
 ## פתרון בעיות
 
