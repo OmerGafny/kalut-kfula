@@ -9,7 +9,7 @@ display_description:
   he: אינטגרציה תקינה לחשבוניות מס ישראליות עם Claude - , גישה ישירה ל-API. זוהי גרסת דמו בלבד. למפתח API או גרסא מאלה שלחו מייל ל support@gafny.com
 
 description: Build invoice applications with Claude using Kalut Kfula WEB's compliant Israeli tax API
-description_he: בנו אפליקציות חשבוניות עם Claude באמצעות ממשק ה-API  של Kalut Kfula WEB זוהי גרסת דמו בלבד. למפתח API או גרסא מאלה שלחו מייל ל support@gafny.com
+description_he: בנו אפליקציות חשבוניות עם Claude באמצעות ממשק ה-API  של Kalut Kfula WEB זוהי גרסת דמו בלבד. למפתח API או גרסא מלאה שלחו מייל ל support@gafny.com
 
 tags:
   - name: invoicing
@@ -33,9 +33,9 @@ language:
 difficulty: intermediate
 ---
 
-# YourApp Invoice API — Developer Skill
+# Kalut Kfula WEB Invoice API — Developer Skill
 
-Build invoice applications with Claude using YourApp's compliant Israeli tax API.
+Build invoice applications with Claude using Kalut Kfula WEB's compliant Israeli tax API.
 
 **For full Hebrew documentation, see [SKILL_HE.md](SKILL_HE.md)**
 
@@ -47,7 +47,7 @@ Build invoice applications with Claude using YourApp's compliant Israeli tax API
 
 ## What This Skill Does
 
-Teaches Claude how to integrate with YourApp's invoicing API — search clients, create compliant Israeli invoices, handle payments, and generate secure document links.
+Teaches Claude how to integrate with Kalut Kfula WEB's invoicing API — search clients, create compliant Israeli invoices, handle payments, and generate secure document links.
 
 ## API Endpoints
 
@@ -122,8 +122,8 @@ Always use environment variables for credentials.
 Never hardcode API key in any file served to the browser.
 
 Backend (.env):
-YOURAPP_API_KEY=gaf_xxxxx-xxxxxx
-YOURAPP_BASE_URL=https://app.gafny.com/api/Main
+Kalut Kfula WEB_API_KEY=gaf_xxxxx-xxxxxx
+Kalut Kfula WEB_BASE_URL=https://app.gafny.com/api/Main
 
 Frontend — API key must never appear. Route all calls through 
 a backend proxy or server function.
@@ -135,10 +135,10 @@ Generate this utility once per project, adapted to the project's
 existing HTTP library and patterns:
 
 // Node.js / Next.js server side
-const yourAppApi = {
-  baseUrl: process.env.YOURAPP_BASE_URL,
+const Kalut Kfula WEBApi = {
+  baseUrl: process.env.Kalut Kfula WEB_BASE_URL,
   headers: {
-    "X-Api-Key": process.env.YOURAPP_API_KEY,
+    "X-Api-Key": process.env.Kalut Kfula WEB_API_KEY,
     "Content-Type": "application/json"
   },
 
@@ -473,7 +473,7 @@ Generate consistent error handling:
 
 // API errors
 try {
-  const result = await yourAppApi.post("/invoice", payload);
+  const result = await Kalut Kfula WEBApi.post("/invoice", payload);
   document.getElementById('success').innerHTML = result.data.messageHtml;
 } catch (error) {
   handleApiError(error.message);
