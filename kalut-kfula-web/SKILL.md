@@ -1,36 +1,7 @@
 ---
 name: Kalut Kfula WEB API
-display_name:
-  en: Kalut Kfula WEB API
-  he: ממשק Kalut Kfula WEB לחשבוניות
-
-display_description:
-  en: Compliant Israeli tax invoice integration for Claude - no setup, no double subscriptions, direct AI access
-  he: אינטגרציה תקינה לחשבוניות מס ישראליות עם Claude - , גישה ישירה ל-API. זוהי גרסת דמו בלבד. למפתח API או גרסא מאלה שלחו מייל ל support@gafny.com
-
-description: Build invoice applications with Claude using Kalut Kfula WEB's compliant Israeli tax API
-description_he: בנו אפליקציות חשבוניות עם Claude באמצעות ממשק ה-API  של Kalut Kfula WEB זוהי גרסת דמו בלבד. למפתח API או גרסא מלאה שלחו מייל ל support@gafny.com
-
-tags:
-  - name: invoicing
-    he: חשבוניות
-  - name: israeli-tax
-    he: מסים-ישראליים
-  - name: finance
-    he: כספים
-  - name: compliance
-    he: תאימות-חוקית
-  - name: api-integration
-    he: אינטגרציה-API
-
-version: 1.1.0
-author: Kalut Kfula WEB
-
-language:
-  - en
-  - he
-
-difficulty: intermediate
+display_name: Offical skill for Kalut Kfula Web API - Accounting and Invoicing software.
+description: Offical skill for Kalut Kfula Web API - Accounting and Invoicing software. This is a limited demo version. For api key or full version send email to support@gafny.com
 ---
 
 # Kalut Kfula WEB Invoice API — Developer Skill
@@ -41,9 +12,7 @@ Build invoice applications with Claude using Kalut Kfula WEB's compliant Israeli
 
 ## Quick Start
 
-1. Get your API key from account settings
-2. Add this skill to your IDE
-3. Start building with Claude
+1. send email to support@gafny.com so we can send you an api key for the sandbox env
 
 ## What This Skill Does
 
@@ -78,8 +47,6 @@ All requests require header: `X-Api-Key: {API_KEY}`
 8. Create → POST /invoice
 
 ---
-
-[Insert the complete SKILL.md content from earlier here — the full technical skill with all endpoints, validation rules, code patterns, etc.]
 
 # KalutKfula Web API — Developer Skill
 version: 1.1.0
