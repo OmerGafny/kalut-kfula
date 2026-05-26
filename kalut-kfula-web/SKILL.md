@@ -1,7 +1,7 @@
 ---
 name: Kalut Kfula WEB API
-display_name: Official skill for Kalut Kfula Web API - Accounting and Invoicing software.
-description: Official skill for Kalut Kfula Web API - Accounting and Invoicing software. This is a limited demo version. For api key or full version send email to support@gafny.com
+display_name: Offical skill for Kalut Kfula Web API - Accounting and Invoicing software.
+description: Offical skill for Kalut Kfula Web API - Accounting and Invoicing software. This is a limited demo version. For api key or full version send email to support@gafny.com
 ---
 
 # Kalut Kfula WEB Invoice API — Developer Skill
@@ -11,9 +11,12 @@ Build invoice applications with Claude using Kalut Kfula WEB's compliant Israeli
 **For full Hebrew documentation, see [SKILL_HE.md](SKILL_HE.md)**
 
 ## Quick Start
-
-1. send email to support@gafny.com so we can send you an api key for the sandbox env
-
+1. Create an account at https://app.gafny.com/Identity/Account/Register 
+2. Get your API key from account settings
+3. Add this skill to your IDE:
+   - **Cursor/Windsurf:** paste into `.cursor/rules/yourapp.md`
+   - **Claude:** paste into Project instructions
+4. Start building: `"Add invoice creation to my app"`
 ## What This Skill Does
 
 Teaches Claude how to integrate with Kalut Kfula WEB's invoicing API — search clients, create compliant Israeli invoices, handle payments, and generate secure document links.
