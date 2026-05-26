@@ -1,7 +1,7 @@
 ---
 name: Kalut Kfula WEB API
 display_name: Offical skill for Kalut Kfula Web API - Accounting and Invoicing software.
-description: Offical skill for Kalut Kfula Web API - Accounting and Invoicing software. This is a limited demo version. For api key or full version send email to support@gafny.com
+description: Offical skill for Kalut Kfula Web API - Accounting and Invoicing software. 
 ---
 
 # Kalut Kfula WEB Invoice API — Developer Skill
